@@ -37,6 +37,7 @@ const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const Downloads = lazy(() => import("./pages/Downloads"));
 const ConfigureCubicle = lazy(() => import("./pages/ConfigureCubicle"));
 const ProductDesigner = lazy(() => import("./pages/ProductDesigner"));
+const PublicVerifyPage = lazy(() => import("./pages/PublicVerifyPage"));
 
 // ── Lazy-loaded Admin Pages ───────────────────────────────────────────────
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
@@ -294,6 +295,14 @@ export const router = createBrowserRouter([
       },
       { path: "privacy", element: (<Suspense fallback={<PageSkeleton />}><PrivacyPolicy /></Suspense>) },
       { path: "terms", element: (<Suspense fallback={<PageSkeleton />}><TermsOfService /></Suspense>) },
+      {
+        path: "verify/:token",
+        element: (
+          <Suspense fallback={<PageSkeleton />}>
+            <PublicVerifyPage />
+          </Suspense>
+        ),
+      },
       {
         path: "*",
         element: (
