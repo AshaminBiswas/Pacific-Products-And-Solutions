@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, animate, useInView } from "motion/react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams, Navigate } from "react-router";
 import { SEO } from "../components/SEO";
 import { localBusinessSchema, faqSchema, breadcrumbSchema } from "../../lib/seo-data";
 import {
@@ -55,12 +55,9 @@ const iconMap: Record<string, LucideIcon> = {
 const serviceIcons: LucideIcon[] = [DoorOpen, ShowerHead, MenuSquare, Layers3, Wrench, Building2];
 
 const adjacentLocations: Record<LocationSlug, string[]> = {
-  delhi: ["mumbai", "bangalore", "kolkata"],
-  bangalore: ["delhi", "mumbai", "kolkata"],
-  kolkata: ["delhi", "bangalore", "mumbai"],
-  mumbai: ["delhi", "ahmedabad", "bangalore"],
-  ahmedabad: ["mumbai", "delhi", "bangalore"],
-  uae: ["delhi", "mumbai", "bangalore"],
+  delhi: ["kolkata", "uae"],
+  kolkata: ["delhi", "uae"],
+  uae: ["delhi", "kolkata"],
 };
 
 function cleanText(value: string) {
@@ -232,7 +229,6 @@ function LocationHeroSlider({ images, altText }: { images: string[], altText: st
 
 function HeroSection({ data, slug }: { data: LocationData; slug: LocationSlug }) {
   const isDelhi = slug === "delhi";
-  const isBangalore = slug === "bangalore";
 
   return (
     <section className={`relative overflow-hidden pt-20 ${isDelhi ? "bg-[#f7f8f3]" : "bg-white"} dark:bg-[#030213]`}>
@@ -241,14 +237,14 @@ function HeroSection({ data, slug }: { data: LocationData; slug: LocationSlug })
           <ChevronLeft className="h-4 w-4" />
           All Locations
         </Link>
-        <div className={`grid items-center gap-12 ${isBangalore ? "lg:grid-cols-[0.9fr_1.1fr]" : "lg:grid-cols-[1.05fr_0.95fr]"}`}>
-          <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className={isBangalore ? "lg:order-2" : ""}>
+        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+          <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <Eyebrow>{cleanText(data.region)}</Eyebrow>
             <h1 className="mt-6 text-5xl font-bold leading-[1.03] text-[#030213] dark:text-white sm:text-6xl lg:text-7xl">{cleanText(data.tagline)}</h1>
             <p className="mt-7 text-lg leading-8 text-gray-600 dark:text-gray-400">{cleanText(data.description)}</p>
             <HeroActions data={data} />
           </motion.div>
-          <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.1 }} className={`relative ${isBangalore ? "lg:order-1" : ""}`}>
+          <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.1 }} className="relative">
             <div className={`overflow-hidden ${isDelhi ? "rounded-t-[4rem]" : "rounded-none"} border border-black/10 bg-white p-3 shadow-2xl shadow-black/10 dark:border-white/10 dark:bg-white/5`}>
               <div className="h-[520px] w-full relative">
                 {data.heroImages && data.heroImages.length > 1 ? (
@@ -601,20 +597,8 @@ function renderLocationFlow(data: LocationData, slug: LocationSlug) {
           <MapSection data={data} />
         </>
       );
-    case "bangalore":
-      return (
-        <>
-          <ShowcaseSection data={data} variant="stack" />
-          <ServicesSection data={data} layout="grid" />
-          <WhyChooseSection data={data} compact />
-          <IndustrySection data={data} />
-          <FaqSection data={data} />
-          <ProjectsCredibility data={data} />
-          <InquirySection data={data} slug={slug} />
-          <MapSection data={data} />
-        </>
-      );
     case "kolkata":
+    case "uae":
       return (
         <>
           <ServicesSection data={data} layout="split" />
@@ -636,11 +620,9 @@ export default function LocationPage() {
   const { location } = useParams<{ location: string }>();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (location && ["mumbai", "ahmedabad", "uae"].includes(location.toLowerCase())) {
-      navigate("/contact", { replace: true });
-    }
-  }, [location, navigate]);
+  if (location && ["mumbai", "ahmedabad", "bangalore"].includes(location.toLowerCase())) {
+    return <Navigate to="/contact" replace />;
+  }
 
   const slug = location as LocationSlug | undefined;
   const data = slug ? locations[slug] : null;
@@ -660,10 +642,7 @@ export default function LocationPage() {
 
   const geoRegionMap: Record<LocationSlug, string> = {
     delhi: 'IN-DL',
-    bangalore: 'IN-KA',
     kolkata: 'IN-WB',
-    mumbai: 'IN-MH',
-    ahmedabad: 'IN-GJ',
     uae: 'AE-DU',
   };
   const geoRegion = geoRegionMap[slug] || 'IN-DL';

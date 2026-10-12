@@ -112,6 +112,11 @@
       "permanent": true
     },
     {
+      "source": "/locations/bangalore",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
       "source": "/locations/ahmedabad",
       "destination": "/contact",
       "permanent": true

@@ -45,7 +45,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 import type { Product, Solution } from "../../lib/database.types";
-import { useHeroImages } from "../../lib/hooks";
+import { useHeroImages, usePageBanner } from "../../lib/hooks";
 
 // ─────────────────────────────────────────────────────────────
 
@@ -616,6 +616,11 @@ function ArchitecturalTrustStrip() {
 }
 
 function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
+  const { data: cubiclesBanner } = usePageBanner("home-cubicles");
+  const { data: lockersBanner } = usePageBanner("home-lockers");
+  const { data: urinalBanner } = usePageBanner("home-urinal-partitions");
+  const { data: kidsBanner } = usePageBanner("home-kids-cubicles");
+
   return (
     <section className="py-16 sm:py-24 bg-white dark:bg-[#030213] text-gray-900 dark:text-white transition-colors">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -647,7 +652,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
             >
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
-                  src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"
+                  src={cubiclesBanner?.image_url || "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"}
                   alt="Commercial Restroom Cubicle Systems"
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
@@ -692,7 +697,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
             >
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
-                  src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80"
+                  src={lockersBanner?.image_url || "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80"}
                   alt="Modular HPL Lockers"
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
@@ -737,7 +742,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
             >
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
-                  src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80"
+                  src={urinalBanner?.image_url || "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80"}
                   alt="Urinal Partitions"
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
@@ -779,7 +784,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
             >
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
-                  src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=80"
+                  src={kidsBanner?.image_url || "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=80"}
                   alt="Kids & Preschool Toilet Cubicles"
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
@@ -1319,7 +1324,7 @@ export default function HomePage() {
           speakableSchema(["h1", "h2", ".speakable"]),
           faqSchema([
             { question: "What products does Pacific Products & Solutions manufacture?", answer: "Pacific Products & Solutions manufactures premium restroom cubicles, toilet partitions, shower cubicles, locker systems, urinal partitions, wall paneling, and custom hardware for commercial spaces across India." },
-            { question: "Where is Pacific Products & Solutions located?", answer: "Pacific Products & Solutions has regional hubs in Delhi NCR (Head Office), Bangalore, and Kolkata, serving pan-India commercial and institutional clients." },
+            { question: "Where is Pacific Products & Solutions located?", answer: "Pacific Products & Solutions has facilities in Delhi NCR (Head Office) and Kolkata, serving commercial and institutional clients pan-India." },
             { question: "What is the warranty on Pacific Products installations?", answer: "All Pacific Products installations come with a 10-year compact board warranty and a 1-year direct hardware replacement warranty." },
           ])
         ]}

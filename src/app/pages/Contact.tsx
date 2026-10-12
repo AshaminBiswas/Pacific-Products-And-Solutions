@@ -22,13 +22,6 @@ export default function ContactPage() {
       email: "info@pacificproduct.in",
     },
     {
-      city: "Bangalore",
-      slug: "bangalore",
-      address: "Bangalore, Karnataka, India",
-      phone: "+91 98185 92113",
-      email: "info@pacificproduct.in",
-    },
-    {
       city: "Kolkata",
       slug: "kolkata",
       address: "Salt Lake Sector V, Kolkata - 700091, West Bengal, India",
