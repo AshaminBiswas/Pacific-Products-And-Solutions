@@ -33,6 +33,7 @@ import {
   Box,
   Wrench,
   Check,
+  FileText,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { Button } from "../components/Button";
