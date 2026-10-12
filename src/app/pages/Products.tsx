@@ -92,9 +92,32 @@ function toProductCategorySlug(category: string | undefined): string {
   return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
+const CATEGORY_BANNERS: Record<string, { bannerSlug: string; fallbackImage: string }> = {
+  "restroom-cubicles": {
+    bannerSlug: "home-cubicles",
+    fallbackImage: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1600&q=80",
+  },
+  "lockers": {
+    bannerSlug: "home-lockers",
+    fallbackImage: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1600&q=80",
+  },
+  "urinal-partitions": {
+    bannerSlug: "home-urinal-partitions",
+    fallbackImage: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1600&q=80",
+  },
+  "kids-cubicles": {
+    bannerSlug: "home-kids-cubicles",
+    fallbackImage: "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1600&q=80",
+  },
+};
+
 export default function ProductsPage({ categorySlug: propCategorySlug }: ProductsPageProps) {
   const { data: products, loading } = useProducts();
-  const { data: banner } = usePageBanner("services");
+  const { data: generalBanner } = usePageBanner("services");
+  const { data: cubiclesBanner } = usePageBanner("home-cubicles");
+  const { data: lockersBanner } = usePageBanner("home-lockers");
+  const { data: urinalBanner } = usePageBanner("home-urinal-partitions");
+  const { data: kidsBanner } = usePageBanner("home-kids-cubicles");
   const [searchParams] = useSearchParams();
   const routeParams = useParams<{ categorySlug?: string; slug?: string }>();
   const navigate = useNavigate();
@@ -192,13 +215,28 @@ export default function ProductsPage({ categorySlug: propCategorySlug }: Product
       />
 
       {/* Hero Banner */}
-      <PageHero
-        title={heroTitle}
-        accentWord={activeCategoryMeta ? activeCategoryMeta.name.split(" ")[0] : "Models"}
-        subtitle={heroSubtitle}
-        breadcrumb={heroBreadcrumb}
-        backgroundImage={banner?.image_url}
-      />
+      {(() => {
+        let activeHeroBackground = generalBanner?.image_url;
+        if (activeSlug === "restroom-cubicles") {
+          activeHeroBackground = cubiclesBanner?.image_url || CATEGORY_BANNERS["restroom-cubicles"].fallbackImage;
+        } else if (activeSlug === "lockers") {
+          activeHeroBackground = lockersBanner?.image_url || CATEGORY_BANNERS["lockers"].fallbackImage;
+        } else if (activeSlug === "urinal-partitions") {
+          activeHeroBackground = urinalBanner?.image_url || CATEGORY_BANNERS["urinal-partitions"].fallbackImage;
+        } else if (activeSlug === "kids-cubicles") {
+          activeHeroBackground = kidsBanner?.image_url || CATEGORY_BANNERS["kids-cubicles"].fallbackImage;
+        }
+
+        return (
+          <PageHero
+            title={heroTitle}
+            accentWord={activeCategoryMeta ? activeCategoryMeta.name.split(" ")[0] : "Models"}
+            subtitle={heroSubtitle}
+            breadcrumb={heroBreadcrumb}
+            backgroundImage={activeHeroBackground}
+          />
+        );
+      })()}
 
       {/* Category Navigation Tabs */}
       <div className="sticky top-20 z-30 bg-white/80 dark:bg-[#030213]/85 backdrop-blur-xl border-y border-gray-200 dark:border-white/10 py-3 shadow-sm">

@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "../components/Button";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { useProduct, useCatalogs } from "../../lib/hooks";
+import { useProduct, useCatalogs, usePageBanner } from "../../lib/hooks";
 import { CatalogCard, CatalogViewerModal } from "../components/CatalogViewer";
 import { useState, useEffect } from "react";
 import { SEO } from "../components/SEO";
@@ -41,6 +41,25 @@ const COLOR_SWATCHES: Record<string, { bg: string; border: string; text: string;
     text: 'text-slate-700 dark:text-slate-300',
     label: 'Satin Stainless Steel',
     dot: 'bg-gradient-to-r from-slate-300 to-zinc-400 shadow-sm',
+  },
+};
+
+const CATEGORY_BANNERS: Record<string, { bannerSlug: string; fallbackImage: string }> = {
+  "restroom-cubicles": {
+    bannerSlug: "home-cubicles",
+    fallbackImage: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1600&q=80",
+  },
+  "lockers": {
+    bannerSlug: "home-lockers",
+    fallbackImage: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1600&q=80",
+  },
+  "urinal-partitions": {
+    bannerSlug: "home-urinal-partitions",
+    fallbackImage: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1600&q=80",
+  },
+  "kids-cubicles": {
+    bannerSlug: "home-kids-cubicles",
+    fallbackImage: "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1600&q=80",
   },
 };
 
@@ -92,9 +111,27 @@ export default function ProductDetailPage() {
   const lookupSlug = rawSlug === "plarina-wave" || rawSlug === "cubicle-platina-wave" ? "platina-wave" : rawSlug;
   const { data: product, loading } = useProduct(lookupSlug);
   const { data: catalogs } = useCatalogs(product?.id || undefined);
+  const { data: cubiclesBanner } = usePageBanner("home-cubicles");
+  const { data: lockersBanner } = usePageBanner("home-lockers");
+  const { data: urinalBanner } = usePageBanner("home-urinal-partitions");
+  const { data: kidsBanner } = usePageBanner("home-kids-cubicles");
   const [showCatalogViewer, setShowCatalogViewer] = useState(false);
   const [currentMain, setCurrentMain] = useState<string | null>(null);
   const [activeColorIdx, setActiveColorIdx] = useState(0);
+
+  const catSlug = toCategorySlug(product?.category);
+  const modelHeroBg = (() => {
+    if (catSlug === "lockers") {
+      return lockersBanner?.image_url || CATEGORY_BANNERS["lockers"].fallbackImage;
+    }
+    if (catSlug === "urinal-partitions") {
+      return urinalBanner?.image_url || CATEGORY_BANNERS["urinal-partitions"].fallbackImage;
+    }
+    if (catSlug === "kids-cubicles") {
+      return kidsBanner?.image_url || CATEGORY_BANNERS["kids-cubicles"].fallbackImage;
+    }
+    return cubiclesBanner?.image_url || CATEGORY_BANNERS["restroom-cubicles"].fallbackImage;
+  })();
 
   // Guard: if slug is a category name or typo alias, redirect appropriately
   useEffect(() => {
@@ -250,8 +287,19 @@ export default function ProductDetailPage() {
 
       {/* ═══════════════════ HERO — DARK IMMERSIVE ═══════════════════ */}
       <section className="relative bg-[#030213] text-white overflow-hidden">
+        {modelHeroBg && (
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <img
+              src={modelHeroBg}
+              alt=""
+              aria-hidden="true"
+              className="w-full h-full object-cover object-center scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#030213]/90 via-[#030213]/85 to-[#030213]" />
+          </div>
+        )}
         {/* Subtle background pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "repeating-linear-gradient(0deg, #7FB706 0px, transparent 1px, transparent 60px), repeating-linear-gradient(90deg, #7FB706 0px, transparent 1px, transparent 60px)" }} />
+        <div className="absolute inset-0 opacity-[0.03] z-0" style={{ backgroundImage: "repeating-linear-gradient(0deg, #7FB706 0px, transparent 1px, transparent 60px), repeating-linear-gradient(90deg, #7FB706 0px, transparent 1px, transparent 60px)" }} />
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 pb-16 sm:pb-20 relative z-10">
           {/* Breadcrumb */}
