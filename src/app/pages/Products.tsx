@@ -29,7 +29,7 @@ const CATEGORY_DEFINITIONS: Record<string, CategoryMeta> = {
     key: "restroom-cubicles",
     name: "Restroom Cubicles",
     slug: "restroom-cubicles",
-    seoTitle: "Restroom Cubicles Manufacturer in India | Pacific Products",
+    seoTitle: "Pacific® Restroom Cubicles & Toilet Partitions Manufacturer in India | Pacific Products",
     seoDescription: "Buy premium 12mm & 18mm compact laminate restroom cubicles with Grade 304 SS hardware. 10-year warranty, pan-India delivery & installation. Request a quote now.",
     h1Title: "Commercial Restroom Cubicle Systems & Toilet Partitions",
     title: "Commercial Restroom Cubicle Systems",
@@ -40,7 +40,7 @@ const CATEGORY_DEFINITIONS: Record<string, CategoryMeta> = {
     key: "lockers",
     name: "Lockers",
     slug: "lockers",
-    seoTitle: "Modular HPL Locker Systems Manufacturer India | Pacific",
+    seoTitle: "Pacific® Modular HPL Locker Systems Manufacturer India | Pacific Products",
     seoDescription: "Heavy-duty phenolic compact laminate lockers for gyms, schools & corporate offices. Rust-proof, digital lock options & 10-year warranty. Request CAD BOQ today.",
     h1Title: "Modular Compact Laminate Locker Systems for Commercial Spaces",
     title: "Modular HPL Locker Systems",
@@ -51,7 +51,7 @@ const CATEGORY_DEFINITIONS: Record<string, CategoryMeta> = {
     key: "urinal-partitions",
     name: "Urinal Partitions",
     slug: "urinal-partitions",
-    seoTitle: "Urinal Partition Screens Manufacturer in India | Pacific",
+    seoTitle: "Pacific® Urinal Partition Screens Manufacturer in India | Pacific Products",
     seoDescription: "Waterproof, anti-bacterial compact laminate urinal modesty partition screens. Cantilever wall-hung & floor-mounted options. Fast pan-India supply. Get pricing.",
     h1Title: "Hygienic Compact Laminate Urinal Partition Modesty Screens",
     title: "Urinal Partition Screens",
@@ -132,11 +132,11 @@ export default function ProductsPage({ categorySlug: propCategorySlug }: Product
 
   const pageTitle = activeCategoryMeta
     ? activeCategoryMeta.seoTitle
-    : "Commercial Restroom Cubicles & Locker Catalog | Pacific";
+    : "Pacific® Restroom Cubicles, Lockers & Partitions Catalog | Pacific Products";
 
   const pageDescription = activeCategoryMeta
     ? activeCategoryMeta.seoDescription
-    : "Explore India's complete range of compact laminate restroom cubicles, school kids cubicles, urinal partitions & modular lockers. Direct manufacturer factory BOQ.";
+    : "Pacific Products & Solutions offers India's premier range of compact laminate restroom cubicles, school kids cubicles, urinal partitions & modular lockers. Direct factory pricing.";
 
   const heroTitle = activeCategoryMeta ? activeCategoryMeta.h1Title : "Commercial Restroom Cubicles, Lockers & Partitions Catalog";
   const heroSubtitle = activeCategoryMeta

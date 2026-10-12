@@ -253,7 +253,7 @@ export const demoProducts: Product[] = [
   },
   {
     id: "prod-cubicle-platinawave-009",
-    slug: "cubicle-platina-wave",
+    slug: "platina-wave",
     title: "Platina Wave Restroom Cubicle",
     subtitle: "Designer Wave-Top Variation of Platina Flagship",
     description: "Designer wave-top variation of Platina flagship with continuous wave profile and heavy-duty box extrusions.",

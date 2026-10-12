@@ -6,7 +6,6 @@ import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 
 const CONSENT_KEY = "pacific_cookie_v2";
 const DISMISS_KEY = "pacific_cookie_dismissed_until";
-const THIRTY_MINUTES_MS = 30 * 60 * 1000; // 30 minutes in milliseconds
 
 // ── Device helpers ────────────────────────────────────────────────────────────
 
@@ -79,33 +78,18 @@ export default function CookieConsent() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [saving, setSaving] = useState(false);
-  const declineCount = useRef(0);
-  const retryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // 1. If consent is already permanently accepted, never display
-    if (localStorage.getItem(CONSENT_KEY)) return;
-
-    // 2. Check if previously dismissed and 30 minutes have not elapsed
+    // 1. If consent is already decided (accepted, declined, or dismissed), NEVER display again
     try {
-      const dismissedUntilRaw = localStorage.getItem(DISMISS_KEY);
-      const dismissedUntil = dismissedUntilRaw ? parseInt(dismissedUntilRaw, 10) : 0;
-      const now = Date.now();
-
-      if (dismissedUntil && now < dismissedUntil) {
-        // 30-minute window active: schedule appearance exactly when 30 minutes expire
-        const remaining = dismissedUntil - now;
-        retryTimer.current = setTimeout(() => {
-          if (!localStorage.getItem(CONSENT_KEY)) {
-            setStep("consent");
-            window.dispatchEvent(new CustomEvent("cookie-consent-change", { detail: { active: true } }));
-          }
-        }, remaining);
+      if (localStorage.getItem(CONSENT_KEY) || localStorage.getItem(DISMISS_KEY)) {
         return;
       }
-    } catch { /* silent */ }
+    } catch {
+      return;
+    }
 
-    // 3. Otherwise show initial consent prompt after gentle delay (1600ms)
+    // 2. Otherwise show initial consent prompt strictly ONCE after delay (1600ms)
     const t = setTimeout(() => {
       setStep("consent");
       window.dispatchEvent(new CustomEvent("cookie-consent-change", { detail: { active: true } }));
@@ -113,37 +97,24 @@ export default function CookieConsent() {
     return () => clearTimeout(t);
   }, []);
 
-  // Clean up retry timer on unmount
-  useEffect(() => {
-    return () => {
-      if (retryTimer.current) clearTimeout(retryTimer.current);
-    };
-  }, []);
-
   const handleDecline = () => {
     saveLead({ consent_given: false });
     setStep(null);
 
-    // Set 30 minutes from now (1,800,000 ms) before it auto-reappears
-    const nextShowTimestamp = Date.now() + THIRTY_MINUTES_MS;
+    // Persist permanently so it NEVER appears again
     try {
-      localStorage.setItem(DISMISS_KEY, nextShowTimestamp.toString());
+      localStorage.setItem(CONSENT_KEY, JSON.stringify({ consent: false, ts: Date.now() }));
+      localStorage.setItem(DISMISS_KEY, "permanent");
       window.dispatchEvent(new CustomEvent("cookie-consent-change", { detail: { active: false } }));
     } catch { /* silent */ }
-
-    if (retryTimer.current) clearTimeout(retryTimer.current);
-    retryTimer.current = setTimeout(() => {
-      if (!localStorage.getItem(CONSENT_KEY)) {
-        setStep("consent");
-        window.dispatchEvent(new CustomEvent("cookie-consent-change", { detail: { active: true } }));
-      }
-    }, THIRTY_MINUTES_MS);
   };
 
   const handleAccept = () => {
     saveLead({ consent_given: true });
+    // Persist consent immediately so it NEVER re-appears on refresh or navigation
     try {
-      localStorage.removeItem(DISMISS_KEY);
+      localStorage.setItem(CONSENT_KEY, JSON.stringify({ consent: true, ts: Date.now() }));
+      localStorage.setItem(DISMISS_KEY, "permanent");
     } catch { /* silent */ }
     setStep("newsletter");
   };
@@ -160,9 +131,9 @@ export default function CookieConsent() {
     if (!skip && email.trim()) {
       await saveLead({ consent_given: true, email: email.trim() });
     }
-    localStorage.setItem(CONSENT_KEY, JSON.stringify({ consent: true, ts: Date.now() }));
     try {
-      localStorage.removeItem(DISMISS_KEY);
+      localStorage.setItem(CONSENT_KEY, JSON.stringify({ consent: true, ts: Date.now() }));
+      localStorage.setItem(DISMISS_KEY, "permanent");
       window.dispatchEvent(new CustomEvent("cookie-consent-change", { detail: { active: false } }));
     } catch { /* silent */ }
     setSaving(false);

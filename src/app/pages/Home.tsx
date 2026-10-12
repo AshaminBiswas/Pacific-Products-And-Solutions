@@ -126,15 +126,6 @@ type SearchResultItem = {
   url: string;
 };
 
-type AIRecommendation = {
-  title: string;
-  reason: string;
-  url: string;
-};
-
-// NVIDIA API key is injected server-side by the Vercel function (production)
-// or the Vite dev proxy (development). The client never holds the key.
-
 // ── Hero Section (extracted as its own component) ─────────────
 
 function HeroSection() {
@@ -149,14 +140,11 @@ function HeroSection() {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [allSolutions, setAllSolutions] = useState<Solution[]>([]);
   const [filteredResults, setFilteredResults] = useState<SearchResultItem[]>([]);
-  const [aiRecommendations, setAiRecommendations] = useState<AIRecommendation[]>([]);
-  const [isAISearching, setIsAISearching] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 });
   const searchRef = useRef<HTMLDivElement>(null);
-  const aiDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Update dropdown position relative to form (for portal rendering)
@@ -215,54 +203,12 @@ function HeroSection() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ── AI recommendations ──
-  const fetchAIRecommendations = useCallback(async (query: string) => {
-    setIsAISearching(true);
-    try {
-      const productList = allProducts.map((p) => {
-        const catSlug = p.category
-          ? p.category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
-          : "";
-        return `- ${p.title} (${p.category ?? "General"}) | URL: ${catSlug ? `/products/${catSlug}/${p.slug}` : `/products/${p.slug}`}`;
-      }).join("\n");
-      const solutionList = allSolutions.map((s) => `- ${s.title} | URL: /solutions/${s.slug}`).join("\n");
-
-      const prompt = `You are a product search assistant for Pacific Products & Solutions, a B2B company selling restroom cubicles, locker systems, urinal partitions, and interior solutions.\n\nUser searched for: "${query}"\n\nAvailable Products:\n${productList || "(none)"}\n\nAvailable Solutions:\n${solutionList || "(none)"}\n\nReturn 1-3 most relevant recommendations as a JSON array (raw JSON only, no markdown):\n[{"title": "Name", "reason": "Brief reason max 8 words", "url": "/exact/url"}]\n\nReturn [] if nothing matches. Only use URLs from the lists above.`;
-
-      const res = await fetch("/api/nvidia/v1/chat/completions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.3,
-          max_tokens: 256,
-          chat_template_kwargs: { enable_thinking: false },
-        }),
-      });
-
-      if (!res.ok) return;
-      const data = await res.json();
-      const text: string = data.choices?.[0]?.message?.content ?? "[]";
-      const jsonMatch = text.match(/\[.*\]/s);
-      if (jsonMatch) {
-        const recs: AIRecommendation[] = JSON.parse(jsonMatch[0]);
-        setAiRecommendations(recs.slice(0, 3));
-      }
-    } catch {
-      // silent fail
-    } finally {
-      setIsAISearching(false);
-    }
-  }, [allProducts, allSolutions]);
-
   // ── Local filter on every keystroke ──
   useEffect(() => {
     setIsExpanded(false); // Reset expansion on new query
     const q = searchQuery.trim().toLowerCase();
     if (!q) {
       setFilteredResults([]);
-      setAiRecommendations([]);
       setShowDropdown(false);
       return;
     }
@@ -305,13 +251,7 @@ function HeroSection() {
 
     setFilteredResults([...productResults, ...solutionResults]);
     setShowDropdown(true);
-
-    // Debounce AI request
-    if (aiDebounceRef.current) clearTimeout(aiDebounceRef.current);
-    if (q.length >= 3) {
-      aiDebounceRef.current = setTimeout(() => fetchAIRecommendations(q), 700);
-    }
-  }, [searchQuery, allProducts, allSolutions, fetchAIRecommendations]);
+  }, [searchQuery, allProducts, allSolutions]);
 
   const handleResultClick = (url: string) => {
     setShowDropdown(false);
@@ -384,7 +324,7 @@ function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Restroom Cubicles &amp; Toilet Partitions Manufacturer in India
+          Pacific Restroom Cubicles &amp; Toilet Partitions Manufacturer in India
         </motion.h1>
 
         {/* Description */}
@@ -401,7 +341,7 @@ function HeroSection() {
           </motion.p>
         )}
 
-        {/* ── AI Search Bar ── */}
+        {/* ── Search Bar ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -450,20 +390,10 @@ function HeroSection() {
                 </button>
               )}
 
-              {/* AI badge */}
-              <div className="relative z-10 flex items-center gap-1.5 mr-2 px-2.5 py-1.5 rounded-lg bg-[#7FB706]/20 border border-[#7FB706]/30 flex-shrink-0">
-                {isAISearching
-                  ? <Loader2 className="w-3.5 h-3.5 text-[#B5F823] animate-spin" />
-                  : <Sparkles className="w-3.5 h-3.5 text-[#B5F823]" />}
-                <span className="text-[11px] font-semibold text-[#B5F823] hidden sm:block">
-                  {isAISearching ? "Thinking…" : "AI"}
-                </span>
-              </div>
-
               {/* Search button */}
               <button
                 type="submit"
-                className="relative z-10 mr-2 px-4 py-2 rounded-xl bg-[#7FB706] hover:bg-[#6fa005] text-white text-sm font-semibold transition-all duration-200 active:scale-95 whitespace-nowrap hidden sm:block"
+                className="relative z-10 mr-2 px-5 py-2.5 rounded-xl bg-[#7FB706] hover:bg-[#6fa005] text-white text-sm font-semibold transition-all duration-200 active:scale-95 whitespace-nowrap hidden sm:block"
               >
                 Search
               </button>
@@ -476,7 +406,7 @@ function HeroSection() {
                motion.div's animated opacity stacking context. */}
           {createPortal(
             <AnimatePresence>
-              {showDropdown && (filteredResults.length > 0 || aiRecommendations.length > 0 || isAISearching) && (
+              {showDropdown && (filteredResults.length > 0 || searchQuery.trim().length > 0) && (
                 <motion.div
                   key="search-results-dropdown"
                   initial={{ opacity: 0, y: -8, scale: 0.98 }}
@@ -553,58 +483,8 @@ function HeroSection() {
                       </div>
                     )}
 
-                    {/* Divider */}
-                    {filteredResults.length > 0 && (aiRecommendations.length > 0 || isAISearching) && (
-                      <div className="mx-4 border-t border-white/8 my-1" />
-                    )}
-
-                    {/* AI Recommendations */}
-                    {(aiRecommendations.length > 0 || isAISearching) && (
-                      <div className="px-3 pt-2 pb-3">
-                        <div className="flex items-center gap-1.5 px-2 mb-2">
-                          <Sparkles className="w-3 h-3 text-[#B5F823]" />
-                          <p className="text-[10px] font-bold text-[#B5F823] uppercase tracking-widest">AI Picks</p>
-                          {isAISearching && <Loader2 className="w-3 h-3 text-[#B5F823] animate-spin ml-1" />}
-                        </div>
-
-                        {isAISearching && aiRecommendations.length === 0 ? (
-                          <div className="flex items-center gap-2 px-2 py-3">
-                            <div className="flex gap-1">
-                              {[0, 0.15, 0.3].map((d, i) => (
-                                <motion.div
-                                  key={i}
-                                  className="w-1.5 h-1.5 rounded-full bg-[#7FB706]/60"
-                                  animate={{ opacity: [0.4, 1, 0.4] }}
-                                  transition={{ duration: 0.9, repeat: Infinity, delay: d }}
-                                />
-                              ))}
-                            </div>
-                            <span className="text-[11px] text-white/35">Generating AI suggestions…</span>
-                          </div>
-                        ) : (
-                          aiRecommendations.map((rec, i) => (
-                            <motion.button
-                              key={i}
-                              onClick={() => handleResultClick(rec.url)}
-                              whileHover={{ x: 3 }}
-                              className="w-full flex items-start gap-2.5 p-2.5 rounded-xl hover:bg-white/5 transition-colors text-left group"
-                            >
-                              <div className="w-7 h-7 rounded-lg bg-[#7FB706]/15 border border-[#7FB706]/25 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                <Sparkles className="w-3.5 h-3.5 text-[#B5F823]" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-semibold text-white/90 group-hover:text-[#B5F823] transition-colors truncate">{rec.title}</p>
-                                <p className="text-[11px] text-white/38 mt-0.5">{rec.reason}</p>
-                              </div>
-                              <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-[#7FB706] transition-colors flex-shrink-0 mt-1" />
-                            </motion.button>
-                          ))
-                        )}
-                      </div>
-                    )}
-
                     {/* Empty state */}
-                    {filteredResults.length === 0 && !isAISearching && aiRecommendations.length === 0 && (
+                    {filteredResults.length === 0 && searchQuery.trim().length > 0 && (
                       <div className="px-5 py-6 text-center">
                         <Search className="w-8 h-8 text-white/12 mx-auto mb-2" />
                         <p className="text-sm text-white/38">No results for <span className="text-white/55 font-medium">"{searchQuery}"</span></p>
@@ -1045,27 +925,27 @@ function MaterialEngineeringDeepDive({ navigate }: { navigate: (path: string) =>
             </div>
           </div>
 
-          {/* Card 3: 3D Visualizer & Customization */}
+          {/* Card 3: Turnkey BOQ & Project Specification */}
           <div className="bg-gradient-to-br from-[#121226] to-[#0a0a1a] rounded-3xl p-6 sm:p-8 border border-white/10 shadow-lg space-y-6 flex flex-col justify-between text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#7FB706]/10 rounded-full blur-3xl pointer-events-none" />
 
             <div className="space-y-4 relative z-10">
               <div className="w-12 h-12 rounded-2xl bg-[#B5F823]/10 border border-[#B5F823]/20 flex items-center justify-center text-[#B5F823]">
-                <Box className="w-6 h-6" />
+                <FileText className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-white">
-                Interactive 3D Configurator
+                Turnkey BOQ &amp; Project Specification
               </h3>
               <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                Design your commercial restroom layout directly in your browser. Select compact board thicknesses, test finish swatches, choose hardware grades, and export your setup.
+                Direct factory manufacturing with comprehensive architectural BOQ support, CAD layout assistance, custom dimensions, and pan-India turnkey installation.
               </p>
 
               <div className="space-y-2.5 pt-2">
                 {[
-                  "Live 3D cubicle model rendering",
-                  "Finish swatches: Woodgrains, solids & textures",
-                  "Hardware finish toggles (Golden, Black, SS)",
-                  "Instant specification summary & BOQ ready",
+                  "Detailed CAD layout & custom dimension planning",
+                  "Finish swatches: Solid phenolic, woodgrains & textures",
+                  "Hardware finish options: Golden PVD, Black & SS 304",
+                  "Express Pan-India delivery & site installation",
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2.5 text-xs text-gray-300">
                     <Check className="w-4 h-4 text-[#7FB706] shrink-0" />
@@ -1079,9 +959,9 @@ function MaterialEngineeringDeepDive({ navigate }: { navigate: (path: string) =>
               <Button
                 size="lg"
                 className="w-full bg-[#7FB706] hover:bg-[#6fa005] text-black font-bold flex items-center justify-center gap-2"
-                onClick={() => navigate("/configure-cubicle")}
+                onClick={() => navigate("/contact")}
               >
-                <span>Launch 3D Configurator</span>
+                <span>Request Project BOQ</span>
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </div>
@@ -1427,9 +1307,9 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       <SEO
-        title="Restroom Cubicles & Partitions Manufacturer India | Pacific"
-        description="India's premier manufacturer of HPL restroom cubicles, modular lockers & urinal partitions. ISO 9001 certified. Get direct factory pricing & turnkey BOQ today."
-        keywords={`${DEFAULT_KEYWORDS}, restroom cubicles manufacturer Delhi, toilet partitions manufacturer India, urinal partitions manufacturer India, HPL cubicle system, locker system supplier India, compact laminate partitions`}
+        title="Pacific® Restroom Cubicles & Toilet Partitions Manufacturer in India"
+        description="Pacific Products & Solutions is India's leading manufacturer of premium restroom cubicles, toilet partitions, modular lockers & urinal screens. ISO 9001 certified. Turnkey BOQ, CAD layouts & Pan-India installation."
+        keywords={`pacific, pacific cubicles, pacific restroom cubicles, pacific toilet partitions, pacific products, pacific partitions, pacific solutions, ${DEFAULT_KEYWORDS}, restroom cubicles manufacturer Delhi, toilet partitions manufacturer India, urinal partitions manufacturer India, HPL cubicle system, locker system supplier India, compact laminate partitions`}
         canonical="/"
         jsonLd={[
           organizationSchema(),

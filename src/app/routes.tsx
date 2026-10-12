@@ -3,7 +3,6 @@ import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { ScrollToTop } from "./components/ScrollToTop";
 import CookieConsent from "./components/CookieConsent";
-import { Chatbot } from "./components/Chatbot";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Suspense, lazy } from "react";
 import {
@@ -35,8 +34,6 @@ const FAQ = lazy(() => import("./pages/FAQ"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const Downloads = lazy(() => import("./pages/Downloads"));
-const ConfigureCubicle = lazy(() => import("./pages/ConfigureCubicle"));
-const ProductDesigner = lazy(() => import("./pages/ProductDesigner"));
 const PublicVerifyPage = lazy(() => import("./pages/PublicVerifyPage"));
 
 // ── Lazy-loaded Admin Pages ───────────────────────────────────────────────
@@ -69,9 +66,6 @@ function Layout() {
 
       {/* Cookie Consent Popup */}
       <CookieConsent />
-
-      {/* Custom Chatbot */}
-      <Chatbot />
     </div>
   );
 }
@@ -315,20 +309,12 @@ export const router = createBrowserRouter([
   },
   {
     path: "/configure-cubicle",
-    element: (
-      <Suspense fallback={<PageSkeleton />}>
-        <ConfigureCubicle />
-      </Suspense>
-    ),
+    element: <Navigate to="/products" replace />,
   },
-  ...(import.meta.env.DEV ? [{
+  {
     path: "/design-studio",
-    element: (
-      <Suspense fallback={<PageSkeleton />}>
-        <ProductDesigner />
-      </Suspense>
-    ),
-  }] : []),
+    element: <Navigate to="/products" replace />,
+  },
   {
     path: "/admin",
     element: (

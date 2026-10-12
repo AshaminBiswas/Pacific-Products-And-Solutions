@@ -88,16 +88,22 @@ export default function ProductDetailPage() {
   const { slug, productSlug, categorySlug } = useParams<{ slug: string; productSlug: string; categorySlug: string }>();
   const navigate = useNavigate();
   // Support both route patterns: /products/:slug and /products/:categorySlug/:productSlug
-  const lookupSlug = productSlug || slug;
+  const rawSlug = productSlug || slug;
+  const lookupSlug = rawSlug === "plarina-wave" || rawSlug === "cubicle-platina-wave" ? "platina-wave" : rawSlug;
   const { data: product, loading } = useProduct(lookupSlug);
   const { data: catalogs } = useCatalogs(product?.id || undefined);
   const [showCatalogViewer, setShowCatalogViewer] = useState(false);
   const [currentMain, setCurrentMain] = useState<string | null>(null);
   const [activeColorIdx, setActiveColorIdx] = useState(0);
 
-  // Guard: if slug is a category name (e.g. /products/restroom-cubicles), redirect to category page
+  // Guard: if slug is a category name or typo alias, redirect appropriately
   useEffect(() => {
     const raw = (slug || "").toLowerCase().trim();
+    const prodRaw = (productSlug || "").toLowerCase().trim();
+    if (raw === "plarina-wave" || raw === "cubicle-platina-wave" || prodRaw === "plarina-wave" || prodRaw === "cubicle-platina-wave") {
+      navigate("/products/restroom-cubicles/platina-wave", { replace: true });
+      return;
+    }
     if (raw === "kids-toilet" || raw === "kids-cubicle") {
       navigate("/products/kids-cubicles", { replace: true });
       return;

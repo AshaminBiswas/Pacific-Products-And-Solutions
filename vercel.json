@@ -68,7 +68,32 @@
     },
     {
       "source": "/products/restroom-cubicles/plarina-wave",
-      "destination": "/products/restroom-cubicles/cubicle-platina-wave",
+      "destination": "/products/restroom-cubicles/platina-wave",
+      "permanent": true
+    },
+    {
+      "source": "/products/restroom-cubicles/cubicle-platina-wave",
+      "destination": "/products/restroom-cubicles/platina-wave",
+      "permanent": true
+    },
+    {
+      "source": "/products/plarina-wave",
+      "destination": "/products/restroom-cubicles/platina-wave",
+      "permanent": true
+    },
+    {
+      "source": "/products/platina-wave",
+      "destination": "/products/restroom-cubicles/platina-wave",
+      "permanent": true
+    },
+    {
+      "source": "/configure-cubicle",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/design-studio",
+      "destination": "/products",
       "permanent": true
     },
     {
