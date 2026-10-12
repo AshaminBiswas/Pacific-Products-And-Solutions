@@ -192,7 +192,7 @@ export default function FAQPage() {
         <section className="relative w-full h-[36vh] min-h-[240px] overflow-hidden">
           <ImageWithFallback
             src={banner.image_url}
-            alt="FAQ banner"
+            alt={banner.alt_text || "Pacific Restroom Cubicles Frequently Asked Questions"}
             className="absolute inset-0 w-full h-full object-cover"
             priority
           />

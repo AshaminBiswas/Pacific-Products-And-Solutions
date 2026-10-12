@@ -45,6 +45,7 @@ export default function ContactPage() {
         subtitle="Get in touch with our team for quotes, project consultations, or any inquiries. We're ready to help you create better commercial spaces."
         breadcrumb="Contact Us"
         backgroundImage={banner?.image_url}
+        backgroundAlt={banner?.alt_text || "Contact Pacific Products & Solutions Restroom Cubicles"}
       />
 
       {/* Contact Form & Info */}

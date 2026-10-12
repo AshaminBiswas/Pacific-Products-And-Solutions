@@ -52,7 +52,7 @@ import { useHeroImages, usePageBanner } from "../../lib/hooks";
 // ── Hero Background Slideshow ─────────────────────────────────
 
 interface HeroSlideshowProps {
-  images: { url: string; description: string }[];
+  images: { url: string; description: string; alt_text?: string | null }[];
   onSlideChange: (index: number) => void;
 }
 
@@ -82,8 +82,7 @@ function HeroSlideshow({ images, onSlideChange }: HeroSlideshowProps) {
         <img
           key={img.url}
           src={img.url}
-          alt=""
-          aria-hidden="true"
+          alt={img.alt_text || img.description || `Pacific Restroom Cubicles & Toilet Partitions Slide ${i + 1}`}
           className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000"
           style={{ opacity: i === current ? 1 : 0 }}
         />
@@ -276,7 +275,7 @@ function HeroSection() {
       {/* Hero Background */}
       {heroImages.length > 0 ? (
         <HeroSlideshow
-          images={heroImages.map((img) => ({ url: img.url, description: img.description }))}
+          images={heroImages.map((img) => ({ url: img.url, description: img.description, alt_text: img.alt_text }))}
           onSlideChange={setCurrentSlide}
         />
       ) : (
@@ -653,7 +652,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
                   src={cubiclesBanner?.image_url || "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"}
-                  alt="Commercial Restroom Cubicle Systems"
+                  alt={cubiclesBanner?.alt_text || "Commercial Restroom Cubicle Systems - Pacific"}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -698,7 +697,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
                   src={lockersBanner?.image_url || "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80"}
-                  alt="Modular HPL Lockers"
+                  alt={lockersBanner?.alt_text || "Modular HPL Locker Systems - Pacific"}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -743,7 +742,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
                   src={urinalBanner?.image_url || "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80"}
-                  alt="Urinal Partitions"
+                  alt={urinalBanner?.alt_text || "Hygienic Compact Laminate Urinal Partitions - Pacific"}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -785,7 +784,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
                   src={kidsBanner?.image_url || "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=80"}
-                  alt="Kids & Preschool Toilet Cubicles"
+                  alt={kidsBanner?.alt_text || "Child-Safe Kids Restroom Cubicles - Pacific"}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />

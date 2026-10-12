@@ -120,17 +120,29 @@ export default function ProductDetailPage() {
   const [activeColorIdx, setActiveColorIdx] = useState(0);
 
   const catSlug = toCategorySlug(product?.category);
-  const modelHeroBg = (() => {
+  const { modelHeroBg, modelHeroAlt } = (() => {
     if (catSlug === "lockers") {
-      return lockersBanner?.image_url || CATEGORY_BANNERS["lockers"].fallbackImage;
+      return {
+        modelHeroBg: lockersBanner?.image_url || CATEGORY_BANNERS["lockers"].fallbackImage,
+        modelHeroAlt: lockersBanner?.alt_text || `${product?.title || "Modular Lockers"} - Pacific Restroom Cubicles & Lockers`,
+      };
     }
     if (catSlug === "urinal-partitions") {
-      return urinalBanner?.image_url || CATEGORY_BANNERS["urinal-partitions"].fallbackImage;
+      return {
+        modelHeroBg: urinalBanner?.image_url || CATEGORY_BANNERS["urinal-partitions"].fallbackImage,
+        modelHeroAlt: urinalBanner?.alt_text || `${product?.title || "Urinal Partitions"} - Pacific Restroom Cubicles`,
+      };
     }
     if (catSlug === "kids-cubicles") {
-      return kidsBanner?.image_url || CATEGORY_BANNERS["kids-cubicles"].fallbackImage;
+      return {
+        modelHeroBg: kidsBanner?.image_url || CATEGORY_BANNERS["kids-cubicles"].fallbackImage,
+        modelHeroAlt: kidsBanner?.alt_text || `${product?.title || "Kids Cubicles"} - Pacific Restroom Cubicles`,
+      };
     }
-    return cubiclesBanner?.image_url || CATEGORY_BANNERS["restroom-cubicles"].fallbackImage;
+    return {
+      modelHeroBg: cubiclesBanner?.image_url || CATEGORY_BANNERS["restroom-cubicles"].fallbackImage,
+      modelHeroAlt: cubiclesBanner?.alt_text || `${product?.title || "Commercial Restroom Cubicles"} - Pacific`,
+    };
   })();
 
   // Guard: if slug is a category name or typo alias, redirect appropriately
@@ -291,8 +303,7 @@ export default function ProductDetailPage() {
           <div className="absolute inset-0 z-0 pointer-events-none">
             <img
               src={modelHeroBg}
-              alt=""
-              aria-hidden="true"
+              alt={modelHeroAlt}
               className="w-full h-full object-cover object-center scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-[#030213]/90 via-[#030213]/85 to-[#030213]" />

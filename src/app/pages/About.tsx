@@ -171,6 +171,7 @@ export default function AboutPage() {
         subtitle="12+ years of excellence in B2B interior contracting — delivering premium restroom cubicles, locker systems, and interior solutions across India."
         breadcrumb="About Us"
         backgroundImage={banner?.image_url}
+        backgroundAlt={banner?.alt_text || "Pacific Restroom Cubicles & Commercial Infrastructure Solutions"}
       />
 
       {/* ═══ STATS ═══ */}

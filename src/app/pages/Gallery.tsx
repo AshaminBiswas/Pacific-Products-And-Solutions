@@ -71,6 +71,7 @@ export default function GalleryPage() {
         subtitle="Browse our portfolio of completed commercial projects — restroom cubicles, urinal partitions, locker installations, and interior solutions across India."
         breadcrumb="Gallery"
         backgroundImage={banner?.image_url}
+        backgroundAlt={banner?.alt_text || "Pacific Restroom Cubicles Commercial Project Gallery"}
       />
 
       {/* Filter Section */}

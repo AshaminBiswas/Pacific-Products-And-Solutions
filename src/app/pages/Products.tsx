@@ -217,14 +217,19 @@ export default function ProductsPage({ categorySlug: propCategorySlug }: Product
       {/* Hero Banner */}
       {(() => {
         let activeHeroBackground = generalBanner?.image_url;
+        let activeHeroAlt = generalBanner?.alt_text || "Pacific Restroom Cubicles Commercial Catalog";
         if (activeSlug === "restroom-cubicles") {
           activeHeroBackground = cubiclesBanner?.image_url || CATEGORY_BANNERS["restroom-cubicles"].fallbackImage;
+          activeHeroAlt = cubiclesBanner?.alt_text || "Commercial Restroom Cubicles & Toilet Partitions - Pacific";
         } else if (activeSlug === "lockers") {
           activeHeroBackground = lockersBanner?.image_url || CATEGORY_BANNERS["lockers"].fallbackImage;
+          activeHeroAlt = lockersBanner?.alt_text || "Modular Compact Laminate Locker Systems - Pacific";
         } else if (activeSlug === "urinal-partitions") {
           activeHeroBackground = urinalBanner?.image_url || CATEGORY_BANNERS["urinal-partitions"].fallbackImage;
+          activeHeroAlt = urinalBanner?.alt_text || "Hygienic Compact Laminate Urinal Partitions - Pacific";
         } else if (activeSlug === "kids-cubicles") {
           activeHeroBackground = kidsBanner?.image_url || CATEGORY_BANNERS["kids-cubicles"].fallbackImage;
+          activeHeroAlt = kidsBanner?.alt_text || "Child-Safe Kids Restroom Cubicles - Pacific";
         }
 
         return (
@@ -234,6 +239,7 @@ export default function ProductsPage({ categorySlug: propCategorySlug }: Product
             subtitle={heroSubtitle}
             breadcrumb={heroBreadcrumb}
             backgroundImage={activeHeroBackground}
+            backgroundAlt={activeHeroAlt}
           />
         );
       })()}

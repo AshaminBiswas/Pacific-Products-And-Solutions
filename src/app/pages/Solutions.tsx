@@ -48,6 +48,7 @@ export default function SolutionsPage() {
         subtitle="Tailored interior solutions for corporates, malls, airports, hospitals, schools, and commercial infrastructure projects across India."
         breadcrumb="Solutions"
         backgroundImage={banner?.image_url}
+        backgroundAlt={banner?.alt_text || "Pacific Commercial Restroom Cubicles & Partition Solutions"}
       />
 
       {/* ── Category Filter Chips ── */}

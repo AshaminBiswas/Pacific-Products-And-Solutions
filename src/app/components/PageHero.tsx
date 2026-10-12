@@ -8,6 +8,7 @@ interface PageHeroProps {
   breadcrumb: string;
   accentWord?: string;        // optional word in title to highlight in brand green
   backgroundImage?: string;   // DB banner image URL — used as hero background
+  backgroundAlt?: string;     // Alt text for image SEO & accessibility
 }
 
 function Particles() {
@@ -44,7 +45,7 @@ function Particles() {
   );
 }
 
-export function PageHero({ title, subtitle, breadcrumb, accentWord, backgroundImage }: PageHeroProps) {
+export function PageHero({ title, subtitle, breadcrumb, accentWord, backgroundImage, backgroundAlt }: PageHeroProps) {
   const renderTitle = () => {
     if (!accentWord) return <span>{title}</span>;
     const parts = title.split(accentWord);
@@ -70,8 +71,7 @@ export function PageHero({ title, subtitle, breadcrumb, accentWord, backgroundIm
         >
           <img
             src={backgroundImage}
-            alt=""
-            aria-hidden="true"
+            alt={backgroundAlt || `${title} - Pacific Restroom Cubicles`}
             className="absolute inset-0 w-full h-full object-cover object-center"
           />
         </motion.div>
