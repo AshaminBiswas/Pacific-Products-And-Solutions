@@ -151,7 +151,7 @@ export default function AboutPage() {
     <div className="min-h-screen pt-20 bg-transparent dark:bg-[#030213] transition-colors">
       <SEO
         title="About Pacific Products & Solutions | ISO Certified Restroom Cubicle Manufacturer"
-        description="Pacific Products & Solutions — ISO 9001:2015 certified manufacturer of restroom cubicles, toilet partitions, exterior cladding & locker systems. 12+ years, 600+ projects, offices across India. Learn about our story, team, and quality commitment."
+        description="Pacific Products & Solutions — ISO 9001:2015 certified manufacturer of restroom cubicles, toilet partitions, urinal screens & locker systems. 12+ years, 600+ projects, offices across India. Learn about our story, team, and quality commitment."
         keywords={`${DEFAULT_KEYWORDS}, about Pacific Products and Solutions, ISO certified cubicle manufacturer India, B2B interior contracting company Delhi, restroom cubicle company 12 years, commercial interior solutions India, turnkey interior contractor`}
         canonical="/about"
         jsonLd={[
@@ -168,7 +168,7 @@ export default function AboutPage() {
       <PageHero
         title="About Us"
         accentWord="Us"
-        subtitle="12+ years of excellence in B2B interior contracting — delivering premium restroom cubicles, cladding, locker systems, and interior solutions across India."
+        subtitle="12+ years of excellence in B2B interior contracting — delivering premium restroom cubicles, locker systems, and interior solutions across India."
         breadcrumb="About Us"
         backgroundImage={banner?.image_url}
       />
@@ -424,7 +424,7 @@ export default function AboutPage() {
             {[
               { icon: DoorOpen, title: "Restroom Cubicles & Toilet Partitions", desc: "Durable and modern restroom cubicle systems designed for hygiene, privacy, and easy maintenance in commercial environments." },
               { icon: ShowerHead, title: "Shower Cubicles", desc: "Practical shower partition systems suitable for gyms, hostels, wellness centres, institutional spaces, and other moisture-prone environments." },
-              { icon: Layers, title: "Exterior Cladding", desc: "Cladding solutions that enhance building appearance while providing protection against weather exposure and external wear." },
+              { icon: Layers, title: "Urinal Partition Screens", desc: "Hygienic, anti-microbial modesty screens engineered with solid compact laminate and Grade 304 SS brackets for modern washrooms." },
               { icon: Lock, title: "Locker Solutions", desc: "Custom locker systems for offices, schools, gyms, hospitals, and commercial facilities, focusing on security, usability, and clean design." },
               { icon: Cog, title: "Custom Hardware & Accessories", desc: "Strong, precision-made hardware solutions designed for commercial use and long service life." },
               { icon: Factory, title: "Interior Panel Solutions", desc: "Architectural panel systems that add functionality and visual appeal to commercial interiors." },

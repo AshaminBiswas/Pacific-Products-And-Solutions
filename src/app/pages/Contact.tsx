@@ -41,7 +41,7 @@ export default function ContactPage() {
     <div className="min-h-screen pt-20 bg-transparent dark:bg-[#030213] transition-colors">
       <SEO
         title="Contact Pacific Products & Solutions | Get a Quote"
-        description="Request a quote for restroom cubicles, cladding & locker systems. Call +91 98185 92113 or visit our Delhi office. Pan-India installation available."
+        description="Request a quote for restroom cubicles, urinal partitions & locker systems. Call +91 98185 92113 or visit our Delhi office. Pan-India installation available."
         canonical="/contact"
         jsonLd={localBusinessSchema()}
       />

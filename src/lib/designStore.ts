@@ -287,7 +287,7 @@ export const TEMPLATES: DesignTemplate[] = [
 export interface LibraryComponent {
   id: string;
   name: string;
-  category: "Restroom Cubicles" | "Locker Systems" | "Partitions & Screens" | "Cladding & Wall Panels" | "Hardware & Accessories";
+  category: "Restroom Cubicles" | "Locker Systems" | "Partitions & Screens" | "Wall Paneling & Liners" | "Hardware & Accessories";
   type: ObjectType;
   emoji: string;
   description: string;
@@ -413,21 +413,21 @@ export const COMPONENT_LIBRARY: LibraryComponent[] = [
     materialId: "hpl_sage",
   },
 
-  // Cladding & Wall Panels
+  // Wall Paneling & Liners
   {
-    id: "cladding_hpl_wood",
-    name: "Exterior Wood Cladding",
-    category: "Cladding & Wall Panels",
+    id: "panel_hpl_wood",
+    name: "Interior Wood Paneling",
+    category: "Wall Paneling & Liners",
     type: "wall",
     emoji: "🧱",
-    description: "Exterior HPL cladding panel wood grain",
+    description: "Interior HPL wall panel wood grain",
     dimensions: { x: 1220, y: 2440, z: 12 },
     materialId: "hpl_oak",
   },
   {
-    id: "cladding_accent_navy",
+    id: "panel_accent_navy",
     name: "Interior Accent Panel",
-    category: "Cladding & Wall Panels",
+    category: "Wall Paneling & Liners",
     type: "wall",
     emoji: "🟦",
     description: "Decorative deep navy wall panel",
@@ -435,9 +435,9 @@ export const COMPONENT_LIBRARY: LibraryComponent[] = [
     materialId: "hpl_navy",
   },
   {
-    id: "cladding_fluted",
+    id: "panel_fluted",
     name: "Fluted Charcoal Panel",
-    category: "Cladding & Wall Panels",
+    category: "Wall Paneling & Liners",
     type: "wall",
     emoji: "🪵",
     description: "Vertical fluted charcoal wall panel",

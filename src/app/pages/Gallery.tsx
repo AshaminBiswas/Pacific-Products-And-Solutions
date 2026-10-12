@@ -61,14 +61,14 @@ export default function GalleryPage() {
     <div className="min-h-screen pt-20 bg-[#f8f9fa] dark:bg-[#030213] transition-colors selection:bg-[#7FB706]/30">
       <SEO
         title="Project Gallery"
-        description="Browse our portfolio of completed commercial projects — restroom cubicles, exterior cladding, locker installations, and interior solutions across India."
+        description="Browse our portfolio of completed commercial projects — restroom cubicles, urinal partitions, locker installations, and interior solutions across India."
         canonical="/gallery"
       />
       {/* Hero Banner */}
       <PageHero
         title="Project Gallery"
         accentWord="Gallery"
-        subtitle="Browse our portfolio of completed commercial projects — restroom cubicles, exterior cladding, locker installations, and interior solutions across India."
+        subtitle="Browse our portfolio of completed commercial projects — restroom cubicles, urinal partitions, locker installations, and interior solutions across India."
         breadcrumb="Gallery"
         backgroundImage={banner?.image_url}
       />

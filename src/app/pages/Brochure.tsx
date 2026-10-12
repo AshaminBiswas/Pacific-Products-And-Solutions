@@ -20,7 +20,7 @@ export default function Brochure() {
     <div className="min-h-screen bg-transparent dark:bg-[#0a0a1a] text-gray-900 dark:text-white font-sans selection:bg-[#E9FDBF] selection:text-[#7FB706] pt-20 transition-colors">
       <SEO
         title="Product Brochure"
-        description="Download the Pacific Products & Solutions product brochure — detailed specifications for restroom cubicles, cladding systems, lockers, and hardware."
+        description="Download the Pacific Products & Solutions product brochure — detailed specifications for restroom cubicles, urinal partitions, lockers, and hardware."
         canonical="/brochure"
       />
       <div className="w-full max-w-5xl mx-auto shadow-2xl overflow-hidden bg-white dark:bg-[#030213] transition-colors">
@@ -126,7 +126,7 @@ export default function Brochure() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-0.5 bg-gray-200 dark:bg-white/5">
           {[
             { n: "01", t: "Interior Wall Panelling", d: "Premium compact grade laminate panels for offices, hotels, hospitals & residences. Available in 30+ wood grain textures and solid colours.", tg: ["Fire-Rated", "Scratch Resistant"] },
-            { n: "02", t: "Exterior Wall Cladding", d: "Ventilated facade systems with double-hardened acrylic PUR resins. Weather-resistant, UV-protected, compatible with Revit & 3M systems.", tg: ["UV Protected", "Weather Resistant"] },
+            { n: "02", t: "Urinal Partition Screens", d: "Solid 12mm phenolic compact laminate modesty partitions for commercial washrooms. Wall-hung cantilever or floor-leg mounting.", tg: ["Waterproof", "Anti-Bacterial"] },
             { n: "03", t: "Restroom Cubicles", d: "High-pressure 12mm compact laminate cubicles for malls, airports, offices, schools. Anti-bacterial coating, handicap-ready, dry-system.", tg: ["Anti-Bacterial", "Water Resistant"] },
             { n: "04", t: "Cubicle Hardware", d: "Complete hardware in Stainless Steel (304/306), Aluminium (6063 alloy) and Nylon Polyamide-6. Includes hinges, locks, coat hooks.", tg: ["SS 304/306", "Aluminium"] },
             { n: "05", t: "Locker Systems", d: "High-pressure laminate lockers in 1–6 tier and Z-shape configurations. Ideal for gyms, schools, swimming pools & sports centres.", tg: ["1–6 Tier", "Anti-Bacterial"] },

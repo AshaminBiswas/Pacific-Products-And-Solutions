@@ -68,7 +68,7 @@ export function Footer() {
               </Link>
             </div>
             <p className="text-gray-400 mb-6">
-              Leading B2B interior contracting provider in India, specializing in premium restroom cubicles, exterior cladding, wall paneling, locker solutions, and custom hardware for commercial spaces.
+              Leading B2B interior contracting provider in India, specializing in premium restroom cubicles, toilet partitions, urinal screens, locker solutions, and custom hardware for commercial spaces.
             </p>
             <div className="flex space-x-4">
               <a href="https://www.facebook.com/profile.php?id=100063648025932" target="_blank" rel="noopener noreferrer" className="hover:text-[#7FB706] transition-colors">

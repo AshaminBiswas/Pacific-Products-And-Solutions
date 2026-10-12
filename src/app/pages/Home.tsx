@@ -227,7 +227,7 @@ function HeroSection() {
       }).join("\n");
       const solutionList = allSolutions.map((s) => `- ${s.title} | URL: /solutions/${s.slug}`).join("\n");
 
-      const prompt = `You are a product search assistant for Pacific Products & Solutions, a B2B company selling restroom cubicles, cladding, locker systems, and interior solutions.\n\nUser searched for: "${query}"\n\nAvailable Products:\n${productList || "(none)"}\n\nAvailable Solutions:\n${solutionList || "(none)"}\n\nReturn 1-3 most relevant recommendations as a JSON array (raw JSON only, no markdown):\n[{"title": "Name", "reason": "Brief reason max 8 words", "url": "/exact/url"}]\n\nReturn [] if nothing matches. Only use URLs from the lists above.`;
+      const prompt = `You are a product search assistant for Pacific Products & Solutions, a B2B company selling restroom cubicles, locker systems, urinal partitions, and interior solutions.\n\nUser searched for: "${query}"\n\nAvailable Products:\n${productList || "(none)"}\n\nAvailable Solutions:\n${solutionList || "(none)"}\n\nReturn 1-3 most relevant recommendations as a JSON array (raw JSON only, no markdown):\n[{"title": "Name", "reason": "Brief reason max 8 words", "url": "/exact/url"}]\n\nReturn [] if nothing matches. Only use URLs from the lists above.`;
 
       const res = await fetch("/api/nvidia/v1/chat/completions", {
         method: "POST",
@@ -640,7 +640,7 @@ function HeroSection() {
             transition={{ delay: 0.8 }}
             className="flex flex-wrap justify-center gap-2 mt-3"
           >
-            {["Restroom Cubicles", "Exterior Cladding", "Locker Systems", "Shower Cubicles"].map((tag) => (
+            {["Restroom Cubicles", "Urinal Partitions", "Locker Systems", "Shower Cubicles"].map((tag) => (
               <button
                 key={tag}
                 onClick={() => { setSearchQuery(tag); inputRef.current?.focus(); }}
@@ -1429,7 +1429,7 @@ export default function HomePage() {
       <SEO
         title="Restroom Cubicles & Partitions Manufacturer India | Pacific"
         description="India's premier manufacturer of HPL restroom cubicles, modular lockers & urinal partitions. ISO 9001 certified. Get direct factory pricing & turnkey BOQ today."
-        keywords={`${DEFAULT_KEYWORDS}, restroom cubicles manufacturer Delhi, toilet partitions manufacturer India, exterior cladding supplier India, HPL cubicle system, locker system supplier India, compact laminate partitions`}
+        keywords={`${DEFAULT_KEYWORDS}, restroom cubicles manufacturer Delhi, toilet partitions manufacturer India, urinal partitions manufacturer India, HPL cubicle system, locker system supplier India, compact laminate partitions`}
         canonical="/"
         jsonLd={[
           organizationSchema(),
@@ -1437,7 +1437,7 @@ export default function HomePage() {
           aggregateRatingSchema(),
           speakableSchema(["h1", "h2", ".speakable"]),
           faqSchema([
-            { question: "What products does Pacific Products & Solutions manufacture?", answer: "Pacific Products & Solutions manufactures premium restroom cubicles, toilet partitions, shower cubicles, exterior cladding, locker systems, wall paneling, and custom hardware for commercial spaces across India." },
+            { question: "What products does Pacific Products & Solutions manufacture?", answer: "Pacific Products & Solutions manufactures premium restroom cubicles, toilet partitions, shower cubicles, locker systems, urinal partitions, wall paneling, and custom hardware for commercial spaces across India." },
             { question: "Where is Pacific Products & Solutions located?", answer: "Pacific Products & Solutions has regional hubs in Delhi NCR (Head Office), Bangalore, and Kolkata, serving pan-India commercial and institutional clients." },
             { question: "What is the warranty on Pacific Products installations?", answer: "All Pacific Products installations come with a 10-year compact board warranty and a 1-year direct hardware replacement warranty." },
           ])

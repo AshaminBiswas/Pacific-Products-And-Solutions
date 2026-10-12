@@ -264,7 +264,7 @@ export default function TermsOfServicePage() {
             {/* Products & Services */}
             <SectionHeading id="products">Products &amp; Services</SectionHeading>
             <Para>
-              Pacific Products &amp; Solutions manufactures and supplies restroom cubicles, toilet partitions, exterior cladding, interior paneling, locker systems, and related hardware. Product specifications, dimensions, finishes, and availability displayed on this website are subject to change without notice.
+              Pacific Products &amp; Solutions manufactures and supplies restroom cubicles, toilet partitions, urinal screens, interior paneling, locker systems, and related hardware. Product specifications, dimensions, finishes, and availability displayed on this website are subject to change without notice.
             </Para>
             <Para>
               All product images are for illustrative purposes only. Actual products may vary slightly in colour, finish, or dimensions due to manufacturing tolerances and screen calibration differences. Final product details will be confirmed in the formal project specification document issued prior to order confirmation.

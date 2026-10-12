@@ -183,7 +183,7 @@ export default function FAQPage() {
     <div className="min-h-screen pt-20 bg-white dark:bg-[#030213] transition-colors">
       <SEO
         title="Frequently Asked Questions"
-        description="Find answers to common questions about Pacific Products restroom cubicles, cladding, locker systems, installation, warranty, and pricing."
+        description="Find answers to common questions about Pacific Products restroom cubicles, urinal partitions, locker systems, installation, warranty, and pricing."
         canonical="/faq"
         jsonLd={faqSchema(faqs)}
       />

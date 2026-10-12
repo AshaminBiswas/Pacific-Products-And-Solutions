@@ -165,7 +165,7 @@ function InsertTab() {
     "Restroom Cubicles",
     "Locker Systems",
     "Partitions & Screens",
-    "Cladding & Wall Panels",
+    "Wall Paneling & Liners",
     "Hardware & Accessories",
   ];
 

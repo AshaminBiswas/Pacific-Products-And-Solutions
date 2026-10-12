@@ -51,7 +51,6 @@ function detectCategory(text: string): string | undefined {
   if (t === "locker solution"    || t.includes("locker"))           return "Locker Solution";
   if (t === "changing room"      || t.includes("changing room"))    return "Changing Room";
   if (t === "custom hardware"    || t.includes("hardware"))         return "Custom Hardware";
-  if (t.includes("cladding") || t.includes("exterior") || t.includes("facade")) return "Exterior Cladding";
   if (t.includes("wall panel") || t.includes("panelling") || t.includes("paneling")) return "Interior Panelling";
   if (t.includes("solid surface") || t.includes("acrylic") || t.includes("countertop") || t.includes("vanity")) return "Acrylic Solid Surface";
   return undefined;
@@ -62,12 +61,12 @@ function detectProductIntent(text: string): { show: boolean; featuredOnly: boole
   const t = text.toLowerCase().trim();
   const CATEGORY_LABELS = [
     "restroom cubicles", "toilet partition", "shower cubicle", "locker solution",
-    "changing room", "custom hardware", "exterior cladding", "interior panelling",
+    "changing room", "custom hardware", "interior panelling",
     "acrylic solid surface",
   ];
   const PRODUCT_KEYWORDS = [
     "product", "catalogue", "catalog", "range", "what do you make", "what do you sell",
-    "show me", "show your", "see your", "cubicle", "cladding", "locker", "partition",
+    "show me", "show your", "see your", "cubicle", "locker", "partition",
     "hardware", "panelling", "paneling", "solid surface",
   ];
   const isCategoryClick  = CATEGORY_LABELS.some((c) => t === c || t.includes(c));
@@ -85,7 +84,7 @@ function getQuickReplies(text: string): string[] {
   if (t.includes("hotel") || t.includes("hospitality"))     return ["Luxury shower enclosures", "Hotel cubicle range", "Request consultation"];
   if (t.includes("school") || t.includes("college"))        return ["School locker systems", "Education solutions", "Request a quote"];
   if (t.includes("office") || t.includes("corporate"))      return ["Office washroom solutions", "Corporate locker systems", "Get quote"];
-  if (t.includes("mall") || t.includes("retail"))           return ["Mall washroom solutions", "Exterior cladding", "Request a quote"];
+  if (t.includes("mall") || t.includes("retail"))           return ["Mall washroom solutions", "Urinal partitions", "Request a quote"];
   return ["See all products", "Request a quote", "Speak to a consultant"];
 }
 
@@ -105,7 +104,7 @@ const CATEGORY_QUICK_REPLIES = [
 // System Prompt
 // ─────────────────────────────────────────────────────────────────────────────
 
-const SYSTEM_PROMPT = `You are Aria — a senior B2B Sales Consultant for Pacific Products & Solutions, India's leading manufacturer and installer of commercial restroom cubicles, shower cubicles, exterior cladding, locker systems, toilet partitions, and wall panelling.
+const SYSTEM_PROMPT = `You are Aria — a senior B2B Sales Consultant for Pacific Products & Solutions, India's leading manufacturer and installer of commercial restroom cubicles, shower cubicles, locker systems, urinal partitions, and wall panelling.
 
 ## YOUR PERSONA
 - Direct, warm, expert. You are talking to architects, PMCs, procurement heads, and facility managers.
@@ -150,12 +149,11 @@ const SYSTEM_PROMPT = `You are Aria — a senior B2B Sales Consultant for Pacifi
 - Drain options: linear, centre, corner. Threshold or zero-threshold (wet room)
 - Glass options: clear, frosted, patterned, anti-lime-scale coating
 
-**3. Exterior Cladding Systems**
-- Materials: ACM (Aluminium Composite), HPL (High Pressure Laminate), fibre cement, terracotta rain-screen
-- Panel size: typically 1220×2440mm | Thickness: 3–6mm (ACM), 6–13mm (HPL)
-- Fixing: concealed cassette, visible rivet, or Z-profile systems
-- Warranty: **10-year** fade and delamination warranty on HPL cladding
-- Applications: facades, canopies, columns, soffits, signage panels
+**3. Urinal Partition Screens**
+- Materials: Solid compact phenolic laminate (12mm), grade 304 SS corner brackets
+- Configurations: Wall-hung floating cantilever, floor-supported leg
+- Dimensions: 400×900mm, 450×1000mm, or custom project sizing
+- Beveled smooth safe edges, non-porous hygienic anti-microbial surface
 
 **4. Locker Systems**
 - Materials: cold-rolled steel (powder-coated), phenolic resin, laminate

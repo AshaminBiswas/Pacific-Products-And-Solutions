@@ -44,7 +44,7 @@ export function organizationSchema() {
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "Restroom Cubicles" } },
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "Toilet Partitions" } },
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "Shower Cubicles" } },
-        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Exterior Cladding" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "Urinal Partition Screens" } },
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "Locker Systems" } },
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "Interior Wall Paneling" } },
         { "@type": "Offer", itemOffered: { "@type": "Service", name: "Custom Cubicle Hardware" } },

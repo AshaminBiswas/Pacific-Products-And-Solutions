@@ -75,8 +75,8 @@ export default function Downloads() {
     <div className="bg-white dark:bg-[#05050f] min-h-screen pt-24 pb-20">
       <SEO
         title="Technical Downloads & Product Catalogs"
-        description="Download product brochures, CAD drawings, technical specifications, and installation manuals for our restroom cubicle, cladding, and locker systems."
-        keywords="restroom cubicle brochure download, HPL cladding technical specification, locker system catalog PDF, cubicle installation manual, Pacific Products downloads"
+        description="Download product brochures, CAD drawings, technical specifications, and installation manuals for our restroom cubicle, urinal partition, and locker systems."
+        keywords="restroom cubicle brochure download, urinal partition technical specification, locker system catalog PDF, cubicle installation manual, Pacific Products downloads"
         canonical="/download"
       />
 

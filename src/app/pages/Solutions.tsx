@@ -38,7 +38,7 @@ export default function SolutionsPage() {
       <SEO
         title="Industry Solutions"
         description="Tailored interior solutions for corporates, malls, airports, metro stations, hospitals, schools, and commercial infrastructure projects."
-        keywords={`${DEFAULT_KEYWORDS}, corporate office interiors, hospital washroom cubicles, airport restroom partitions, mall cladding solutions, commercial interior contractors`}
+        keywords={`${DEFAULT_KEYWORDS}, corporate office interiors, hospital washroom cubicles, airport restroom partitions, mall restroom partitions, commercial interior contractors`}
         canonical="/solutions"
       />
       {/* Hero Banner */}

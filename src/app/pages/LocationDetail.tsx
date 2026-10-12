@@ -252,9 +252,9 @@ function HeroSection({ data, slug }: { data: LocationData; slug: LocationSlug })
             <div className={`overflow-hidden ${isDelhi ? "rounded-t-[4rem]" : "rounded-none"} border border-black/10 bg-white p-3 shadow-2xl shadow-black/10 dark:border-white/10 dark:bg-white/5`}>
               <div className="h-[520px] w-full relative">
                 {data.heroImages && data.heroImages.length > 1 ? (
-                  <LocationHeroSlider images={data.heroImages} altText={`${cleanText(data.city)} restroom cubicles and cladding projects`} />
+                  <LocationHeroSlider images={data.heroImages} altText={`${cleanText(data.city)} restroom cubicles and commercial projects`} />
                 ) : (
-                  <img src={data.heroImage} alt={`${cleanText(data.city)} restroom cubicles and cladding projects`} className="h-full w-full object-cover" />
+                  <img src={data.heroImage} alt={`${cleanText(data.city)} restroom cubicles and commercial projects`} className="h-full w-full object-cover" />
                 )}
               </div>
             </div>
@@ -287,7 +287,7 @@ function HeroActions({ data, light = false }: { data: LocationData; light?: bool
 }
 
 function ServicesSection({ data, layout = "grid" }: { data: LocationData; layout?: "grid" | "split" | "rail" }) {
-  const copy = `${cleanText(data.city)} teams support commercial restroom cubicles, shower cubicles, locker solutions, exterior cladding, custom hardware, and interior packages for demanding B2B environments.`;
+  const copy = `${cleanText(data.city)} teams support commercial restroom cubicles, shower cubicles, locker solutions, urinal partitions, custom hardware, and interior packages for demanding B2B environments.`;
 
   if (layout === "split") {
     return (
@@ -412,7 +412,7 @@ function ShowcaseSection({ data, variant }: { data: LocationData; variant: "mosa
   return (
     <section className="bg-white py-24 dark:bg-[#030213]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading eyebrow="Visual Product Showcase" title={`${cleanText(data.city)} installations shaped for modern infrastructure`} copy="Alternating product, interior, cladding, and public-space compositions create a complete specification view for commercial buyers." />
+        <SectionHeading eyebrow="Visual Product Showcase" title={`${cleanText(data.city)} installations shaped for modern infrastructure`} copy="Alternating product, interior, partition, and public-space compositions create a complete specification view for commercial buyers." />
         <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
           <img src={images[0]} alt={`${cleanText(data.city)} commercial interiors`} className="h-[560px] w-full object-cover" />
           <div className="grid gap-5 sm:grid-cols-2">
@@ -484,7 +484,7 @@ function FaqSection({ data }: { data: LocationData }) {
   return (
     <section className="bg-white py-24 dark:bg-[#030213]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading eyebrow="Local SEO FAQ" title={`${cleanText(data.city)} restroom cubicles, cladding, lockers, and commercial interiors`} align="center" />
+        <SectionHeading eyebrow="Local SEO FAQ" title={`${cleanText(data.city)} restroom cubicles, lockers, and commercial interiors`} align="center" />
         <div className="mx-auto grid max-w-5xl gap-4">
           {data.faqs.map((faq) => (
             <details key={faq.question} className="group border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-white/[0.03]">
@@ -577,7 +577,7 @@ function StickyCta({ data }: { data: LocationData }) {
     <div className="fixed bottom-4 left-1/2 z-40 flex w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 items-center justify-between gap-3 border border-black/10 bg-white/95 p-3 shadow-2xl shadow-black/15 backdrop-blur dark:border-white/10 dark:bg-[#030213]/95 sm:rounded-2xl">
       <div className="min-w-0 pl-2">
         <p className="truncate text-sm font-bold text-[#030213] dark:text-white">{cleanText(data.city)} project inquiry</p>
-        <p className="truncate text-xs text-gray-500 dark:text-gray-400">Restroom cubicles, cladding, lockers and interiors</p>
+        <p className="truncate text-xs text-gray-500 dark:text-gray-400">Restroom cubicles, lockers and interiors</p>
       </div>
       <Button size="sm" onClick={scrollToInquiry} className="shrink-0">
         Get Quote
