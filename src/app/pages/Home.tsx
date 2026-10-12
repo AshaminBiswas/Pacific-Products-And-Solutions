@@ -140,8 +140,6 @@ type AIRecommendation = {
 function HeroSection() {
   const navigate = useNavigate();
   const heroRef = useRef<HTMLDivElement>(null);
-  const [quoteHovered, setQuoteHovered] = useState(false);
-  const [productHovered, setProductHovered] = useState(false);
   const { data: heroImages } = useHeroImages();
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -332,7 +330,7 @@ function HeroSection() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex items-end justify-center overflow-hidden pt-0 sm:pt-16 lg:pt-20"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20 pb-16"
     >
       {/* Hero Background */}
       {heroImages.length > 0 ? (
@@ -377,30 +375,31 @@ function HeroSection() {
       {/* Main content */}
       <motion.div
         style={{ opacity }}
-        className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 text-center pb-[18vh]"
+        className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 text-center"
       >
-        {/* Primary Keyword H1 */}
+        {/* Primary Keyword H1 / Tagline */}
         <motion.h1
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 sm:mb-6 tracking-tight leading-tight max-w-4xl mx-auto"
-          style={{ textShadow: "0 2px 20px rgba(0,0,0,0.8)" }}
-          initial={{ opacity: 0, y: 15 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#7FB706]/15 border border-[#7FB706]/35 text-[#7FB706] text-xs sm:text-sm font-bold tracking-wider uppercase mb-4 backdrop-blur-md"
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
         >
           Restroom Cubicles &amp; Toilet Partitions Manufacturer in India
         </motion.h1>
 
         {/* Description */}
-        <motion.p
-          key={currentSlide}
-          className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 sm:mb-10 max-w-2xl lg:max-w-3xl mx-auto leading-relaxed font-medium"
-          style={{ textShadow: "0 1px 8px rgba(0,0,0,0.9), 0 2px 20px rgba(0,0,0,0.7)" }}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {activeDescription}
-        </motion.p>
+        {activeDescription && (
+          <motion.p
+            key={currentSlide}
+            className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 sm:mb-10 max-w-2xl lg:max-w-3xl mx-auto leading-relaxed font-medium"
+            style={{ textShadow: "0 1px 8px rgba(0,0,0,0.9), 0 2px 20px rgba(0,0,0,0.7)" }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {activeDescription}
+          </motion.p>
+        )}
 
         {/* ── AI Search Bar ── */}
         <motion.div
@@ -408,7 +407,6 @@ function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
           className="mb-8 sm:mb-10 max-w-2xl mx-auto"
-          style={{ marginTop: "-400px" }}
           ref={searchRef}
         >
           <form ref={formRef} onSubmit={handleSearchSubmit} className="relative">
@@ -651,62 +649,6 @@ function HeroSection() {
                 {tag}
               </button>
             ))}
-          </motion.div>
-        </motion.div>
-
-        {/* CTA buttons */}
-        <motion.div
-          className="flex flex-row gap-1.5 sm:gap-4 justify-center items-center mb-6 sm:mb-16 lg:mb-2 w-full px-2 sm:px-0"
-          style={{ marginTop: "100px" }}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-        >
-          <motion.div
-            className="flex-1 sm:flex-none w-full sm:w-auto"
-            onHoverStart={() => setQuoteHovered(true)}
-            onHoverEnd={() => setQuoteHovered(false)}
-            whileTap={{ scale: 0.97 }}
-          >
-            <Button
-              size="lg"
-              className="w-full relative overflow-hidden px-2 sm:px-8 py-3.5 sm:py-4 text-[13px] sm:text-base font-semibold shadow-lg shadow-[#7FB706]/25 transition-shadow hover:shadow-xl hover:shadow-[#7FB706]/35"
-              onClick={() => navigate("/contact")}
-            >
-              <span className="relative z-10 flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap">
-                Get Quote
-                <motion.span
-                  animate={{ x: quoteHovered ? 4 : 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                >
-                  <ArrowRight className="w-5 h-5" />
-                </motion.span>
-              </span>
-            </Button>
-          </motion.div>
-
-          <motion.div
-            className="flex-1 sm:flex-none w-full sm:w-auto"
-            onHoverStart={() => setProductHovered(true)}
-            onHoverEnd={() => setProductHovered(false)}
-            whileTap={{ scale: 0.97 }}
-          >
-            <Button
-              size="lg"
-              variant="outline"
-              className="w-full px-2 sm:px-8 py-3.5 sm:py-4 text-[13px] sm:text-base font-semibold backdrop-blur-sm border-[#7FB706]/40 hover:bg-[#7FB706]/5 hover:border-[#7FB706]/30 hover:text-gray-900 dark:hover:text-white dark:text-gray-300 transition-all"
-              onClick={() => navigate("/products")}
-            >
-              <span className="flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap">
-                View Services
-                <motion.span
-                  animate={{ x: productHovered ? 4 : 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                >
-                  <ArrowRight className="w-4 h-4 opacity-60" />
-                </motion.span>
-              </span>
-            </Button>
           </motion.div>
         </motion.div>
 
