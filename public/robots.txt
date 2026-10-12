@@ -6,12 +6,27 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /api/
+Disallow: /verify/
+Disallow: /wp-admin/
+Disallow: /wp-content/
+Disallow: /wp-includes/
+Disallow: /*.php$
+Disallow: /*?*
+Disallow: /*?
 Crawl-delay: 1
 
 # ── Google ────────────────────────────────────────────────────────
 User-agent: Googlebot
 Allow: /
 Disallow: /admin/
+Disallow: /api/
+Disallow: /verify/
+Disallow: /wp-admin/
+Disallow: /wp-content/
+Disallow: /wp-includes/
+Disallow: /*.php$
+Disallow: /*?*
+Disallow: /*?
 
 User-agent: Googlebot-Image
 Allow: /
@@ -20,6 +35,9 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 Disallow: /admin/
+Disallow: /api/
+Disallow: /verify/
+Disallow: /*?*
 Crawl-delay: 1
 
 # ── AI Crawlers (GEO — allow so AI models can cite us) ────────────

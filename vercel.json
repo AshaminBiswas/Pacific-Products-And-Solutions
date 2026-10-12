@@ -65,6 +65,36 @@
       "source": "/urinal-partitions",
       "destination": "/products/urinal-partitions",
       "permanent": true
+    },
+    {
+      "source": "/products/restroom-cubicles/plarina-wave",
+      "destination": "/products/restroom-cubicles/cubicle-platina-wave",
+      "permanent": true
+    },
+    {
+      "source": "/products/restroom-cubicles/saffron",
+      "destination": "/products/restroom-cubicles/cubicle-saffron",
+      "permanent": true
+    },
+    {
+      "source": "/products/restroom-cubicles/sky-light",
+      "destination": "/products/restroom-cubicles/cubicle-skylight",
+      "permanent": true
+    },
+    {
+      "source": "/locations/mumbai",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/locations/ahmedabad",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/locations/uae",
+      "destination": "/contact",
+      "permanent": true
     }
   ],
   "rewrites": [
