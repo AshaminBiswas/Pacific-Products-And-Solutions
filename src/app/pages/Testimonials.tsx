@@ -16,6 +16,8 @@ import {
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 import { SEO } from "../components/SEO";
 import { Button } from "../components/Button";
+import { PageHero } from "../components/PageHero";
+import { usePageBanner } from "../../lib/hooks";
 
 interface TestimonialRecord {
   id: string;
@@ -37,6 +39,7 @@ const RATING_LABELS: Record<number, string> = {
 };
 
 export default function TestimonialsPage() {
+  const { data: banner } = usePageBanner("testimonials");
   const [testimonials, setTestimonials] = useState<TestimonialRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -200,7 +203,7 @@ export default function TestimonialsPage() {
     : "5.0";
 
   return (
-    <div className="bg-white dark:bg-[#030213] min-h-screen pt-24 pb-20 transition-colors">
+    <div className="bg-white dark:bg-[#030213] min-h-screen pt-20 pb-20 transition-colors">
       <SEO
         title="Client Testimonials & Reviews | Pacific Products & Solutions"
         description="Authentic verified client reviews and project testimonials on Pacific Restroom Cubicles, lockers, and architectural partition systems across India and GCC."
@@ -209,32 +212,24 @@ export default function TestimonialsPage() {
       />
 
       {/* Hero Header */}
-      <section className="bg-gradient-to-b from-gray-50 to-white dark:from-[#0a0a1a] dark:to-[#030213] border-b border-gray-200 dark:border-white/5 py-16 sm:py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="inline-flex items-center gap-2 bg-[#7FB706]/15 border border-[#7FB706]/30 text-[#7FB706] text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-4">
-              <Sparkles className="w-3.5 h-3.5" />
-              Verified Client Feedback
-            </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight">
-              Client Testimonials &amp; Reviews
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
-              Transparent, genuine experiences from architects, contractors, and facility leaders who trust Pacific Restroom Cubicles &amp; Architectural Systems.
-            </p>
-          </motion.div>
+      <PageHero
+        title={banner?.title || "Client Testimonials & Reviews"}
+        accentWord="Reviews"
+        subtitle={banner?.subtitle || "Transparent, genuine experiences from architects, contractors, and facility leaders who trust Pacific Restroom Cubicles & Architectural Systems."}
+        breadcrumb="Testimonials"
+        backgroundImage={banner?.image_url}
+        backgroundAlt={banner?.alt_text || "Pacific Restroom Cubicles Client Testimonials and Reviews"}
+      />
 
-          {/* Stats strip if records exist */}
-          {totalCount > 0 && (
+      {/* Stats strip if records exist */}
+      {totalCount > 0 && (
+        <section className="py-8 bg-gray-50/50 dark:bg-white/[0.02] border-b border-gray-200 dark:border-white/5">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="mt-10 grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-2xl mx-auto"
+              className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-2xl mx-auto"
             >
               <div className="bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-4">
                 <div className="flex items-center justify-center gap-1.5 text-amber-500 mb-1">
@@ -259,9 +254,9 @@ export default function TestimonialsPage() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Authentic Feedback</p>
               </div>
             </motion.div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* Main Content Area */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">

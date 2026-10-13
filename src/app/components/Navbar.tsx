@@ -178,14 +178,6 @@ export function Navbar() {
         path: getProductPath(p),
       })),
     },
-    {
-      name: "Downloads",
-      path: "/download",
-    },
-    {
-      name: "Testimonials",
-      path: "/testimonials",
-    },
   ];
 
   const toggleMobileDropdown = (name: string) => {

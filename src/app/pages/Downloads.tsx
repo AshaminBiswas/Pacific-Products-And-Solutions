@@ -3,6 +3,8 @@ import { supabase } from "../../lib/supabase";
 import type { Catalog } from "../../lib/database.types";
 import { FileText, Image as ImageIcon, Download, ExternalLink, X, Search } from "lucide-react";
 import { SEO } from "../components/SEO";
+import { PageHero } from "../components/PageHero";
+import { usePageBanner } from "../../lib/hooks";
 
 const DOCUMENT_TYPES = [
   "Brochure",
@@ -24,6 +26,10 @@ function formatFileSize(bytes: number): string {
 }
 
 export default function Downloads() {
+  const { data: bannerData } = usePageBanner("downloads");
+  const { data: altBanner } = usePageBanner("download");
+  const banner = bannerData || altBanner;
+
   const [downloads, setDownloads] = useState<Catalog[]>([]);
   const [productMap, setProductMap] = useState<Record<string, { title: string; slug: string; category: string }>>({});
   const [loading, setLoading] = useState(true);
@@ -104,7 +110,7 @@ export default function Downloads() {
 
 
   return (
-    <div className="bg-white dark:bg-[#05050f] min-h-screen pt-24 pb-20">
+    <div className="bg-white dark:bg-[#030213] min-h-screen pt-20 pb-20 transition-colors">
       <SEO
         title="Technical Downloads & Product Catalogs"
         description="Download product brochures, CAD drawings, technical specifications, and installation manuals for our restroom cubicle, urinal partition, and locker systems."
@@ -113,16 +119,16 @@ export default function Downloads() {
       />
 
       {/* Hero Banner */}
-      <div className="bg-gray-50 dark:bg-[#0a0a1a] border-y border-gray-200 dark:border-white/5 py-16 mb-12">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">Technical Downloads &amp; Product Catalogs</h1>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-            Access our complete library of product brochures, technical specifications, CAD drawings, and installation manuals.
-          </p>
-        </div>
-      </div>
+      <PageHero
+        title={banner?.title || "Technical Downloads & Product Catalogs"}
+        accentWord="Catalogs"
+        subtitle={banner?.subtitle || "Access our complete library of product brochures, technical specifications, CAD drawings, and installation manuals."}
+        breadcrumb="Downloads"
+        backgroundImage={banner?.image_url}
+        backgroundAlt={banner?.alt_text || "Pacific Restroom Cubicles Technical Downloads & Catalogs"}
+      />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 mt-12">
         <div className="flex flex-col lg:flex-row gap-12">
           
           {/* Sidebar */}

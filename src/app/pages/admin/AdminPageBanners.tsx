@@ -20,6 +20,8 @@ const PAGE_SPECS: Record<string, { label: string; size: string; ratio: string; b
   solutions:                { label: "Solutions Page",                 size: "1920×600 px", ratio: "16:5",  bucket: "page-banners", aspect: "aspect-[16/5]" },
   gallery:                  { label: "Gallery Page",                   size: "1920×480 px", ratio: "4:1",   bucket: "page-banners", aspect: "aspect-[4/1]"  },
   contact:                  { label: "Contact Us Page",                size: "1920×600 px", ratio: "16:5",  bucket: "page-banners", aspect: "aspect-[16/5]" },
+  downloads:                { label: "Downloads & Catalogs Page",      size: "1920×600 px", ratio: "16:5",  bucket: "page-banners", aspect: "aspect-[16/5]" },
+  testimonials:             { label: "Testimonials & Reviews Page",    size: "1920×600 px", ratio: "16:5",  bucket: "page-banners", aspect: "aspect-[16/5]" },
   "home-cubicles":          { label: "Home: Restroom Cubicles Banner", size: "1600×500 px", ratio: "16:5",  bucket: "page-banners", aspect: "aspect-[16/5]" },
   "home-lockers":           { label: "Home: Modular Lockers Banner",   size: "1600×500 px", ratio: "16:5",  bucket: "page-banners", aspect: "aspect-[16/5]" },
   "home-urinal-partitions": { label: "Home: Urinal Partitions Banner", size: "1600×500 px", ratio: "16:5",  bucket: "page-banners", aspect: "aspect-[16/5]" },
