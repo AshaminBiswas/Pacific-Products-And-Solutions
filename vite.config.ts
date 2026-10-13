@@ -17,6 +17,23 @@ export default defineConfig(({ mode }) => {
       // Tailwind is not being actively used – do not remove them
       react(),
       tailwindcss(),
+      {
+        name: 'html-transform-optimize',
+        enforce: 'post' as const,
+        transformIndexHtml(html: string, ctx: any) {
+          if (!ctx.bundle) return html;
+          const cssChunk = Object.values(ctx.bundle).find(
+            (b: any) => b.type === 'asset' && b.fileName.endsWith('.css') && b.fileName.includes('index')
+          ) as any;
+          if (cssChunk) {
+            return html.replace(
+              '<!-- ── High-Priority Preconnect Hints',
+              `<link rel="preload" as="style" href="/${cssChunk.fileName}" fetchpriority="high" />\n    <!-- ── High-Priority Preconnect Hints`
+            );
+          }
+          return html;
+        },
+      },
     ],
     resolve: {
       alias: {

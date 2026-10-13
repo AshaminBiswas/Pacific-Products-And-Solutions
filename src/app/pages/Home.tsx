@@ -95,9 +95,9 @@ function HeroSlideshow({ images, onSlideChange }: HeroSlideshowProps) {
           return null;
         }
 
-        const optimizedSrc = getOptimizedImageUrl(img.url, 1400, 80);
-        const mobileSrc = getOptimizedImageUrl(img.url, 750, 80);
-        const desktopSrc = getOptimizedImageUrl(img.url, 1920, 85);
+        const optimizedSrc = getOptimizedImageUrl(img.url, 1400, 75);
+        const mobileSrc = getOptimizedImageUrl(img.url, 750, 72);
+        const desktopSrc = getOptimizedImageUrl(img.url, 1920, 75);
 
         return (
           <img
@@ -202,13 +202,8 @@ function HeroSection() {
       ? heroImages[currentSlide].description
       : "";
 
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const { scrollY } = useScroll();
+  const opacity = useTransform(scrollY, [0, 450], [1, 0]);
 
   // ── Fetch products & solutions on search interaction or idle (keeps critical load fast) ──
   const searchDataLoaded = useRef(false);
@@ -316,7 +311,7 @@ function HeroSection() {
           onSlideChange={setCurrentSlide}
         />
       ) : (
-        <motion.div style={{ y }} className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 z-0 pointer-events-none">
           <div className="absolute inset-0 bg-gradient-to-br from-[#f0ffc8]/80 via-white/60 to-[#e6fdb0]/80 dark:from-[#030213] dark:via-[#030213] dark:to-[#0a0a1a]" />
           <motion.div
             className="absolute -top-24 -left-24 w-[480px] h-[480px] rounded-full"
@@ -346,7 +341,7 @@ function HeroSection() {
             className="absolute inset-0 opacity-[0.03]"
             style={{ backgroundImage: "repeating-linear-gradient(0deg, #7FB706 0px, transparent 1px, transparent 40px), repeating-linear-gradient(90deg, #7FB706 0px, transparent 1px, transparent 40px)" }}
           />
-        </motion.div>
+        </div>
       )}
 
       {/* Main content */}
@@ -676,15 +671,14 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              whileHover={{ y: -4 }}
-              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
+              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8 transition-transform duration-300 hover:-translate-y-1"
             >
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
-                  src={cubiclesBanner?.image_url || "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"}
+                  src={cubiclesBanner?.image_url || "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format,compress&fit=crop&w=800&q=70"}
                   alt={cubiclesBanner?.alt_text || "Commercial Restroom Cubicle Systems - Pacific"}
-                  renderWidth={1000}
-                  quality={80}
+                  renderWidth={800}
+                  quality={70}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -723,15 +717,14 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              whileHover={{ y: -4 }}
-              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
+              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8 transition-transform duration-300 hover:-translate-y-1"
             >
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
-                  src={lockersBanner?.image_url || "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80"}
+                  src={lockersBanner?.image_url || "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format,compress&fit=crop&w=800&q=70"}
                   alt={lockersBanner?.alt_text || "Modular HPL Locker Systems - Pacific"}
-                  renderWidth={1000}
-                  quality={80}
+                  renderWidth={800}
+                  quality={70}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -770,15 +763,14 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              whileHover={{ y: -4 }}
-              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
+              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8 transition-transform duration-300 hover:-translate-y-1"
             >
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
-                  src={urinalBanner?.image_url || "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80"}
+                  src={urinalBanner?.image_url || "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format,compress&fit=crop&w=800&q=70"}
                   alt={urinalBanner?.alt_text || "Hygienic Compact Laminate Urinal Partitions - Pacific"}
-                  renderWidth={1000}
-                  quality={80}
+                  renderWidth={800}
+                  quality={70}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -814,15 +806,14 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              whileHover={{ y: -4 }}
-              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
+              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8 transition-transform duration-300 hover:-translate-y-1"
             >
               <div className="absolute inset-0 z-0">
                 <ImageWithFallback
-                  src={kidsBanner?.image_url || "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=80"}
+                  src={kidsBanner?.image_url || "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format,compress&fit=crop&w=800&q=70"}
                   alt={kidsBanner?.alt_text || "Child-Safe Kids Restroom Cubicles - Pacific"}
-                  renderWidth={1000}
-                  quality={80}
+                  renderWidth={800}
+                  quality={70}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -861,7 +852,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
 
 function MaterialEngineeringDeepDive({ navigate }: { navigate: (path: string) => void }) {
   return (
-    <section className="py-16 sm:py-24 bg-gray-50 dark:bg-[#060515] text-gray-900 dark:text-white transition-colors border-y border-gray-200 dark:border-white/5">
+    <section style={{ contentVisibility: "auto", containIntrinsicSize: "auto 600px" }} className="py-16 sm:py-24 bg-gray-50 dark:bg-[#060515] text-gray-900 dark:text-white transition-colors border-y border-gray-200 dark:border-white/5">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#7FB706] mb-2 block">
@@ -1056,7 +1047,7 @@ function CommercialTypologyExplorer({ navigate }: { navigate: (path: string) => 
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-white dark:bg-[#030213] text-gray-900 dark:text-white transition-colors">
+    <section style={{ contentVisibility: "auto", containIntrinsicSize: "auto 600px" }} className="py-16 sm:py-24 bg-white dark:bg-[#030213] text-gray-900 dark:text-white transition-colors">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#7FB706] mb-2 block">
@@ -1149,7 +1140,7 @@ function ModernTurnkeyProcess() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-gray-50 dark:bg-[#060515] text-gray-900 dark:text-white transition-colors border-y border-gray-200 dark:border-white/5">
+    <section style={{ contentVisibility: "auto", containIntrinsicSize: "auto 600px" }} className="py-16 sm:py-24 bg-gray-50 dark:bg-[#060515] text-gray-900 dark:text-white transition-colors border-y border-gray-200 dark:border-white/5">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#7FB706] mb-2 block">
@@ -1215,7 +1206,7 @@ function WhyChooseUsSection({ navigate }: { navigate: (path: string) => void }) 
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-white dark:bg-[#030213] transition-colors">
+    <section style={{ contentVisibility: "auto", containIntrinsicSize: "auto 600px" }} className="py-16 sm:py-24 bg-white dark:bg-[#030213] transition-colors">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <motion.div
@@ -1285,7 +1276,7 @@ function WhyChooseUsSection({ navigate }: { navigate: (path: string) => void }) 
 
 function ArchitectBOMToolkit({ navigate }: { navigate: (path: string) => void }) {
   return (
-    <section className="py-12 sm:py-16 bg-white dark:bg-[#030213] text-gray-900 dark:text-white transition-colors">
+    <section style={{ contentVisibility: "auto", containIntrinsicSize: "auto 450px" }} className="py-12 sm:py-16 bg-white dark:bg-[#030213] text-gray-900 dark:text-white transition-colors">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-[#121226] via-[#0a0a1a] to-[#030213] border border-[#7FB706]/30 shadow-2xl relative overflow-hidden text-white">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#7FB706]/10 rounded-full blur-3xl pointer-events-none" />

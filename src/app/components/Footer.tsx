@@ -54,7 +54,9 @@ export function Footer() {
             <div className="mb-6">
               <Link to="/" className="flex items-center gap-3">
                 <img
-                  src={logo}
+                  src="/logo-64.webp"
+                  srcSet="/logo-64.webp 64w, /logo-84.webp 84w, /logo-128.webp 128w"
+                  sizes="(max-width: 640px) 48px, 64px"
                   alt="Pacific Products & Solutions"
                   width={64}
                   height={64}

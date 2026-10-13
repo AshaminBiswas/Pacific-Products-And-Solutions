@@ -10,7 +10,7 @@
 export function getOptimizedImageUrl(
   src: string | undefined | null,
   width = 800,
-  quality = 80
+  quality = 75
 ): string {
   if (!src) return "";
   try {
@@ -35,8 +35,9 @@ export function getOptimizedImageUrl(
     if (src.includes("images.unsplash.com")) {
       const url = new URL(src);
       url.searchParams.set("w", String(width));
-      url.searchParams.set("q", String(quality));
-      url.searchParams.set("auto", "format");
+      url.searchParams.set("q", String(quality > 70 ? 70 : quality));
+      url.searchParams.set("auto", "format,compress");
+      url.searchParams.set("fit", "crop");
       return url.toString();
     }
 

@@ -11,14 +11,13 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ title, description, image, path }: ProductCardProps) {
-  const optimizedImage = getOptimizedImageUrl(image, 600, 80);
+  const img400 = getOptimizedImageUrl(image, 400, 72);
+  const img600 = getOptimizedImageUrl(image, 600, 75);
+  const img800 = getOptimizedImageUrl(image, 800, 75);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="group relative flex flex-col"
+    <div
+      className="group relative flex flex-col transition-transform duration-300 hover:-translate-y-1"
     >
       {/* Invisible link overlay covering the entire card for better UX */}
       <Link to={path} className="absolute inset-0 z-20 rounded-3xl" aria-label={`View ${title}`} />
@@ -26,12 +25,14 @@ export function ProductCard({ title, description, image, path }: ProductCardProp
       {/* Top Image Layer */}
       <div className="relative aspect-[4/3] w-full rounded-3xl overflow-hidden shadow-md border border-gray-100 dark:border-white/5 bg-gray-100 dark:bg-gray-900">
         <img
-          src={optimizedImage}
+          src={img400}
+          srcSet={`${img400} 400w, ${img600} 600w, ${img800} 800w`}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px"
           alt={title}
           loading="lazy"
           decoding="async"
-          width={600}
-          height={450}
+          width={400}
+          height={300}
           className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-110"
         />
         
@@ -65,6 +66,6 @@ export function ProductCard({ title, description, image, path }: ProductCardProp
           
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

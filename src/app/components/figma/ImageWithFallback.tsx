@@ -26,7 +26,13 @@ export function ImageWithFallback({
   const [didError, setDidError] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
 
+  const src400 = getOptimizedImageUrl(src, 400, quality ? Math.min(quality, 70) : 70)
+  const src750 = getOptimizedImageUrl(src, 750, quality)
   const optimizedSrc = getOptimizedImageUrl(src, renderWidth, quality)
+  const srcMax = optimizedSrc
+
+  const generatedSrcSet = rest.srcSet || (src ? `${src400} 400w, ${src750} 750w, ${srcMax} 1000w` : undefined)
+  const defaultSizes = rest.sizes || '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px'
 
   const handleError = () => setDidError(true)
   const handleLoad  = () => setIsLoaded(true)
@@ -47,6 +53,8 @@ export function ImageWithFallback({
   return (
     <img
       src={optimizedSrc}
+      srcSet={generatedSrcSet}
+      sizes={defaultSizes}
       alt={alt}
       className={`transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${className ?? ''}`}
       style={style}
