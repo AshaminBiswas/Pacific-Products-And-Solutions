@@ -107,7 +107,7 @@ export const locations: Record<string, LocationData> = {
     phone: "+91 98185 92113",
     email: "info@pacificproduct.in",
     hours: "Mon–Sat: 9:00 AM – 6:00 PM",
-    whatsapp: "919818592113",
+    whatsapp: "919217016908",
     mapSrc: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d112130.34005085694!2d76.99403816684724!3d28.514782017772656!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d19d582e38859%3A0x2cf5fe8e5c64b1e!2sGurugram%2C%20Haryana!5e0!3m2!1sen!2sin!4v1713550212891!5m2!1sen!2sin",
     meta: {
       title: "Restroom Cubicles & Interior Solutions in Delhi NCR | Pacific Products",
@@ -144,7 +144,7 @@ export const locations: Record<string, LocationData> = {
     phone: "+91 98185 92113",
     email: "info@pacificproduct.in",
     hours: "Mon–Sat: 9:00 AM – 6:00 PM",
-    whatsapp: "919818592113",
+    whatsapp: "919217016908",
     mapSrc: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117925.33!2d88.264!3d22.535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f882db4908f667%3A0x43e330e68f6c2cbc!2sKolkata%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1713550212891!5m2!1sen!2sin",
     meta: {
       title: "Restroom Cubicles & Commercial Interiors in Kolkata | Pacific Products",
@@ -181,7 +181,7 @@ export const locations: Record<string, LocationData> = {
     phone: "+91 98185 92113",
     email: "info@pacificproduct.in",
     hours: "Sun–Thu: 8:30 AM – 5:30 PM",
-    whatsapp: "919818592113",
+    whatsapp: "919217016908",
     mapSrc: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115582.49386348633!2d55.19503463765103!3d25.197196999999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43496ad9c645%3A0xbde66e5084295162!2sDubai%20-%20United%20Arab%20Emirates!5e0!3m2!1sen!2sin!4v1713550212891!5m2!1sen!2sin",
     meta: {
       title: "Restroom Cubicles & Toilet Partitions Supplier Dubai UAE | Pacific Products",

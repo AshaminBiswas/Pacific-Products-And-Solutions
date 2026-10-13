@@ -34,6 +34,7 @@ const FAQ = lazy(() => import("./pages/FAQ"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const Downloads = lazy(() => import("./pages/Downloads"));
+const Testimonials = lazy(() => import("./pages/Testimonials"));
 const PublicVerifyPage = lazy(() => import("./pages/PublicVerifyPage"));
 
 // ── Lazy-loaded Admin Pages ───────────────────────────────────────────────
@@ -267,7 +268,7 @@ export const router = createBrowserRouter([
         path: "testimonials",
         element: (
           <Suspense fallback={<PageSkeleton />}>
-            <Home />
+            <Testimonials />
           </Suspense>
         ),
       },

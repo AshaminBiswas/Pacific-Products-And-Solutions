@@ -1291,7 +1291,7 @@ function ArchitectBOMToolkit({ navigate }: { navigate: (path: string) => void })
               </Button>
               <button
                 type="button"
-                onClick={() => window.open("https://wa.me/919818592113", "_blank")}
+                onClick={() => window.open("https://wa.me/919217016908", "_blank")}
                 className="px-6 py-3.5 rounded-xl border border-white/20 hover:border-[#7FB706] bg-white/5 hover:bg-white/10 text-white font-semibold text-sm flex items-center justify-center gap-2 transition min-h-[44px]"
               >
                 <span>WhatsApp Architectural Desk</span>

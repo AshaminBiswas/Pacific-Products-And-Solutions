@@ -83,8 +83,9 @@ export default function ContactPage() {
                     <Phone className="w-6 h-6 text-[#B5F823]" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-white text-lg mb-2">Phone</h4>
-                    <p className="text-gray-400 hover:text-white transition-colors cursor-pointer">+91 98185 92113</p>
+                    <h4 className="font-semibold text-white text-lg mb-2">Phone &amp; WhatsApp</h4>
+                    <a href="tel:+919818592113" className="text-gray-400 hover:text-white transition-colors cursor-pointer block">+91 98185 92113 <span className="text-xs text-gray-500">(Office Calling)</span></a>
+                    <a href="https://wa.me/919217016908" target="_blank" rel="noopener noreferrer" className="text-[#25D366] hover:underline text-sm block mt-1">+91 92170 16908 <span className="text-xs text-gray-400">(WhatsApp Only)</span></a>
                   </div>
                 </div>
 
@@ -131,7 +132,7 @@ export default function ContactPage() {
                 <h3 className="text-2xl font-bold text-white mb-3 relative z-10">Need Quick Assistance?</h3>
                 <p className="text-gray-300 mb-6 relative z-10">Chat with us on WhatsApp for instant support</p>
                 <button
-                  onClick={() => window.open("https://wa.me/919818592113", "_blank")}
+                  onClick={() => window.open("https://wa.me/919217016908", "_blank")}
                   className="relative z-10 inline-flex items-center px-6 py-3 bg-[#7FB706] text-white font-medium rounded-xl hover:bg-[#8cc70a] shadow-lg shadow-[#7FB706]/30 transition-all hover:scale-105 active:scale-95"
                 >
                   <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">

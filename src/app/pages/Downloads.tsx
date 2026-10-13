@@ -25,31 +25,63 @@ function formatFileSize(bytes: number): string {
 
 export default function Downloads() {
   const [downloads, setDownloads] = useState<Catalog[]>([]);
+  const [productMap, setProductMap] = useState<Record<string, { title: string; slug: string; category: string }>>({});
   const [loading, setLoading] = useState(true);
   const [selectedType, setSelectedType] = useState<string>("Brochure");
+  const [searchQuery, setSearchQuery] = useState("");
   const [previewItem, setPreviewItem] = useState<Catalog | null>(null);
 
   useEffect(() => {
     const fetchDownloads = async () => {
       setLoading(true);
-      const { data } = await supabase
-        .from("catalogs")
-        .select("*")
-        .eq("published", true)
-        .order("sort_order", { ascending: true })
-        .order("created_at", { ascending: false });
-      
-      if (data) {
-        setDownloads(data as Catalog[]);
+      try {
+        const [{ data: catalogData }, { data: productData }] = await Promise.all([
+          supabase
+            .from("catalogs")
+            .select("*")
+            .eq("published", true)
+            .order("sort_order", { ascending: true })
+            .order("created_at", { ascending: false }),
+          supabase
+            .from("products")
+            .select("id, title, slug, category"),
+        ]);
+
+        if (catalogData) {
+          setDownloads(catalogData as Catalog[]);
+        }
+
+        if (productData) {
+          const map: Record<string, { title: string; slug: string; category: string }> = {};
+          productData.forEach((p: any) => {
+            map[p.id] = { title: p.title, slug: p.slug, category: p.category };
+          });
+          setProductMap(map);
+        }
+      } catch (err) {
+        console.error("Error loading downloads:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchDownloads();
   }, []);
 
   // Filter and group by category
-  const filteredDownloads = downloads.filter((d) => (d.document_type || "Catalog") === selectedType);
+  const filteredDownloads = downloads.filter((d) => {
+    const matchesType = (d.document_type || "Catalog") === selectedType;
+    if (!matchesType) return false;
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    const linkedProduct = d.product_id ? productMap[d.product_id] : null;
+    return (
+      d.title.toLowerCase().includes(q) ||
+      (d.description || "").toLowerCase().includes(q) ||
+      (d.category || "").toLowerCase().includes(q) ||
+      (linkedProduct && linkedProduct.title.toLowerCase().includes(q))
+    );
+  });
   
   const groupedByCategory = filteredDownloads.reduce((acc, item) => {
     const cat = item.category || "Other";
@@ -127,6 +159,28 @@ export default function Downloads() {
 
           {/* Main Content */}
           <div className="lg:w-3/4">
+            {/* Search Input */}
+            <div className="relative mb-8">
+              <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by product model, brochure name, or specification..."
+                className="w-full pl-12 pr-10 py-3 bg-gray-50 dark:bg-[#0a0a1a] border border-gray-200 dark:border-white/10 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#7FB706] text-sm transition-colors"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                  title="Clear search"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
             {loading ? (
               <div className="py-20 flex flex-col items-center justify-center gap-3">
                 <div className="w-8 h-8 rounded-full border-2 border-black/10 dark:border-white/10 border-t-[#7FB706] animate-spin" />
@@ -136,7 +190,9 @@ export default function Downloads() {
               <div className="bg-gray-50 dark:bg-[#0a0a1a] border border-gray-200 dark:border-white/5 rounded-2xl p-16 text-center">
                 <Search className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4 opacity-50" />
                 <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">No documents found</h3>
-                <p className="text-gray-600 dark:text-gray-400">There are currently no {selectedType.toLowerCase()}s available for download.</p>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {searchQuery ? `No documents match "${searchQuery}".` : `There are currently no ${selectedType.toLowerCase()}s available for download.`}
+                </p>
               </div>
             ) : (
               <div className="space-y-12">
@@ -181,6 +237,13 @@ export default function Downloads() {
                           </div>
 
                           <div className="flex-1">
+                            {item.product_id && productMap[item.product_id] && (
+                              <div className="mb-2">
+                                <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#7FB706]/15 text-[#7FB706] border border-[#7FB706]/30">
+                                  Model: {productMap[item.product_id].title}
+                                </span>
+                              </div>
+                            )}
                             <h3 className="text-gray-900 dark:text-white font-medium mb-1 line-clamp-2 group-hover:text-[#7FB706] transition-colors">{item.title}</h3>
                             {item.description && (
                               <p className="text-sm text-gray-600 dark:text-gray-500 line-clamp-2 mb-3">{item.description}</p>

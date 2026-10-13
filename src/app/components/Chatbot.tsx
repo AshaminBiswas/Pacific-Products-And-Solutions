@@ -364,7 +364,7 @@ function LiveProductCard({ product }: { product: Product }) {
             <ClipboardList className="w-2.5 h-2.5" /> Get Quote
           </a>
           <a
-            href={`https://wa.me/919818592113?text=${waMsg}`}
+            href={`https://wa.me/919217016908?text=${waMsg}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-[10px] font-semibold border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 px-2 py-1 rounded-lg hover:border-green-500 hover:text-green-500 transition-colors"

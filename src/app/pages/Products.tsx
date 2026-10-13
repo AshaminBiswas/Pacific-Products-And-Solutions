@@ -433,7 +433,7 @@ export default function ProductsPage({ categorySlug: propCategorySlug }: Product
                   View All Models
                 </Button>
                 <a
-                  href="https://wa.me/919818592113?text=Hello%20Pacific,%20I%20need%20custom%20specifications%20and%20BOQ%20for%20commercial%20cubicles."
+                  href="https://wa.me/919217016908?text=Hello%20Pacific,%20I%20need%20custom%20specifications%20and%20BOQ%20for%20commercial%20cubicles."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-4 py-2.5 rounded-xl text-sm font-semibold bg-emerald-600/10 text-emerald-500 hover:bg-emerald-600/20 border border-emerald-500/20 transition flex items-center gap-2"

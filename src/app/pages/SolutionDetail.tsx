@@ -179,7 +179,7 @@ export default function SolutionDetailPage() {
                   <Button size="lg" onClick={() => navigate("/contact")}>
                     Get a Free Quote <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
-                  <button onClick={() => window.open("https://wa.me/919818592113", "_blank")} className="px-6 py-3.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl hover:bg-white/20 transition-all font-medium text-base">
+                  <button onClick={() => window.open("https://wa.me/919217016908", "_blank")} className="px-6 py-3.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl hover:bg-white/20 transition-all font-medium text-base">
                     WhatsApp Us
                   </button>
                 </motion.div>

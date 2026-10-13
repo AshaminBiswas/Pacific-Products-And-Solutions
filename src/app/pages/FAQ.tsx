@@ -368,7 +368,7 @@ export default function FAQPage() {
                 Contact Us
               </Button>
               <a
-                href="https://wa.me/919818592113"
+                href="https://wa.me/919217016908"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white font-semibold transition-all duration-200"
