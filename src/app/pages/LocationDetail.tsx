@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, animate, useInView } from "motion/react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams, useLocation } from "react-router";
 import { SEO } from "../components/SEO";
 import { organizationSchema, faqSchema, breadcrumbSchema } from "../../lib/seo-data";
 import {
@@ -831,12 +831,30 @@ function StickyCta({ data }: { data: LocationData }) {
 // ── Main Page Component ────────────────────────────────────────────────────
 export default function LocationPage() {
   const { location, city } = useParams<{ location?: string; city?: string }>();
+  const routerLocation = useLocation();
   const navigate = useNavigate();
 
-  // Support both /restroom-cubicle-manufacturer-:city and /locations/:location
-  const rawParam = city || location;
-  const resolvedKey = resolveLocationKey(rawParam);
+  // Support route params (:location, :city), full pathname, or trailing segment
+  const cleanPath = routerLocation.pathname.replace(/^\/+|\/+$/g, "");
+  const pathSegment = cleanPath.split("/").pop() || "";
+  const rawParam = city || location || cleanPath || pathSegment;
+  const resolvedKey =
+    resolveLocationKey(rawParam) ||
+    resolveLocationKey(cleanPath) ||
+    resolveLocationKey(pathSegment);
   const data = resolvedKey ? locations[resolvedKey] : null;
+
+  // Persist detected customer location to localStorage and broadcast change event
+  useEffect(() => {
+    if (resolvedKey) {
+      try {
+        localStorage.setItem("pacific_customer_location", resolvedKey);
+        window.dispatchEvent(new CustomEvent("pacific_location_changed", { detail: resolvedKey }));
+      } catch (err) {
+        // ignore localStorage access issues
+      }
+    }
+  }, [resolvedKey]);
 
   const { data: locationImages } = useLocationGallery(resolvedKey || undefined);
   const pageData = data ? mergeBackendImages(data, locationImages) : null;
@@ -858,7 +876,7 @@ export default function LocationPage() {
     );
   }
 
-  const canonicalPath = `/${pageData.canonicalSlug}/`;
+  const canonicalPath = `/${pageData.canonicalSlug}`;
 
   return (
     <main className="min-h-screen bg-white text-[#030213] dark:bg-[#030213] dark:text-white">

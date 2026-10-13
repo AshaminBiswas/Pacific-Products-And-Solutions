@@ -34,6 +34,7 @@ import {
   Wrench,
   Check,
   FileText,
+  MapPin,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { Button } from "../components/Button";
@@ -43,6 +44,7 @@ import { FeaturedServices } from "../components/FeaturedServices";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { locations, searchLocations, resolveLocationKey } from "./locations/locationData";
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 import type { Product, Solution } from "../../lib/database.types";
 import { useHeroImages, usePageBanner } from "../../lib/hooks";
@@ -153,8 +155,9 @@ type SearchResultItem = {
   title: string;
   subtitle?: string;
   image_url?: string;
-  type: "product" | "solution";
+  type: "product" | "solution" | "location";
   url: string;
+  locationKey?: string;
 };
 
 // ── Hero Section (extracted as its own component) ─────────────
@@ -248,6 +251,18 @@ function HeroSection() {
       return;
     }
 
+    const locationResults: SearchResultItem[] = searchLocations(q)
+      .slice(0, 4)
+      .map((loc) => ({
+        id: `loc-${loc.slug}`,
+        title: `${loc.city} Restroom Cubicles`,
+        subtitle: `${loc.region} Hub · ${loc.logisticsInfo.deliveryTime}`,
+        image_url: loc.heroImage,
+        type: "location" as const,
+        url: `/${loc.canonicalSlug}`,
+        locationKey: loc.slug,
+      }));
+
     const productResults: SearchResultItem[] = allProducts
       .filter((p) =>
         p.title.toLowerCase().includes(q) ||
@@ -284,20 +299,40 @@ function HeroSection() {
         url: `/solutions/${s.slug}`,
       }));
 
-    setFilteredResults([...productResults, ...solutionResults]);
+    setFilteredResults([...locationResults, ...productResults, ...solutionResults]);
     setShowDropdown(true);
   }, [searchQuery, allProducts, allSolutions]);
 
-  const handleResultClick = (url: string) => {
+  const handleResultClick = (item: SearchResultItem) => {
     setShowDropdown(false);
     setSearchQuery("");
-    navigate(url);
+    if (item.type === "location" && item.locationKey) {
+      try {
+        localStorage.setItem("pacific_customer_location", item.locationKey);
+        window.dispatchEvent(new CustomEvent("pacific_location_changed", { detail: item.locationKey }));
+      } catch {}
+    }
+    navigate(item.url);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
+    const q = searchQuery.trim();
+    if (q) {
+      const matchedKey = resolveLocationKey(q);
+      if (matchedKey) {
+        try {
+          localStorage.setItem("pacific_customer_location", matchedKey);
+          window.dispatchEvent(new CustomEvent("pacific_location_changed", { detail: matchedKey }));
+        } catch {}
+        const loc = locations[matchedKey];
+        if (loc) {
+          setShowDropdown(false);
+          navigate(`/${loc.canonicalSlug}`);
+          return;
+        }
+      }
+      navigate(`/products?q=${encodeURIComponent(q)}`);
       setShowDropdown(false);
     }
   };
@@ -464,7 +499,7 @@ function HeroSection() {
                         {(isExpanded ? filteredResults : filteredResults.slice(0, 5)).map((item) => (
                           <motion.button
                             key={`${item.type}-${item.id}`}
-                            onClick={() => handleResultClick(item.url)}
+                            onClick={() => handleResultClick(item)}
                             whileHover={{ x: 3 }}
                             className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 transition-colors text-left group"
                           >
@@ -474,9 +509,13 @@ function HeroSection() {
                                 <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" loading="lazy" />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center">
-                                  {item.type === "product"
-                                    ? <Package className="w-4 h-4 text-white/20" />
-                                    : <Layers className="w-4 h-4 text-white/20" />}
+                                  {item.type === "product" ? (
+                                    <Package className="w-4 h-4 text-white/20" />
+                                  ) : item.type === "location" ? (
+                                    <MapPin className="w-4 h-4 text-[#7FB706]" />
+                                  ) : (
+                                    <Layers className="w-4 h-4 text-white/20" />
+                                  )}
                                 </div>
                               )}
                             </div>
@@ -491,6 +530,8 @@ function HeroSection() {
                             <span className={`text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full flex-shrink-0 ${
                               item.type === "product"
                                 ? "bg-[#7FB706]/15 text-[#B5F823]"
+                                : item.type === "location"
+                                ? "bg-[#7FB706]/20 text-[#B5F823] border border-[#7FB706]/30"
                                 : "bg-blue-500/15 text-blue-400"
                             }`}>
                               {item.type}

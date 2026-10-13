@@ -951,6 +951,14 @@ export const SLUG_MAP: Record<string, string> = {
   "restroom-cubicle-manufacturer-guwahati": "guwahati",
   "restroom-cubicle-manufacturer-bhubaneswar": "bhubaneswar",
   "restroom-cubicle-manufacturer-kochi": "kochi",
+  "restroom-cubicle-manufacturer-uae": "uae",
+  // Common aliases & variations
+  "dubai": "uae",
+  "delhi-ncr": "delhi",
+  "new-delhi": "delhi",
+  "calcutta": "kolkata",
+  "madras": "chennai",
+  "cochin": "kochi",
 };
 
 export function resolveLocationKey(param: string | undefined): string | null {
@@ -958,3 +966,99 @@ export function resolveLocationKey(param: string | undefined): string | null {
   const normalized = param.toLowerCase().trim().replace(/^\/+|\/+$/g, "");
   return SLUG_MAP[normalized] || null;
 }
+
+// ── Regional Clustered Locations (for dynamic customer-location display) ──
+
+export interface RegionCluster {
+  id: string;
+  name: string;
+  badge: string;
+  description: string;
+  cityKeys: string[];
+}
+
+export const REGION_CLUSTERS: RegionCluster[] = [
+  {
+    id: "ncr",
+    name: "Delhi NCR Hub",
+    badge: "Primary Plant & HQ",
+    description: "Same-day site inspection & 24–48h express dispatch from Okhla, New Delhi",
+    cityKeys: ["delhi", "gurugram", "noida", "greater-noida", "ghaziabad", "faridabad"],
+  },
+  {
+    id: "west",
+    name: "Western Region",
+    badge: "Direct Freight 2–3 Days",
+    description: "Dedicated project coordinators for Mumbai, Pune, and Gujarat commercial zones",
+    cityKeys: ["mumbai", "pune", "ahmedabad"],
+  },
+  {
+    id: "south",
+    name: "Southern Region",
+    badge: "Direct Freight 3–4 Days",
+    description: "Serving top IT corridors, tech parks, and commercial towers across South India",
+    cityKeys: ["bengaluru", "hyderabad", "chennai", "kochi"],
+  },
+  {
+    id: "east",
+    name: "Eastern & Northeast",
+    badge: "Direct Freight 3–5 Days",
+    description: "Express rail & road logistics for Eastern industrial and institutional hubs",
+    cityKeys: ["kolkata", "bhubaneswar", "guwahati"],
+  },
+  {
+    id: "international",
+    name: "Middle East / UAE",
+    badge: "Export Air & Sea Freight",
+    description: "Turnkey knockdown crates conforming to ISPM-15 for GCC projects",
+    cityKeys: ["uae"],
+  },
+];
+
+export const CITY_REGION_MAP: Record<string, string> = {
+  delhi: "ncr",
+  gurugram: "ncr",
+  noida: "ncr",
+  "greater-noida": "ncr",
+  ghaziabad: "ncr",
+  faridabad: "ncr",
+  mumbai: "west",
+  pune: "west",
+  ahmedabad: "west",
+  bengaluru: "south",
+  hyderabad: "south",
+  chennai: "south",
+  kochi: "south",
+  kolkata: "east",
+  bhubaneswar: "east",
+  guwahati: "east",
+  uae: "international",
+};
+
+export function getRegionForCity(cityKey: string | undefined): RegionCluster {
+  const normalizedKey = resolveLocationKey(cityKey) || "delhi";
+  const regionId = CITY_REGION_MAP[normalizedKey] || "ncr";
+  return REGION_CLUSTERS.find((r) => r.id === regionId) || REGION_CLUSTERS[0];
+}
+
+export function getLocationsForCustomer(locationKey: string | undefined): LocationData[] {
+  const region = getRegionForCity(locationKey);
+  return region.cityKeys
+    .map((k) => locations[k])
+    .filter((loc): loc is LocationData => Boolean(loc));
+}
+
+export function searchLocations(query: string): LocationData[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  return Object.values(locations).filter((loc) => {
+    return (
+      loc.city.toLowerCase().includes(q) ||
+      loc.region.toLowerCase().includes(q) ||
+      loc.stateName.toLowerCase().includes(q) ||
+      loc.targetKeyword.toLowerCase().includes(q) ||
+      loc.logisticsInfo.coverageHubs.some((h) => h.toLowerCase().includes(q))
+    );
+  });
+}
+

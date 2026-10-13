@@ -225,13 +225,35 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: "restroom-cubicle-manufacturer-:city",
+      ...[
+        "restroom-cubicle-manufacturer-delhi",
+        "restroom-cubicle-manufacturer-gurugram",
+        "restroom-cubicle-manufacturer-noida",
+        "restroom-cubicle-manufacturer-greater-noida",
+        "restroom-cubicle-manufacturer-ghaziabad",
+        "restroom-cubicle-manufacturer-faridabad",
+        "restroom-cubicle-manufacturer-mumbai",
+        "restroom-cubicle-manufacturer-kolkata",
+        "restroom-cubicle-manufacturer-bengaluru",
+        "restroom-cubicle-manufacturer-hyderabad",
+        "restroom-cubicle-manufacturer-chennai",
+        "restroom-cubicle-manufacturer-pune",
+        "restroom-cubicle-manufacturer-ahmedabad",
+        "restroom-cubicle-manufacturer-guwahati",
+        "restroom-cubicle-manufacturer-bhubaneswar",
+        "restroom-cubicle-manufacturer-kochi",
+        "restroom-cubicle-manufacturer-uae",
+      ].map((slug) => ({
+        path: slug,
         element: (
           <Suspense fallback={<PageSkeleton />}>
             <LocationDetail />
           </Suspense>
         ),
+      })),
+      {
+        path: "locations",
+        element: <Navigate to="/restroom-cubicle-manufacturer-delhi" replace />,
       },
       {
         path: "locations/:location",

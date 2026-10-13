@@ -1,8 +1,17 @@
-import { useState } from "react";
-import { Link } from "react-router";
-import { Facebook, Youtube, Linkedin, Instagram, Mail, Phone, MapPin, Clock } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Link, useLocation } from "react-router";
+import { Facebook, Youtube, Linkedin, Instagram, Mail, Phone, MapPin, Clock, Search, X } from "lucide-react";
 import { useProducts, useSolutions } from "../../lib/hooks";
 import { OFFICE_PHONE, OFFICE_PHONE_TEL, WHATSAPP_DISPLAY, WHATSAPP_URL } from "../../lib/constants";
+import {
+  locations,
+  REGION_CLUSTERS,
+  getRegionForCity,
+  getLocationsForCustomer,
+  searchLocations,
+  resolveLocationKey,
+  type LocationData,
+} from "../pages/locations/locationData";
 
 const logo = "/logo.webp";
 
@@ -10,6 +19,77 @@ export function Footer() {
   const [showUpdate, setShowUpdate] = useState(false);
   const { data: products } = useProducts();
   const { data: solutions } = useSolutions();
+  const routerLocation = useLocation();
+
+  const [activeLocationKey, setActiveLocationKey] = useState<string>(() => {
+    try {
+      return localStorage.getItem("pacific_customer_location") || "delhi";
+    } catch {
+      return "delhi";
+    }
+  });
+  const [footerSearch, setFooterSearch] = useState("");
+  const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
+
+  // Sync customer location from current route
+  useEffect(() => {
+    const cleanPath = routerLocation.pathname.replace(/^\/+|\/+$/g, "");
+    const pathSegment = cleanPath.split("/").pop() || "";
+    const matchedKey = resolveLocationKey(pathSegment) || resolveLocationKey(cleanPath);
+    if (matchedKey) {
+      setActiveLocationKey(matchedKey);
+      try {
+        localStorage.setItem("pacific_customer_location", matchedKey);
+      } catch {}
+    }
+  }, [routerLocation.pathname]);
+
+  // Listen to custom location changes broadcasted across the app
+  useEffect(() => {
+    const handleLocationChange = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      if (customEvent.detail) {
+        setActiveLocationKey(customEvent.detail);
+      }
+    };
+    window.addEventListener("pacific_location_changed", handleLocationChange);
+    return () => window.removeEventListener("pacific_location_changed", handleLocationChange);
+  }, []);
+
+  // Determine active cluster
+  const currentRegion = useMemo(() => {
+    if (selectedRegionId && selectedRegionId !== "all") {
+      return REGION_CLUSTERS.find(r => r.id === selectedRegionId) || getRegionForCity(activeLocationKey);
+    }
+    return getRegionForCity(activeLocationKey);
+  }, [selectedRegionId, activeLocationKey]);
+
+  // Determine displayed locations based on search, selected tab, or customer's region
+  const displayedLocations: LocationData[] = useMemo(() => {
+    const query = footerSearch.trim();
+    if (query) {
+      return searchLocations(query);
+    }
+    if (selectedRegionId === "all") {
+      return Object.values(locations);
+    }
+    if (selectedRegionId) {
+      const cluster = REGION_CLUSTERS.find(r => r.id === selectedRegionId);
+      if (cluster) {
+        return cluster.cityKeys.map(k => locations[k]).filter((l): l is LocationData => Boolean(l));
+      }
+    }
+    return getLocationsForCustomer(activeLocationKey);
+  }, [footerSearch, selectedRegionId, activeLocationKey]);
+
+  const handleLocationClick = (locKey: string) => {
+    setActiveLocationKey(locKey);
+    try {
+      localStorage.setItem("pacific_customer_location", locKey);
+      window.dispatchEvent(new CustomEvent("pacific_location_changed", { detail: locKey }));
+    } catch {}
+    setFooterSearch("");
+  };
 
   const productLinks = [
     { name: "Restroom Cubicles", path: "/products/restroom-cubicles" },
@@ -37,20 +117,6 @@ export function Footer() {
     { name: "Testimonials", path: "/testimonials" },
     { name: "Careers", path: "/careers" },
     { name: "Blog", path: "/blog" },
-  ];
-
-  const locationLinks = [
-    { name: "Delhi NCR", path: "/restroom-cubicle-manufacturer-delhi/" },
-    { name: "Gurugram", path: "/restroom-cubicle-manufacturer-gurugram/" },
-    { name: "Noida", path: "/restroom-cubicle-manufacturer-noida/" },
-    { name: "Mumbai", path: "/restroom-cubicle-manufacturer-mumbai/" },
-    { name: "Bengaluru", path: "/restroom-cubicle-manufacturer-bengaluru/" },
-    { name: "Kolkata", path: "/restroom-cubicle-manufacturer-kolkata/" },
-    { name: "Hyderabad", path: "/restroom-cubicle-manufacturer-hyderabad/" },
-    { name: "Pune", path: "/restroom-cubicle-manufacturer-pune/" },
-    { name: "Chennai", path: "/restroom-cubicle-manufacturer-chennai/" },
-    { name: "Ahmedabad", path: "/restroom-cubicle-manufacturer-ahmedabad/" },
-    { name: "Dubai UAE", path: "/locations/uae" },
   ];
 
   return (
@@ -205,19 +271,132 @@ export function Footer() {
                 <span className="text-gray-400 text-sm">Okhla Industrial Estate, New Delhi - 110020<br/>Delhi, India</span>
               </li>
             </ul>
-            <h5 className="font-semibold mb-2 text-sm">Our Locations</h5>
-            <ul className="space-y-1">
-              {locationLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.path}
-                    className="text-gray-400 hover:text-[#7FB706] transition-colors text-xs"
+            {/* Dynamic Customer Location & Service Areas */}
+            <div className="pt-2 border-t border-white/10">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4 text-[#7FB706] shrink-0" />
+                  <h5 className="font-semibold text-sm text-white">Service Locations</h5>
+                </div>
+                <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#7FB706]/15 text-[#B5F823] border border-[#7FB706]/30">
+                  {footerSearch ? "Search" : currentRegion.name.replace(" Hub", "")}
+                </span>
+              </div>
+
+              {/* City search box */}
+              <div className="relative mb-2.5">
+                <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  value={footerSearch}
+                  onChange={(e) => {
+                    setFooterSearch(e.target.value);
+                    if (selectedRegionId) setSelectedRegionId(null);
+                  }}
+                  placeholder="Search city (e.g. Mumbai, Noida)..."
+                  className="w-full pl-8 pr-7 py-1.5 text-xs bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#7FB706] transition-colors"
+                />
+                {footerSearch && (
+                  <button
+                    type="button"
+                    onClick={() => setFooterSearch("")}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs px-1"
+                    aria-label="Clear city search"
                   >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+
+              {/* Quick region filter pills */}
+              <div className="flex flex-wrap gap-1 mb-2.5">
+                {REGION_CLUSTERS.map((r) => {
+                  const isActive = !footerSearch && (selectedRegionId === r.id || (!selectedRegionId && currentRegion.id === r.id));
+                  return (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => {
+                        setFooterSearch("");
+                        setSelectedRegionId(r.id);
+                      }}
+                      className={`text-[10px] px-1.5 py-0.5 rounded font-medium transition-colors ${
+                        isActive
+                          ? "bg-[#7FB706] text-[#030213] font-bold"
+                          : "bg-white/5 text-gray-400 hover:text-white hover:bg-white/10"
+                      }`}
+                    >
+                      {r.id.toUpperCase()}
+                    </button>
+                  );
+                })}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFooterSearch("");
+                    setSelectedRegionId(selectedRegionId === "all" ? null : "all");
+                  }}
+                  className={`text-[10px] px-1.5 py-0.5 rounded font-medium transition-colors ${
+                    selectedRegionId === "all"
+                      ? "bg-[#7FB706] text-[#030213] font-bold"
+                      : "bg-white/5 text-gray-400 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  ALL
+                </button>
+              </div>
+
+              {/* Filtered Location Links */}
+              {displayedLocations.length > 0 ? (
+                <ul className="space-y-1 max-h-52 overflow-y-auto pr-1">
+                  {displayedLocations.map((loc) => {
+                    const isCurrent = loc.slug === activeLocationKey;
+                    return (
+                      <li key={loc.slug}>
+                        <Link
+                          to={`/${loc.canonicalSlug}`}
+                          onClick={() => handleLocationClick(loc.slug)}
+                          className={`flex items-center justify-between group text-xs transition-colors py-0.5 ${
+                            isCurrent
+                              ? "text-[#B5F823] font-semibold"
+                              : "text-gray-400 hover:text-[#7FB706]"
+                          }`}
+                        >
+                          <span className="flex items-center gap-1.5 truncate">
+                            <span
+                              className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                                isCurrent ? "bg-[#B5F823]" : "bg-gray-600 group-hover:bg-[#7FB706]"
+                              }`}
+                            />
+                            <span className="truncate">{loc.city}</span>
+                          </span>
+                          <span className="text-[10px] text-gray-500 group-hover:text-gray-400 shrink-0 ml-1">
+                            {loc.region}
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <div className="py-2.5 text-center">
+                  <p className="text-xs text-gray-400">No locations matching "{footerSearch}"</p>
+                  <p className="text-[10px] text-gray-500 mt-0.5">We manufacture & deliver Pan-India.</p>
+                </div>
+              )}
+
+              {/* Cluster Logistics Info */}
+              {!footerSearch && selectedRegionId !== "all" && (
+                <div className="mt-2.5 pt-2 border-t border-white/5">
+                  <p className="text-[10px] text-[#B5F823] font-medium leading-tight">
+                    {currentRegion.badge}
+                  </p>
+                  <p className="text-[10px] text-gray-500 mt-0.5 leading-snug">
+                    {currentRegion.description}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
