@@ -47,6 +47,7 @@ import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 import type { Product, Solution } from "../../lib/database.types";
 import { useHeroImages, usePageBanner } from "../../lib/hooks";
 import { getOptimizedImageUrl } from "../../lib/imageOptimization";
+import { useIsMobile } from "../components/ui/use-mobile";
 
 // ─────────────────────────────────────────────────────────────
 
@@ -202,8 +203,10 @@ function HeroSection() {
       ? heroImages[currentSlide].description
       : "";
 
+  const isMobile = useIsMobile();
   const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 450], [1, 0]);
+  const desktopOpacity = useTransform(scrollY, [0, 450], [1, 0]);
+  const opacity = isMobile ? undefined : desktopOpacity;
 
   // ── Fetch products & solutions on search interaction or idle (keeps critical load fast) ──
   const searchDataLoaded = useRef(false);
@@ -310,7 +313,7 @@ function HeroSection() {
           images={heroImages.map((img) => ({ url: img.url, description: img.description, alt_text: img.alt_text }))}
           onSlideChange={setCurrentSlide}
         />
-      ) : (
+      ) : !isMobile ? (
         <div className="absolute inset-0 z-0 pointer-events-none">
           <div className="absolute inset-0 bg-gradient-to-br from-[#f0ffc8]/80 via-white/60 to-[#e6fdb0]/80 dark:from-[#030213] dark:via-[#030213] dark:to-[#0a0a1a]" />
           <motion.div
@@ -342,11 +345,13 @@ function HeroSection() {
             style={{ backgroundImage: "repeating-linear-gradient(0deg, #7FB706 0px, transparent 1px, transparent 40px), repeating-linear-gradient(90deg, #7FB706 0px, transparent 1px, transparent 40px)" }}
           />
         </div>
+      ) : (
+        <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-[#f0ffc8]/80 via-white/60 to-[#e6fdb0]/80 dark:from-[#030213] dark:via-[#030213] dark:to-[#0a0a1a]" />
       )}
 
       {/* Main content */}
       <motion.div
-        style={{ opacity }}
+        style={opacity ? { opacity } : undefined}
         className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 text-center"
       >
         {/* Primary Keyword H1 / Tagline */}
@@ -356,9 +361,8 @@ function HeroSection() {
           Pacific Restroom Cubicles &amp; Toilet Partitions Manufacturer in India
         </h1>
 
-        {/* Description */}
+        {/* Description (Primary LCP Element on Mobile) */}
         <p
-          key={currentSlide}
           className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 sm:mb-10 max-w-2xl lg:max-w-3xl mx-auto leading-relaxed font-medium min-h-[3.5rem] flex items-center justify-center"
           style={{ textShadow: "0 1px 8px rgba(0,0,0,0.9), 0 2px 20px rgba(0,0,0,0.7)" }}
         >

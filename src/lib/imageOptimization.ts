@@ -18,7 +18,8 @@ export function getOptimizedImageUrl(
     if (src.includes("ik.imagekit.io")) {
       const url = new URL(src);
       url.searchParams.delete("tr");
-      url.searchParams.set("tr", `w-${width},q-${quality},f-webp`);
+      const safeQuality = quality > 70 ? 70 : quality;
+      url.searchParams.set("tr", `w-${width},q-${safeQuality},f-webp`);
       return url.toString();
     }
 
@@ -26,7 +27,7 @@ export function getOptimizedImageUrl(
     if (src.includes("/storage/v1/object/public/")) {
       const url = new URL(src);
       url.searchParams.set("width", String(width));
-      url.searchParams.set("quality", String(quality));
+      url.searchParams.set("quality", String(quality > 70 ? 70 : quality));
       url.searchParams.set("format", "webp");
       return url.toString();
     }
@@ -35,7 +36,9 @@ export function getOptimizedImageUrl(
     if (src.includes("images.unsplash.com")) {
       const url = new URL(src);
       url.searchParams.set("w", String(width));
-      url.searchParams.set("q", String(quality > 70 ? 70 : quality));
+      const safeQuality = quality > 65 ? 65 : quality;
+      url.searchParams.set("q", String(safeQuality));
+      url.searchParams.set("fm", "webp");
       url.searchParams.set("auto", "format,compress");
       url.searchParams.set("fit", "crop");
       return url.toString();
