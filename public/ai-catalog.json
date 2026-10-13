@@ -1,16 +1,16 @@
 {
-  "$schema": "https://agenticresourcediscovery.org/schemas/v1/ai-catalog.json",
   "specVersion": "1.0",
   "host": {
     "displayName": "Pacific Products & Solutions",
-    "publisherDomain": "pacificproduct.in",
-    "documentationUrl": "https://www.pacificproduct.in/about"
+    "identifier": "did:web:pacificproduct.in",
+    "documentationUrl": "https://www.pacificproduct.in/about",
+    "logoUrl": "https://www.pacificproduct.in/logo.png"
   },
   "entries": [
     {
-      "identifier": "urn:ai:pacificproduct.in:catalog:restroom-cubicles",
+      "identifier": "urn:air:pacificproduct.in:catalog:restroom-cubicles",
       "displayName": "Pacific Restroom Cubicles & Toilet Partitions Catalog",
-      "type": "application/json",
+      "type": "application/ai-catalog+json",
       "url": "https://www.pacificproduct.in/products/restroom-cubicles",
       "description": "Commercial compact laminate (HPL) restroom cubicles, nylon and SS 304/316 hardware specifications, CAD layouts, and technical estimation desk.",
       "representativeQueries": [
@@ -20,9 +20,9 @@
       ]
     },
     {
-      "identifier": "urn:ai:pacificproduct.in:catalog:lockers",
+      "identifier": "urn:air:pacificproduct.in:catalog:lockers",
       "displayName": "Modular Compact Laminate Locker Systems",
-      "type": "application/json",
+      "type": "application/ai-catalog+json",
       "url": "https://www.pacificproduct.in/products/lockers",
       "description": "Heavy-duty phenolic compact laminate locker systems for commercial facilities, gymnasiums, and corporate workspaces with electronic and cam lock configurations.",
       "representativeQueries": [
@@ -32,9 +32,9 @@
       ]
     },
     {
-      "identifier": "urn:ai:pacificproduct.in:catalog:urinal-partitions",
+      "identifier": "urn:air:pacificproduct.in:catalog:urinal-partitions",
       "displayName": "Hygienic Compact Laminate Urinal Modesty Partitions",
-      "type": "application/json",
+      "type": "application/ai-catalog+json",
       "url": "https://www.pacificproduct.in/products/urinal-partitions",
       "description": "Waterproof, anti-bacterial compact laminate urinal privacy modesty screens. Cantilever wall-hung and floor-mounted systems.",
       "representativeQueries": [
@@ -44,9 +44,9 @@
       ]
     },
     {
-      "identifier": "urn:ai:pacificproduct.in:catalog:kids-cubicles",
+      "identifier": "urn:air:pacificproduct.in:catalog:kids-cubicles",
       "displayName": "Kids & Primary School Restroom Cubicle Systems",
-      "type": "application/json",
+      "type": "application/ai-catalog+json",
       "url": "https://www.pacificproduct.in/products/kids-cubicles",
       "description": "Safety-first, anti-pinch, colorful compact laminate cubicles designed specifically for kindergartens, primary schools, and children's amusement centers.",
       "representativeQueries": [
@@ -56,9 +56,9 @@
       ]
     },
     {
-      "identifier": "urn:ai:pacificproduct.in:service:boq-estimation",
+      "identifier": "urn:air:pacificproduct.in:service:boq-estimation",
       "displayName": "Architectural Estimation Desk & BOQ Service",
-      "type": "application/json",
+      "type": "application/agent-card+json",
       "url": "https://www.pacificproduct.in/contact",
       "description": "Technical CAD layout estimation, BOQ itemization, and architectural finish sample dispatch desk for B2B contractors and architects.",
       "representativeQueries": [
@@ -68,11 +68,16 @@
       ]
     },
     {
-      "identifier": "urn:ai:pacificproduct.in:docs:llms-txt",
+      "identifier": "urn:air:pacificproduct.in:skills:llms-txt",
       "displayName": "Pacific Products LLM Context & Guidelines",
-      "type": "text/markdown",
+      "type": "text/markdown; profile=\"urn:air:agent-skills\"",
       "url": "https://www.pacificproduct.in/llms.txt",
-      "description": "Machine-readable context guide, markdown links, and technical specifications for large language models and autonomous AI agents."
+      "description": "Machine-readable context guide, markdown links, and technical specifications for large language models and autonomous AI agents.",
+      "representativeQueries": [
+        "Pacific restroom cubicles LLM specifications context",
+        "Pacific Products commercial toilet partitions guidelines",
+        "Compact laminate HPL cubicles technical documentation"
+      ]
     }
   ]
 }
