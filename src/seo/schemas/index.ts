@@ -31,10 +31,21 @@ export function organizationSchema() {
     areaServed: [
       { "@type": "Country", name: "India" },
       { "@type": "AdministrativeArea", name: "Delhi NCR" },
+      { "@type": "AdministrativeArea", name: "Gurugram" },
+      { "@type": "AdministrativeArea", name: "Noida" },
+      { "@type": "AdministrativeArea", name: "Greater Noida" },
+      { "@type": "AdministrativeArea", name: "Ghaziabad" },
+      { "@type": "AdministrativeArea", name: "Faridabad" },
       { "@type": "AdministrativeArea", name: "Mumbai" },
-      { "@type": "AdministrativeArea", name: "Bangalore" },
-      { "@type": "AdministrativeArea", name: "Ahmedabad" },
       { "@type": "AdministrativeArea", name: "Kolkata" },
+      { "@type": "AdministrativeArea", name: "Bengaluru" },
+      { "@type": "AdministrativeArea", name: "Hyderabad" },
+      { "@type": "AdministrativeArea", name: "Chennai" },
+      { "@type": "AdministrativeArea", name: "Pune" },
+      { "@type": "AdministrativeArea", name: "Ahmedabad" },
+      { "@type": "AdministrativeArea", name: "Guwahati" },
+      { "@type": "AdministrativeArea", name: "Bhubaneswar" },
+      { "@type": "AdministrativeArea", name: "Kochi" },
       { "@type": "Country", name: "United Arab Emirates" },
     ],
     hasOfferCatalog: {
@@ -113,13 +124,6 @@ export function localBusinessSchema(location?: {
       opens: "09:00",
       closes: "18:00",
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      bestRating: "5",
-      worstRating: "1",
-      ratingCount: "100",
-    },
   };
 }
 
@@ -152,12 +156,6 @@ export function productSchema(product: {
       availability: "https://schema.org/InStock",
       priceCurrency: "INR",
       seller: { "@type": "Organization", name: SITE_NAME },
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      bestRating: "5",
-      ratingCount: "85",
     },
   };
 }

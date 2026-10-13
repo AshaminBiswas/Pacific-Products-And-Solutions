@@ -166,6 +166,34 @@ export const router = createBrowserRouter([
         element: <Navigate to="/products/kids-cubicles" replace />,
       },
       {
+        path: "restroom-cubicles",
+        element: <Navigate to="/products/restroom-cubicles" replace />,
+      },
+      {
+        path: "toilet-cubicles",
+        element: <Navigate to="/products/restroom-cubicles" replace />,
+      },
+      {
+        path: "toilet-partitions",
+        element: <Navigate to="/products/restroom-cubicles" replace />,
+      },
+      {
+        path: "shower-cubicles",
+        element: <Navigate to="/products/restroom-cubicles" replace />,
+      },
+      {
+        path: "kids-toilet-cubicles",
+        element: <Navigate to="/products/kids-cubicles" replace />,
+      },
+      {
+        path: "hpl-lockers",
+        element: <Navigate to="/products/lockers" replace />,
+      },
+      {
+        path: "commercial-washroom-solutions",
+        element: <Navigate to="/products" replace />,
+      },
+      {
         path: "products/:categorySlug/:productSlug",
         element: (
           <Suspense fallback={<ProductDetailSkeleton />}>
@@ -194,6 +222,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<SolutionsSkeleton />}>
             <SolutionDetail />
+          </Suspense>
+        ),
+      },
+      {
+        path: "restroom-cubicle-manufacturer-:city",
+        element: (
+          <Suspense fallback={<PageSkeleton />}>
+            <LocationDetail />
           </Suspense>
         ),
       },

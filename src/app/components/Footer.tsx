@@ -40,8 +40,16 @@ export function Footer() {
   ];
 
   const locationLinks = [
-    { name: "Delhi NCR", path: "/locations/delhi" },
-    { name: "Kolkata", path: "/locations/kolkata" },
+    { name: "Delhi NCR", path: "/restroom-cubicle-manufacturer-delhi/" },
+    { name: "Gurugram", path: "/restroom-cubicle-manufacturer-gurugram/" },
+    { name: "Noida", path: "/restroom-cubicle-manufacturer-noida/" },
+    { name: "Mumbai", path: "/restroom-cubicle-manufacturer-mumbai/" },
+    { name: "Bengaluru", path: "/restroom-cubicle-manufacturer-bengaluru/" },
+    { name: "Kolkata", path: "/restroom-cubicle-manufacturer-kolkata/" },
+    { name: "Hyderabad", path: "/restroom-cubicle-manufacturer-hyderabad/" },
+    { name: "Pune", path: "/restroom-cubicle-manufacturer-pune/" },
+    { name: "Chennai", path: "/restroom-cubicle-manufacturer-chennai/" },
+    { name: "Ahmedabad", path: "/restroom-cubicle-manufacturer-ahmedabad/" },
     { name: "Dubai UAE", path: "/locations/uae" },
   ];
 
