@@ -9,6 +9,7 @@ import { DynamicIcon } from "../components/DynamicIcon";
 import { SEO } from "../components/SEO";
 import { breadcrumbSchema, faqSchema, serviceSchema, DEFAULT_KEYWORDS } from "../../lib/seo-data";
 import { ProductCard } from "../components/ProductCard";
+import { ColorsAndFinishesSection } from "../components/ColorsAndFinishesSection";
 
 export default function SolutionDetailPage() {
   const { industry } = useParams<{ industry: string }>();
@@ -17,7 +18,6 @@ export default function SolutionDetailPage() {
   const { data: allProducts } = useProducts();
   const [currentMain, setCurrentMain] = useState<string | null>(null);
   const [currentThumbs, setCurrentThumbs] = useState<string[] | null>(null);
-  const [activeColorIdx, setActiveColorIdx] = useState(0);
   const prodScrollRef = useRef<HTMLDivElement>(null);
   const [prodCanLeft, setProdCanLeft] = useState(false);
   const [prodCanRight, setProdCanRight] = useState(true);
@@ -245,57 +245,7 @@ export default function SolutionDetailPage() {
 
       {/* ═══════════════════ COLORS & FINISHES ═══════════════════ */}
       {solution.colors && solution.colors.length > 0 && (
-        <section className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#030213] transition-colors border-t border-gray-100 dark:border-white/5">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-              <span className="text-xs font-bold tracking-widest text-[#7FB706] uppercase">Options</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mt-2 mb-4">Colors & Finishes</h2>
-            </motion.div>
-            
-            <div className="max-w-4xl mx-auto mb-10">
-              <motion.div 
-                key={activeColorIdx}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4 }}
-                className="relative rounded-2xl overflow-hidden aspect-[16/9] ring-1 ring-black/5 dark:ring-white/10 bg-gray-50 dark:bg-white/[0.02]"
-              >
-                <ImageWithFallback 
-                  src={solution.colors[activeColorIdx]?.image_url} 
-                  alt={solution.colors[activeColorIdx]?.name} 
-                  className="w-full h-full object-cover" 
-                />
-                <div className="absolute bottom-4 left-4 right-4 text-center sm:text-left sm:bottom-6 sm:left-6">
-                  <div className="inline-block px-4 py-2 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-xl shadow-lg border border-black/5 dark:border-white/10">
-                    <span className="font-bold text-gray-900 dark:text-white">
-                      {solution.colors[activeColorIdx]?.name}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
-              {solution.colors.map((color: any, index: number) => {
-                const isActive = index === activeColorIdx;
-                return (
-                  <button
-                    key={index}
-                    onClick={() => setActiveColorIdx(index)}
-                    className={`group relative flex flex-col items-center gap-2 transition-all duration-300 ${isActive ? 'scale-110' : 'hover:scale-105 opacity-70 hover:opacity-100'}`}
-                  >
-                    <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden ring-2 transition-all shadow-md ${isActive ? 'ring-[#7FB706] ring-offset-2 ring-offset-white dark:ring-offset-[#030213] shadow-[#7FB706]/20' : 'ring-gray-200 dark:ring-white/10 hover:ring-[#7FB706]/50'}`}>
-                      <ImageWithFallback src={color.image_url} alt={color.name} className="w-full h-full object-cover" />
-                    </div>
-                    <span className={`text-xs sm:text-sm font-semibold transition-colors ${isActive ? 'text-[#7FB706]' : 'text-gray-500 dark:text-gray-400'}`}>
-                      {color.name}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        <ColorsAndFinishesSection colors={solution.colors} />
       )}
 
       {/* ═══════════════════ FEATURES — NUMBERED LIST ═══════════════════ */}
