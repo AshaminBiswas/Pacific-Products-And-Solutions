@@ -74,17 +74,45 @@ export function Footer() {
               Leading B2B interior contracting provider in India, specializing in premium restroom cubicles, toilet partitions, urinal screens, locker solutions, and custom hardware for commercial spaces.
             </p>
             <div className="flex space-x-4">
-              <a href="https://www.facebook.com/profile.php?id=100063648025932" target="_blank" rel="noopener noreferrer" className="hover:text-[#7FB706] transition-colors">
-                <Facebook className="w-5 h-5" />
+              <a
+                href="https://www.facebook.com/profile.php?id=100063648025932"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#7FB706] transition-colors"
+                aria-label="Visit Pacific Products &amp; Solutions on Facebook"
+              >
+                <Facebook className="w-5 h-5" aria-hidden="true" />
+                <span className="sr-only">Facebook</span>
               </a>
-              <a href="https://youtube.com/@pacificcubicles" target="_blank" rel="noopener noreferrer" className="hover:text-[#7FB706] transition-colors">
-                <Youtube className="w-5 h-5" />
+              <a
+                href="https://youtube.com/@pacificcubicles"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#7FB706] transition-colors"
+                aria-label="Visit Pacific Products on YouTube"
+              >
+                <Youtube className="w-5 h-5" aria-hidden="true" />
+                <span className="sr-only">YouTube</span>
               </a>
-              <a href="https://www.linkedin.com/company/pacific-products-and-solutions" target="_blank" rel="noopener noreferrer" className="hover:text-[#7FB706] transition-colors">
-                <Linkedin className="w-5 h-5" />
+              <a
+                href="https://www.linkedin.com/company/pacific-products-and-solutions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#7FB706] transition-colors"
+                aria-label="Visit Pacific Products &amp; Solutions on LinkedIn"
+              >
+                <Linkedin className="w-5 h-5" aria-hidden="true" />
+                <span className="sr-only">LinkedIn</span>
               </a>
-              <a href="https://www.instagram.com/pacificcubicles" target="_blank" rel="noopener noreferrer" className="hover:text-[#7FB706] transition-colors">
-                <Instagram className="w-5 h-5" />
+              <a
+                href="https://www.instagram.com/pacificcubicles"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#7FB706] transition-colors"
+                aria-label="Visit Pacific Products on Instagram"
+              >
+                <Instagram className="w-5 h-5" aria-hidden="true" />
+                <span className="sr-only">Instagram</span>
               </a>
             </div>
           </div>

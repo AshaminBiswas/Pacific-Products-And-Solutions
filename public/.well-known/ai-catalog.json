@@ -1,0 +1,78 @@
+{
+  "$schema": "https://agenticresourcediscovery.org/schemas/v1/ai-catalog.json",
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Pacific Products & Solutions",
+    "publisherDomain": "pacificproduct.in",
+    "documentationUrl": "https://www.pacificproduct.in/about"
+  },
+  "entries": [
+    {
+      "identifier": "urn:ai:pacificproduct.in:catalog:restroom-cubicles",
+      "displayName": "Pacific Restroom Cubicles & Toilet Partitions Catalog",
+      "type": "application/json",
+      "url": "https://www.pacificproduct.in/products/restroom-cubicles",
+      "description": "Commercial compact laminate (HPL) restroom cubicles, nylon and SS 304/316 hardware specifications, CAD layouts, and technical estimation desk.",
+      "representativeQueries": [
+        "Restroom cubicle specifications India",
+        "HPL toilet partition CAD layout estimation",
+        "Commercial toilet cubicle manufacturer Delhi NCR"
+      ]
+    },
+    {
+      "identifier": "urn:ai:pacificproduct.in:catalog:lockers",
+      "displayName": "Modular Compact Laminate Locker Systems",
+      "type": "application/json",
+      "url": "https://www.pacificproduct.in/products/lockers",
+      "description": "Heavy-duty phenolic compact laminate locker systems for commercial facilities, gymnasiums, and corporate workspaces with electronic and cam lock configurations.",
+      "representativeQueries": [
+        "HPL locker dimensions and pricing",
+        "Phenolic laminate locker manufacturer India",
+        "Gym locker systems specifications"
+      ]
+    },
+    {
+      "identifier": "urn:ai:pacificproduct.in:catalog:urinal-partitions",
+      "displayName": "Hygienic Compact Laminate Urinal Modesty Partitions",
+      "type": "application/json",
+      "url": "https://www.pacificproduct.in/products/urinal-partitions",
+      "description": "Waterproof, anti-bacterial compact laminate urinal privacy modesty screens. Cantilever wall-hung and floor-mounted systems.",
+      "representativeQueries": [
+        "Urinal partition modesty screen dimensions",
+        "Compact laminate urinal divider specifications",
+        "Restroom privacy screens India"
+      ]
+    },
+    {
+      "identifier": "urn:ai:pacificproduct.in:catalog:kids-cubicles",
+      "displayName": "Kids & Primary School Restroom Cubicle Systems",
+      "type": "application/json",
+      "url": "https://www.pacificproduct.in/products/kids-cubicles",
+      "description": "Safety-first, anti-pinch, colorful compact laminate cubicles designed specifically for kindergartens, primary schools, and children's amusement centers.",
+      "representativeQueries": [
+        "Kids toilet cubicle safety hinges",
+        "School restroom partition height and specifications",
+        "Child-friendly toilet partitions India"
+      ]
+    },
+    {
+      "identifier": "urn:ai:pacificproduct.in:service:boq-estimation",
+      "displayName": "Architectural Estimation Desk & BOQ Service",
+      "type": "application/json",
+      "url": "https://www.pacificproduct.in/contact",
+      "description": "Technical CAD layout estimation, BOQ itemization, and architectural finish sample dispatch desk for B2B contractors and architects.",
+      "representativeQueries": [
+        "Request restroom cubicle BOQ quotation",
+        "Submit CAD floor plan for cubicle estimation",
+        "Order laminate finish sample swatch kit"
+      ]
+    },
+    {
+      "identifier": "urn:ai:pacificproduct.in:docs:llms-txt",
+      "displayName": "Pacific Products LLM Context & Guidelines",
+      "type": "text/markdown",
+      "url": "https://www.pacificproduct.in/llms.txt",
+      "description": "Machine-readable context guide, markdown links, and technical specifications for large language models and autonomous AI agents."
+    }
+  ]
+}

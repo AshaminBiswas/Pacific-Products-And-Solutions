@@ -14,6 +14,11 @@ Allow: /testimonials
 Allow: /download
 Allow: /faq
 Allow: /sitemap.xml
+Allow: /llms.txt
+Allow: /ai-catalog.json
+Allow: /.well-known/ai-catalog.json
+Allow: /ard.json
+Allow: /.well-known/ard.json
 Allow: /assets/
 Disallow: /admin/
 Disallow: /api/
@@ -46,6 +51,11 @@ Allow: /testimonials
 Allow: /download
 Allow: /faq
 Allow: /sitemap.xml
+Allow: /llms.txt
+Allow: /ai-catalog.json
+Allow: /.well-known/ai-catalog.json
+Allow: /ard.json
+Allow: /.well-known/ard.json
 Allow: /assets/
 Disallow: /admin/
 Disallow: /api/
@@ -133,6 +143,8 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-# ── Sitemap ───────────────────────────────────────────────────────
+# ── Sitemap & Agent Discovery ─────────────────────────────────
 Sitemap: https://www.pacificproduct.in/sitemap.xml
 Sitemap: https://www.pacificproduct.in/llms.txt
+Agentmap: https://www.pacificproduct.in/.well-known/ai-catalog.json
+Agentmap: https://www.pacificproduct.in/ai-catalog.json
