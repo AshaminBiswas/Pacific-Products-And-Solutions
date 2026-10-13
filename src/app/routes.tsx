@@ -4,7 +4,7 @@ import { Footer } from "./components/Footer";
 import { ScrollToTop } from "./components/ScrollToTop";
 import CookieConsent from "./components/CookieConsent";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
 import {
   PageSkeleton,
   ProductsSkeleton,
@@ -56,6 +56,13 @@ const AdminLeads = lazy(() => import("./pages/admin/AdminLeads"));
 
 // ── Layout ────────────────────────────────────────────────────────────────
 function Layout() {
+  const [footerReady, setFooterReady] = useState(false);
+  useEffect(() => {
+    // Mount footer after initial page paint so it never renders above the fold during initial route hydration
+    const t = setTimeout(() => setFooterReady(true), 150);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col relative">
       <ScrollToTop />
@@ -63,7 +70,7 @@ function Layout() {
       <main id="main-content" className="flex-1">
         <Outlet />
       </main>
-      <Footer />
+      {footerReady && <Footer />}
 
       {/* Cookie Consent Popup */}
       <CookieConsent />

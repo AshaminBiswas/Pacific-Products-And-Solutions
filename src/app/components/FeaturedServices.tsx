@@ -43,7 +43,14 @@ export function FeaturedServices() {
         </motion.div>
 
         {loading ? (
-          <div className="text-center text-gray-500 py-10">Loading featured models...</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="animate-pulse flex flex-col">
+                <div className="aspect-[4/3] w-full rounded-3xl bg-gray-200 dark:bg-white/5" />
+                <div className="mx-4 sm:mx-6 -mt-16 sm:-mt-20 p-6 sm:p-7 rounded-2xl bg-gray-100 dark:bg-white/10 h-36" />
+              </div>
+            ))}
+          </div>
         ) : featuredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {featuredProducts.map((product) => {

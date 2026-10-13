@@ -4,6 +4,17 @@
 # ── Standard crawlers ────────────────────────────────────────────
 User-agent: *
 Allow: /
+Allow: /about
+Allow: /products
+Allow: /solutions
+Allow: /gallery
+Allow: /contact
+Allow: /blog
+Allow: /testimonials
+Allow: /download
+Allow: /faq
+Allow: /sitemap.xml
+Allow: /assets/
 Disallow: /admin/
 Disallow: /api/
 Disallow: /verify/
@@ -11,13 +22,31 @@ Disallow: /wp-admin/
 Disallow: /wp-content/
 Disallow: /wp-includes/
 Disallow: /*.php$
+Disallow: /*.php?*
 Disallow: /*?*
 Disallow: /*?
+Disallow: /*/[0-9][0-9][0-9][0-9]*
+Disallow: /category/
+Disallow: /tag/
+Disallow: /author/
+Disallow: /feed/
+Disallow: /comments/
 Crawl-delay: 1
 
 # ── Google ────────────────────────────────────────────────────────
 User-agent: Googlebot
 Allow: /
+Allow: /about
+Allow: /products
+Allow: /solutions
+Allow: /gallery
+Allow: /contact
+Allow: /blog
+Allow: /testimonials
+Allow: /download
+Allow: /faq
+Allow: /sitemap.xml
+Allow: /assets/
 Disallow: /admin/
 Disallow: /api/
 Disallow: /verify/
@@ -25,8 +54,15 @@ Disallow: /wp-admin/
 Disallow: /wp-content/
 Disallow: /wp-includes/
 Disallow: /*.php$
+Disallow: /*.php?*
 Disallow: /*?*
 Disallow: /*?
+Disallow: /*/[0-9][0-9][0-9][0-9]*
+Disallow: /category/
+Disallow: /tag/
+Disallow: /author/
+Disallow: /feed/
+Disallow: /comments/
 
 User-agent: Googlebot-Image
 Allow: /
@@ -34,10 +70,30 @@ Allow: /
 # ── Bing ──────────────────────────────────────────────────────────
 User-agent: Bingbot
 Allow: /
+Allow: /about
+Allow: /products
+Allow: /solutions
+Allow: /gallery
+Allow: /contact
+Allow: /blog
+Allow: /testimonials
+Allow: /download
+Allow: /faq
+Allow: /sitemap.xml
+Allow: /assets/
 Disallow: /admin/
 Disallow: /api/
 Disallow: /verify/
+Disallow: /*.php$
+Disallow: /*.php?*
 Disallow: /*?*
+Disallow: /*?
+Disallow: /*/[0-9][0-9][0-9][0-9]*
+Disallow: /category/
+Disallow: /tag/
+Disallow: /author/
+Disallow: /feed/
+Disallow: /comments/
 Crawl-delay: 1
 
 # ── AI Crawlers (GEO — allow so AI models can cite us) ────────────

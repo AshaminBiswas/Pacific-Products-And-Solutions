@@ -7,7 +7,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { useProducts } from "../../lib/hooks";
 import type { Product } from "../../lib/database.types";
 
-const logo = "/logo.png";
+const logo = "/logo.webp";
 
 function toCategorySlug(category: string | undefined) {
   if (!category) return "";
@@ -209,10 +209,8 @@ export function Navbar() {
   };
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
         isSolid
           ? "bg-white/95 dark:bg-[#030213]/95 backdrop-blur-lg shadow-lg border-b border-transparent dark:border-white/10"
           : "bg-transparent border-b border-transparent"
@@ -225,7 +223,11 @@ export function Navbar() {
             <img
               src={logo}
               alt="Pacific Products & Solutions"
-              className="h-12 sm:h-16 w-auto object-contain rounded-full"
+              width={64}
+              height={64}
+              loading="eager"
+              decoding="async"
+              className="h-12 sm:h-16 w-12 sm:w-16 object-contain rounded-full flex-shrink-0"
             />
             <span className="text-base sm:text-lg font-bold tracking-tight leading-tight text-[#7FB706]">
               Pacific Restroom<br className="hidden sm:block" />
@@ -591,6 +593,6 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </nav>
   );
 }

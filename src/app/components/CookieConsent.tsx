@@ -89,11 +89,11 @@ export default function CookieConsent() {
       return;
     }
 
-    // 2. Otherwise show initial consent prompt strictly ONCE after delay (1600ms)
+    // 2. Otherwise show initial consent prompt strictly ONCE after delay (5000ms)
     const t = setTimeout(() => {
       setStep("consent");
       window.dispatchEvent(new CustomEvent("cookie-consent-change", { detail: { active: true } }));
-    }, 1600);
+    }, 5000);
     return () => clearTimeout(t);
   }, []);
 

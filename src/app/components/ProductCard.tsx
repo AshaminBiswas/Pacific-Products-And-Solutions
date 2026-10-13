@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router";
+import { getOptimizedImageUrl } from "../../lib/imageOptimization";
 
 interface ProductCardProps {
   title: string;
@@ -10,6 +11,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ title, description, image, path }: ProductCardProps) {
+  const optimizedImage = getOptimizedImageUrl(image, 600, 80);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -22,9 +25,13 @@ export function ProductCard({ title, description, image, path }: ProductCardProp
       
       {/* Top Image Layer */}
       <div className="relative aspect-[4/3] w-full rounded-3xl overflow-hidden shadow-md border border-gray-100 dark:border-white/5 bg-gray-100 dark:bg-gray-900">
-        <motion.img
-          src={image}
+        <img
+          src={optimizedImage}
           alt={title}
+          loading="lazy"
+          decoding="async"
+          width={600}
+          height={450}
           className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-110"
         />
         

@@ -46,6 +46,7 @@ import { createPortal } from "react-dom";
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 import type { Product, Solution } from "../../lib/database.types";
 import { useHeroImages, usePageBanner } from "../../lib/hooks";
+import { getOptimizedImageUrl } from "../../lib/imageOptimization";
 
 // ─────────────────────────────────────────────────────────────
 
@@ -58,15 +59,24 @@ interface HeroSlideshowProps {
 
 function HeroSlideshow({ images, onSlideChange }: HeroSlideshowProps) {
   const [current, setCurrent] = useState(0);
+  const [slidesReady, setSlidesReady] = useState(false);
 
   function goTo(i: number) {
+    setSlidesReady(true);
     setCurrent(i);
     onSlideChange(i);
   }
 
   useEffect(() => {
+    // Defer rendering non-LCP slides so initial network is 100% dedicated to LCP and critical JS
+    const timer = setTimeout(() => setSlidesReady(true), 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     if (images.length <= 1) return;
     const interval = setInterval(() => {
+      setSlidesReady(true);
       setCurrent((c) => {
         const next = (c + 1) % images.length;
         onSlideChange(next);
@@ -78,15 +88,35 @@ function HeroSlideshow({ images, onSlideChange }: HeroSlideshowProps) {
 
   return (
     <div className="absolute inset-0 z-0">
-      {images.map((img, i) => (
-        <img
-          key={img.url}
-          src={img.url}
-          alt={img.alt_text || img.description || `Pacific Restroom Cubicles & Toilet Partitions Slide ${i + 1}`}
-          className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000"
-          style={{ opacity: i === current ? 1 : 0 }}
-        />
-      ))}
+      {images.map((img, i) => {
+        const isLcp = i === 0;
+        // Don't inject non-LCP slides until slidesReady is true or when active
+        if (!isLcp && !slidesReady && i !== current) {
+          return null;
+        }
+
+        const optimizedSrc = getOptimizedImageUrl(img.url, 1400, 80);
+        const mobileSrc = getOptimizedImageUrl(img.url, 750, 80);
+        const desktopSrc = getOptimizedImageUrl(img.url, 1920, 85);
+
+        return (
+          <img
+            key={img.url}
+            src={optimizedSrc}
+            srcSet={`${mobileSrc} 750w, ${optimizedSrc} 1400w, ${desktopSrc} 1920w`}
+            sizes="100vw"
+            alt={img.alt_text || img.description || `Pacific Restroom Cubicles & Toilet Partitions Slide ${i + 1}`}
+            className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000"
+            style={{ opacity: i === current ? 1 : 0 }}
+            loading={isLcp ? "eager" : "lazy"}
+            decoding="async"
+            // @ts-ignore - fetchpriority is standard HTML but missing from older React typings
+            fetchpriority={isLcp ? "high" : "low"}
+            width={1920}
+            height={1080}
+          />
+        );
+      })}
       {/* Base dark overlay */}
       <div className="absolute inset-0 z-10 bg-black/50 pointer-events-none" />
       {/* Vignette — darker edges from all sides */}
@@ -180,9 +210,11 @@ function HeroSection() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  // ── Fetch products & solutions once ──
-  useEffect(() => {
-    if (!isSupabaseConfigured()) return;
+  // ── Fetch products & solutions on search interaction or idle (keeps critical load fast) ──
+  const searchDataLoaded = useRef(false);
+  const loadSearchData = useCallback(() => {
+    if (searchDataLoaded.current || !isSupabaseConfigured()) return;
+    searchDataLoaded.current = true;
     Promise.all([
       supabase.from("products").select("id,title,subtitle,image_url,slug,category").eq("published", true).order("sort_order"),
       supabase.from("solutions").select("id,title,subtitle,image_url,slug").eq("published", true).order("sort_order"),
@@ -191,6 +223,11 @@ function HeroSection() {
       if (s.data) setAllSolutions(s.data as Solution[]);
     });
   }, []);
+
+  useEffect(() => {
+    const t = setTimeout(loadSearchData, 4000);
+    return () => clearTimeout(t);
+  }, [loadSearchData]);
 
   // ── Click-outside to close dropdown ──
   useEffect(() => {
@@ -318,28 +355,20 @@ function HeroSection() {
         className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 text-center"
       >
         {/* Primary Keyword H1 / Tagline */}
-        <motion.h1
+        <h1
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#7FB706]/15 border border-[#7FB706]/35 text-[#7FB706] text-xs sm:text-sm font-bold tracking-wider uppercase mb-4 backdrop-blur-md"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
         >
           Pacific Restroom Cubicles &amp; Toilet Partitions Manufacturer in India
-        </motion.h1>
+        </h1>
 
         {/* Description */}
-        {activeDescription && (
-          <motion.p
-            key={currentSlide}
-            className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 sm:mb-10 max-w-2xl lg:max-w-3xl mx-auto leading-relaxed font-medium"
-            style={{ textShadow: "0 1px 8px rgba(0,0,0,0.9), 0 2px 20px rgba(0,0,0,0.7)" }}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {activeDescription}
-          </motion.p>
-        )}
+        <p
+          key={currentSlide}
+          className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 sm:mb-10 max-w-2xl lg:max-w-3xl mx-auto leading-relaxed font-medium min-h-[3.5rem] flex items-center justify-center"
+          style={{ textShadow: "0 1px 8px rgba(0,0,0,0.9), 0 2px 20px rgba(0,0,0,0.7)" }}
+        >
+          {activeDescription || "Platina Wave Cubicle Model"}
+        </p>
 
         {/* ── Search Bar ── */}
         <motion.div
@@ -373,7 +402,8 @@ function HeroSection() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => { setSearchFocused(true); if (searchQuery.trim()) setShowDropdown(true); }}
+                onPointerDown={() => loadSearchData()}
+                onFocus={() => { loadSearchData(); setSearchFocused(true); if (searchQuery.trim()) setShowDropdown(true); }}
                 onBlur={() => setSearchFocused(false)}
                 placeholder="Search products, solutions, materials..."
                 className="relative z-10 flex-1 bg-transparent text-white placeholder-white/45 text-sm sm:text-base px-3 sm:px-4 py-4 outline-none"
@@ -523,7 +553,7 @@ function HeroSection() {
             {["Restroom Cubicles", "Urinal Partitions", "Locker Systems", "Shower Cubicles"].map((tag) => (
               <button
                 key={tag}
-                onClick={() => { setSearchQuery(tag); inputRef.current?.focus(); }}
+                onClick={() => { loadSearchData(); setSearchQuery(tag); inputRef.current?.focus(); }}
                 className="text-[11px] text-white/50 hover:text-white/85 border border-white/15 hover:border-white/35 px-3 py-1 rounded-full transition-all duration-200 backdrop-blur-sm hover:bg-white/5"
               >
                 {tag}
@@ -653,6 +683,8 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
                 <ImageWithFallback
                   src={cubiclesBanner?.image_url || "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"}
                   alt={cubiclesBanner?.alt_text || "Commercial Restroom Cubicle Systems - Pacific"}
+                  renderWidth={1000}
+                  quality={80}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -698,6 +730,8 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
                 <ImageWithFallback
                   src={lockersBanner?.image_url || "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80"}
                   alt={lockersBanner?.alt_text || "Modular HPL Locker Systems - Pacific"}
+                  renderWidth={1000}
+                  quality={80}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -743,6 +777,8 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
                 <ImageWithFallback
                   src={urinalBanner?.image_url || "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80"}
                   alt={urinalBanner?.alt_text || "Hygienic Compact Laminate Urinal Partitions - Pacific"}
+                  renderWidth={1000}
+                  quality={80}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
@@ -785,6 +821,8 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
                 <ImageWithFallback
                   src={kidsBanner?.image_url || "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=80"}
                   alt={kidsBanner?.alt_text || "Child-Safe Kids Restroom Cubicles - Pacific"}
+                  renderWidth={1000}
+                  quality={80}
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />

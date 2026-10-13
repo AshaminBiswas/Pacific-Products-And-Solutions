@@ -52,12 +52,35 @@
     <meta name="twitter:image" content="https://www.pacificproduct.in/og-image.png" />
     <meta name="twitter:image:alt" content="Pacific Products &amp; Solutions — Premium Restroom Cubicles" />
 
-    <!-- ── Preconnect hints and font stylesheet for performance ─────────────────────────────────── -->
+    <!-- ── High-Priority Preconnect Hints ─────────────────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://www.pacificproduct.in" />
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+    <link rel="preconnect" href="https://ik.imagekit.io" />
+
+    <!-- ── Preload Mobile & Desktop LCP Hero Image ────────────────────────── -->
+    <link
+      rel="preload"
+      as="image"
+      href="https://ik.imagekit.io/1r254icf2/hero/1790678119404_ChatGPT_Image_Sep_29__2026__04_04_34_PM_slOnbmkY6.webp?tr=w-750,q-80,f-webp"
+      type="image/webp"
+      fetchpriority="high"
+      media="(max-width: 768px)"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="https://ik.imagekit.io/1r254icf2/hero/1790678119404_ChatGPT_Image_Sep_29__2026__04_04_34_PM_slOnbmkY6.webp?tr=w-1400,q-80,f-webp"
+      type="image/webp"
+      fetchpriority="high"
+      media="(min-width: 769px)"
+    />
+
+    <!-- ── Non-Render-Blocking Google Fonts ───────────────────────────────── -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    </noscript>
 
     <!-- ── JSON-LD: Organization (critical for Google Knowledge Graph & SERP Favicon) ──────────── -->
     <script type="application/ld+json">
@@ -137,13 +160,15 @@
     </script>
   </head>
 
-  <body>
-    <div id="root">
-      <!-- ── Pre-rendered Static Semantic Shell for Googlebot Pass 1 (Replaced on React mount) ── -->
+  <body style="margin:0;background-color:#030213;color:#ffffff;">
+    <div id="root" style="min-height:100vh;background-color:#030213;"></div>
+
+    <noscript>
+      <!-- ── Semantic Fallback Shell for Crawlers with JavaScript Disabled ── -->
       <div id="prc-ssr-shell" style="min-height:100vh;background-color:#030213;color:#ffffff;font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;">
         <header style="padding:16px 24px;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:space-between;max-width:1280px;margin:0 auto;">
           <a href="/" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:#7FB706;font-weight:700;font-size:18px;">
-            <img src="/logo.png" alt="Pacific Products &amp; Solutions Logo" width="48" height="48" style="border-radius:50%;" />
+            <img src="/logo.webp" alt="Pacific Products &amp; Solutions Logo" width="48" height="48" style="border-radius:50%;" />
             <span>Pacific Restroom Cubicle</span>
           </a>
           <nav aria-label="Main Navigation" style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
@@ -244,7 +269,7 @@
           </p>
         </footer>
       </div>
-    </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

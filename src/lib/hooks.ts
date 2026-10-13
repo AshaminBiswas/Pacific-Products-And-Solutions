@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, isSupabaseConfigured } from "./supabase";
 import type { Product, Blog, Solution, GalleryImage, HeroImage, CoreService, PageBanner, Catalog } from "./database.types";
 import {
+  demoProducts,
   demoBlogs,
   demoSolutions,
   demoGalleryImages,
@@ -14,6 +15,7 @@ import {
 // Stores already-fetched data so navigating back to a page is instant.
 // Cache is busted only when `refetch()` is explicitly called.
 const memCache = new Map<string, { data: unknown; timestamp: number }>();
+const inFlight = new Map<string, Promise<any>>();
 const CACHE_TTL_MS = 20 * 1000; // 20 seconds for responsive CMS updates
 
 function getCached<T>(key: string): T[] | null {
@@ -50,26 +52,62 @@ interface UseSingleResult<T> {
 
 export function useProducts(featuredOnly = false): UseDataResult<Product> {
   const cacheKey = `products:${featuredOnly}`;
-  const [data, setData] = useState<Product[]>(() => getCached<Product>(cacheKey) ?? []);
-  const [loading, setLoading] = useState(() => !getCached<Product>(cacheKey));
+  const [data, setData] = useState<Product[]>(() => {
+    const direct = getCached<Product>(cacheKey);
+    if (direct) return direct;
+    if (featuredOnly) {
+      const all = getCached<Product>("products:false");
+      if (all) return all.filter((p) => p.is_featured);
+    }
+    return [];
+  });
+  const [loading, setLoading] = useState(() => {
+    if (getCached<Product>(cacheKey)) return false;
+    if (featuredOnly && getCached<Product>("products:false")) return false;
+    return true;
+  });
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async (bust = false) => {
     if (!bust) {
       const cached = getCached<Product>(cacheKey);
       if (cached) { setData(cached); setLoading(false); return; }
+      if (featuredOnly) {
+        const all = getCached<Product>("products:false");
+        if (all) {
+          const featured = all.filter((p) => p.is_featured);
+          setCache(cacheKey, featured);
+          setData(featured);
+          setLoading(false);
+          return;
+        }
+      }
+      if (inFlight.has(cacheKey)) {
+        try {
+          const result = await inFlight.get(cacheKey)!;
+          setData(result);
+        } catch (e: any) {
+          setError(e.message);
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
     }
     setLoading(true);
     setError(null);
 
     if (!isSupabaseConfigured()) {
-      setCache(cacheKey, []);
-      setData([]);
+      const demo = featuredOnly
+        ? demoProducts.filter((p) => p.is_featured)
+        : demoProducts;
+      setCache(cacheKey, demo);
+      setData(demo);
       setLoading(false);
       return;
     }
 
-    try {
+    const fetchPromise = (async () => {
       let query = supabase
         .from("products")
         .select("*")
@@ -84,12 +122,22 @@ export function useProducts(featuredOnly = false): UseDataResult<Product> {
       if (err) throw err;
       const result = (rows as Product[]) || [];
       setCache(cacheKey, result);
+      if (!featuredOnly) {
+        setCache("products:true", result.filter((p) => p.is_featured));
+      }
+      return result;
+    })();
+
+    inFlight.set(cacheKey, fetchPromise);
+    try {
+      const result = await fetchPromise;
       setData(result);
     } catch (e: any) {
       console.error("Failed to fetch products:", e);
       setError(e.message);
       setData([]);
     } finally {
+      inFlight.delete(cacheKey);
       setLoading(false);
     }
   }, [featuredOnly, cacheKey]);
@@ -114,7 +162,7 @@ export function useProduct(slug: string | undefined): UseSingleResult<Product> {
       setLoading(true);
 
       if (!isSupabaseConfigured()) {
-        setData(null);
+        setData(demoProducts.find((p) => p.slug === slug) || null);
         setLoading(false);
         return;
       }
@@ -523,17 +571,58 @@ export function useAdminGallery(): UseDataResult<GalleryImage> {
 
 // ── Hero Images ──────────────────────────────────────────────
 
+export const defaultHeroImages: HeroImage[] = [
+  {
+    id: "bf7e19dc-c710-4327-a13f-a442bd5c3f99",
+    url: "https://ik.imagekit.io/1r254icf2/hero/1790678119404_ChatGPT_Image_Sep_29__2026__04_04_34_PM_slOnbmkY6.webp",
+    description: "Platina Wave Cubicle Model",
+    sort_order: 0,
+    created_at: "2026-09-29T10:35:24.101109+00:00",
+    alt_text: "Platina Wave Restroom Cubicle System by Pacific",
+  },
+  {
+    id: "e2e24d1c-98ee-4b5f-84fa-e6b21733c246",
+    url: "https://ik.imagekit.io/1r254icf2/hero/1790680561247_ChatGPT_Image_Sep_29__2026__04_44_04_PM_59UFAEMlu.webp",
+    description: "Skylight Cubicle Model",
+    sort_order: 1,
+    created_at: "2026-09-29T11:16:05.802076+00:00",
+    alt_text: "Skylight Architectural Restroom Cubicle System by Pacific",
+  },
+  {
+    id: "7579a141-3885-4eb2-b95d-1c11ab21ef2c",
+    url: "https://ik.imagekit.io/1r254icf2/hero/1791018379465_SAFFRON_UCYGGym91.webp",
+    description: "Saffron Cubicle Model",
+    sort_order: 2,
+    created_at: "2026-10-03T09:06:25.557076+00:00",
+    alt_text: "Saffron Commercial Restroom Cubicle System by Pacific",
+  },
+  {
+    id: "009ee36d-906f-4dbe-8d3f-a1d2a494f62e",
+    url: "https://ik.imagekit.io/1r254icf2/hero/1791791921262_Modern_Symmetrical_Restroom_Stalls_udx-2kJnzH.webp",
+    description: "Gusto Shoe Box Cubicle Model",
+    sort_order: 3,
+    created_at: "2026-10-12T07:58:47.038945+00:00",
+    alt_text: "Gusto Shoe Box Commercial Toilet Cubicle by Pacific",
+  },
+];
+
 export function useHeroImages(): UseDataResult<HeroImage> {
-  const [data, setData] = useState<HeroImage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const cacheKey = "hero_images";
+  const [data, setData] = useState<HeroImage[]>(() => getCached<HeroImage>(cacheKey) ?? defaultHeroImages);
+  const [loading, setLoading] = useState(() => !getCached<HeroImage>(cacheKey));
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (bust = false) => {
+    if (!bust) {
+      const cached = getCached<HeroImage>(cacheKey);
+      if (cached) { setData(cached); setLoading(false); return; }
+    }
     setLoading(true);
     setError(null);
 
     if (!isSupabaseConfigured()) {
-      setData([]);
+      setCache(cacheKey, defaultHeroImages);
+      setData(defaultHeroImages);
       setLoading(false);
       return;
     }
@@ -544,20 +633,23 @@ export function useHeroImages(): UseDataResult<HeroImage> {
         .select("*")
         .order("sort_order", { ascending: true });
       if (err) throw err;
-      setData((rows as HeroImage[]) || []);
+      const result = (rows as HeroImage[]) || [];
+      const finalData = result.length > 0 ? result : defaultHeroImages;
+      setCache(cacheKey, finalData);
+      setData(finalData);
     } catch (e: any) {
       setError(e.message);
-      setData([]);
+      setData(defaultHeroImages);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [cacheKey]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  return { data, loading, error, refetch: fetchData };
+  return { data, loading, error, refetch: () => fetchData(true) };
 }
 
 export function useAdminHeroImages(): UseDataResult<HeroImage> {
@@ -658,14 +750,22 @@ export function useAdminCoreServices(): UseDataResult<CoreService> {
 // ── Page Banners ──────────────────────────────────────────────
 
 export function usePageBanner(pageSlug: string): UseSingleResult<PageBanner> {
-  const [data, setData] = useState<PageBanner | null>(null);
-  const [loading, setLoading] = useState(true);
+  const cacheKey = `page_banner:${pageSlug}`;
+  const [data, setData] = useState<PageBanner | null>(() => {
+    if (!pageSlug) return null;
+    const cached = memCache.get(`page_banner:${pageSlug}`);
+    return (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) ? (cached.data as PageBanner) : null;
+  });
+  const [loading, setLoading] = useState(() => {
+    if (!pageSlug) return false;
+    const cached = memCache.get(`page_banner:${pageSlug}`);
+    return !(cached && Date.now() - cached.timestamp < CACHE_TTL_MS);
+  });
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!pageSlug) { setLoading(false); return; }
 
-    const cacheKey = `page_banner:${pageSlug}`;
     const cached = memCache.get(cacheKey);
     if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
       setData(cached.data as PageBanner);
@@ -677,18 +777,32 @@ export function usePageBanner(pageSlug: string): UseSingleResult<PageBanner> {
       setLoading(true);
       if (!isSupabaseConfigured()) { setLoading(false); return; }
       try {
-        const { data: row, error: err } = await supabase
-          .from("page_banners")
-          .select("*")
-          .eq("page_slug", pageSlug)
-          .maybeSingle();
-        if (err) throw err;
-        const banner = row as unknown as PageBanner;
+        let allBannersPromise = inFlight.get("all_page_banners");
+        if (!allBannersPromise) {
+          allBannersPromise = (async () => {
+            const { data: rows, error: err } = await supabase
+              .from("page_banners")
+              .select("*");
+            if (err) throw err;
+            const banners = (rows as unknown as PageBanner[]) || [];
+            banners.forEach((b) => {
+              if (b.page_slug) {
+                memCache.set(`page_banner:${b.page_slug}`, { data: b, timestamp: Date.now() });
+              }
+            });
+            return banners;
+          })();
+          inFlight.set("all_page_banners", allBannersPromise);
+        }
+
+        const banners = await allBannersPromise;
+        const banner = banners.find((b: PageBanner) => b.page_slug === pageSlug) || null;
         memCache.set(cacheKey, { data: banner, timestamp: Date.now() });
         setData(banner);
       } catch (e: any) {
         setError(e.message);
       } finally {
+        inFlight.delete("all_page_banners");
         setLoading(false);
       }
     }

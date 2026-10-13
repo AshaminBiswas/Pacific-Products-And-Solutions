@@ -4,7 +4,7 @@ import { Facebook, Youtube, Linkedin, Instagram, Mail, Phone, MapPin, Clock } fr
 import { useProducts, useSolutions } from "../../lib/hooks";
 import { OFFICE_PHONE, OFFICE_PHONE_TEL, WHATSAPP_DISPLAY, WHATSAPP_URL } from "../../lib/constants";
 
-const logo = "/logo.png";
+const logo = "/logo.webp";
 
 export function Footer() {
   const [showUpdate, setShowUpdate] = useState(false);
@@ -56,7 +56,11 @@ export function Footer() {
                 <img
                   src={logo}
                   alt="Pacific Products & Solutions"
-                  className="h-12 sm:h-16 w-auto object-contain rounded-full"
+                  width={64}
+                  height={64}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-12 sm:h-16 w-12 sm:w-16 object-contain rounded-full"
                 />
                 <span className="text-base sm:text-lg font-bold tracking-tight leading-tight text-[#7FB706]">
                   Pacific Restroom<br className="hidden sm:block" />

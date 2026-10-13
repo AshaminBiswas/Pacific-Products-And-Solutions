@@ -33,9 +33,82 @@
           "value": "public, max-age=0, must-revalidate"
         }
       ]
+    },
+    {
+      "source": "/api/gone",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive, nosnippet"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
   "redirects": [
+    {
+      "source": "/index.php",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/gallery/",
+      "destination": "/gallery",
+      "permanent": true
+    },
+    {
+      "source": "/download/",
+      "destination": "/download",
+      "permanent": true
+    },
+    {
+      "source": "/contact/",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/about/",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/products/",
+      "destination": "/products",
+      "permanent": true
+    },
+    {
+      "source": "/solutions/",
+      "destination": "/solutions",
+      "permanent": true
+    },
+    {
+      "source": "/testimonials/",
+      "destination": "/testimonials",
+      "permanent": true
+    },
+    {
+      "source": "/faq/",
+      "destination": "/faq",
+      "permanent": true
+    },
+    {
+      "source": "/blog/",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/brochure/",
+      "destination": "/brochure",
+      "permanent": true
+    },
     {
       "source": "/products/kids-toilet",
       "destination": "/products/kids-cubicles",
@@ -131,6 +204,306 @@
     {
       "source": "/api/nvidia/:path*",
       "destination": "/api/nvidia"
+    },
+    {
+      "source": "/api/gone",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)/([0-9]{4,10})",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)/([0-9]{4,10})/(.*)",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/category/:path*",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/tag/:path*",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/author/:path*",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/feed/:path*",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/comments/:path*",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/wp-(.*)",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)\\.php",
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "goods"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "so"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "investigate"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "however"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "lovely"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "jp"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "sun"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "contrast"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "allegation"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "bake"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "head"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "inherent"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "harvest"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "detail"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "m"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "f"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "t"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "i"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "k"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "r"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "u"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "x"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "h"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "w"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "p"
+        }
+      ],
+      "destination": "/api/gone"
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "query",
+          "key": "c"
+        }
+      ],
+      "destination": "/api/gone"
     },
     {
       "source": "/(.*)",

@@ -7,9 +7,9 @@ import React from "react";
  */
 export function PageLoader() {
   return (
-    <div className="min-h-[50vh] flex items-center justify-center bg-transparent">
+    <div className="min-h-screen flex items-center justify-center bg-[#030213]">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 rounded-full border-2 border-black/10 dark:border-white/10 border-t-[#7FB706] animate-spin" />
+        <div className="w-8 h-8 rounded-full border-2 border-white/10 border-t-[#7FB706] animate-spin" />
         <span className="sr-only">Loading...</span>
       </div>
     </div>
