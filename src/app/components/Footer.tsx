@@ -275,7 +275,8 @@ export function Footer() {
           </div>
         </div>
 
-        {/* ── FULL-WIDTH CENTERED SERVICE LOCATIONS SECTION ──────── */}
+        {/* ── FULL-WIDTH CENTERED SERVICE LOCATIONS SECTION (HIDDEN AS REQUESTED) ──────── */}
+        {false && (
         <div className="w-full my-12 pt-10 pb-8 px-4 sm:px-8 bg-gradient-to-b from-white/[0.04] to-white/[0.01] border border-white/10 rounded-3xl shadow-2xl">
           {/* Centered Header */}
           <div className="max-w-3xl mx-auto text-center mb-8">
@@ -435,6 +436,7 @@ export function Footer() {
             </div>
           </div>
         </div>
+        )}
 
         {/* ── BOTTOM COPYRIGHT BAR ───────────────────────────────── */}
         <div className="border-t border-gray-800 pt-8">
