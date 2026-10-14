@@ -13,8 +13,6 @@ import {
   type LocationData,
 } from "../pages/locations/locationData";
 
-const logo = "/logo.webp";
-
 export function Footer() {
   const [showUpdate, setShowUpdate] = useState(false);
   const { data: products } = useProducts();
@@ -122,6 +120,7 @@ export function Footer() {
   return (
     <footer className="bg-[#030213] text-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* ── 5-COLUMN TOP NAVIGATION GRID ───────────────────────── */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           {/* Company Info */}
           <div className="lg:col-span-1">
@@ -144,7 +143,7 @@ export function Footer() {
                 </span>
               </Link>
             </div>
-            <p className="text-gray-400 mb-6">
+            <p className="text-gray-400 mb-6 text-sm leading-relaxed">
               Leading B2B interior contracting provider in India, specializing in premium restroom cubicles, toilet partitions, urinal screens, locker solutions, and custom hardware for commercial spaces.
             </p>
             <div className="flex space-x-4">
@@ -153,7 +152,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[#7FB706] transition-colors"
-                aria-label="Visit Pacific Products &amp; Solutions on Facebook"
+                aria-label="Visit Pacific Products & Solutions on Facebook"
               >
                 <Facebook className="w-5 h-5" aria-hidden="true" />
                 <span className="sr-only">Facebook</span>
@@ -173,7 +172,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[#7FB706] transition-colors"
-                aria-label="Visit Pacific Products &amp; Solutions on LinkedIn"
+                aria-label="Visit Pacific Products & Solutions on LinkedIn"
               >
                 <Linkedin className="w-5 h-5" aria-hidden="true" />
                 <span className="sr-only">LinkedIn</span>
@@ -242,7 +241,7 @@ export function Footer() {
             </ul>
           </nav>
 
-          {/* Contact & Locations */}
+          {/* Contact Details */}
           <div>
             <h4 className="font-bold mb-4 text-[#B5F823]">Contact</h4>
             <ul className="space-y-3 mb-6">
@@ -267,144 +266,181 @@ export function Footer() {
                 </a>
               </li>
               <li className="flex items-start space-x-2">
-                <MapPin className="w-4 h-4 mt-1 text-[#7FB706]" />
-                <span className="text-gray-400 text-sm">Okhla Industrial Estate, New Delhi - 110020<br/>Delhi, India</span>
+                <MapPin className="w-4 h-4 mt-1 text-[#7FB706] shrink-0" />
+                <span className="text-gray-400 text-sm">
+                  Okhla Industrial Estate Phase-II, New Delhi - 110020, Delhi, India
+                </span>
               </li>
             </ul>
-            {/* Dynamic Customer Location & Service Areas */}
-            <div className="pt-2 border-t border-white/10">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <div className="flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-[#7FB706] shrink-0" />
-                  <h5 className="font-semibold text-sm text-white">Service Locations</h5>
-                </div>
-                <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#7FB706]/15 text-[#B5F823] border border-[#7FB706]/30">
-                  {footerSearch ? "Search" : currentRegion.name.replace(" Hub", "")}
-                </span>
-              </div>
+          </div>
+        </div>
 
-              {/* City search box */}
-              <div className="relative mb-2.5">
-                <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  value={footerSearch}
-                  onChange={(e) => {
-                    setFooterSearch(e.target.value);
-                    if (selectedRegionId) setSelectedRegionId(null);
-                  }}
-                  placeholder="Search city (e.g. Mumbai, Noida)..."
-                  className="w-full pl-8 pr-7 py-1.5 text-xs bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#7FB706] transition-colors"
-                />
-                {footerSearch && (
-                  <button
-                    type="button"
-                    onClick={() => setFooterSearch("")}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs px-1"
-                    aria-label="Clear city search"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                )}
-              </div>
+        {/* ── FULL-WIDTH CENTERED SERVICE LOCATIONS SECTION ──────── */}
+        <div className="w-full my-12 pt-10 pb-8 px-4 sm:px-8 bg-gradient-to-b from-white/[0.04] to-white/[0.01] border border-white/10 rounded-3xl shadow-2xl">
+          {/* Centered Header */}
+          <div className="max-w-3xl mx-auto text-center mb-8">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#7FB706]/15 text-[#B5F823] text-xs font-bold uppercase tracking-wider mb-3 border border-[#7FB706]/30">
+              <MapPin className="w-3.5 h-3.5" />
+              <span>National Footprint &amp; Project Supply</span>
+            </div>
+            <h4 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight mb-2">
+              Pan-India Service &amp; Project Locations
+            </h4>
+            <p className="text-xs sm:text-sm text-gray-400 max-w-2xl mx-auto leading-relaxed">
+              Direct factory manufacturing in Okhla, New Delhi with express dispatch and certified installation crews deployed across all major commercial, institutional, and industrial hubs nationwide.
+            </p>
+          </div>
 
-              {/* Quick region filter pills */}
-              <div className="flex flex-wrap gap-1 mb-2.5">
-                {REGION_CLUSTERS.map((r) => {
-                  const isActive = !footerSearch && (selectedRegionId === r.id || (!selectedRegionId && currentRegion.id === r.id));
-                  return (
-                    <button
-                      key={r.id}
-                      type="button"
-                      onClick={() => {
-                        setFooterSearch("");
-                        setSelectedRegionId(r.id);
-                      }}
-                      className={`text-[10px] px-1.5 py-0.5 rounded font-medium transition-colors ${
-                        isActive
-                          ? "bg-[#7FB706] text-[#030213] font-bold"
-                          : "bg-white/5 text-gray-400 hover:text-white hover:bg-white/10"
-                      }`}
-                    >
-                      {r.id.toUpperCase()}
-                    </button>
-                  );
-                })}
+          {/* Centered Controls: Search & Region Switcher */}
+          <div className="flex flex-col items-center gap-4 mb-8">
+            {/* Search Box */}
+            <div className="relative w-full max-w-md">
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                value={footerSearch}
+                onChange={(e) => {
+                  setFooterSearch(e.target.value);
+                  if (selectedRegionId) setSelectedRegionId(null);
+                }}
+                placeholder="Search city (e.g. Noida, Delhi NCR, Mumbai, Bengaluru)..."
+                className="w-full pl-10 pr-9 py-2.5 text-xs sm:text-sm bg-[#08081a] border border-white/15 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#7FB706] shadow-inner transition-colors"
+              />
+              {footerSearch && (
                 <button
                   type="button"
-                  onClick={() => {
-                    setFooterSearch("");
-                    setSelectedRegionId(selectedRegionId === "all" ? null : "all");
-                  }}
-                  className={`text-[10px] px-1.5 py-0.5 rounded font-medium transition-colors ${
-                    selectedRegionId === "all"
-                      ? "bg-[#7FB706] text-[#030213] font-bold"
-                      : "bg-white/5 text-gray-400 hover:text-white hover:bg-white/10"
-                  }`}
+                  onClick={() => setFooterSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs p-1"
+                  aria-label="Clear city search"
                 >
-                  ALL
+                  <X className="w-3.5 h-3.5" />
                 </button>
-              </div>
-
-              {/* Filtered Location Links */}
-              {displayedLocations.length > 0 ? (
-                <ul className="space-y-1 max-h-52 overflow-y-auto pr-1">
-                  {displayedLocations.map((loc) => {
-                    const isCurrent = loc.slug === activeLocationKey;
-                    return (
-                      <li key={loc.slug}>
-                        <Link
-                          to={`/${loc.canonicalSlug}`}
-                          onClick={() => handleLocationClick(loc.slug)}
-                          className={`flex items-center justify-between group text-xs transition-colors py-0.5 ${
-                            isCurrent
-                              ? "text-[#B5F823] font-semibold"
-                              : "text-gray-400 hover:text-[#7FB706]"
-                          }`}
-                        >
-                          <span className="flex items-center gap-1.5 truncate">
-                            <span
-                              className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                                isCurrent ? "bg-[#B5F823]" : "bg-gray-600 group-hover:bg-[#7FB706]"
-                              }`}
-                            />
-                            <span className="truncate">{loc.city}</span>
-                          </span>
-                          <span className="text-[10px] text-gray-500 group-hover:text-gray-400 shrink-0 ml-1">
-                            {loc.region}
-                          </span>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              ) : (
-                <div className="py-2.5 text-center">
-                  <p className="text-xs text-gray-400">No locations matching "{footerSearch}"</p>
-                  <p className="text-[10px] text-gray-500 mt-0.5">We manufacture & deliver Pan-India.</p>
-                </div>
               )}
+            </div>
 
-              {/* Cluster Logistics Info */}
-              {!footerSearch && selectedRegionId !== "all" && (
-                <div className="mt-2.5 pt-2 border-t border-white/5">
-                  <p className="text-[10px] text-[#B5F823] font-medium leading-tight">
-                    {currentRegion.badge}
-                  </p>
-                  <p className="text-[10px] text-gray-500 mt-0.5 leading-snug">
-                    {currentRegion.description}
-                  </p>
-                </div>
-              )}
+            {/* Region Switcher Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setFooterSearch("");
+                  setSelectedRegionId(selectedRegionId === "all" ? null : "all");
+                }}
+                className={`text-xs px-3.5 py-1.5 rounded-xl font-bold transition-all shadow-sm ${
+                  selectedRegionId === "all"
+                    ? "bg-[#7FB706] text-[#030213]"
+                    : "bg-white/5 text-gray-300 hover:text-white hover:bg-white/10 border border-white/5"
+                }`}
+              >
+                ALL (17 LOCATIONS)
+              </button>
+              {REGION_CLUSTERS.map((r) => {
+                const isActive = !footerSearch && (selectedRegionId === r.id || (!selectedRegionId && currentRegion.id === r.id));
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => {
+                      setFooterSearch("");
+                      setSelectedRegionId(r.id);
+                    }}
+                    className={`text-xs px-3.5 py-1.5 rounded-xl font-semibold transition-all ${
+                      isActive
+                        ? "bg-[#7FB706] text-[#030213] font-bold shadow-md shadow-[#7FB706]/20"
+                        : "bg-white/5 text-gray-300 hover:text-white hover:bg-white/10 border border-white/5"
+                    }`}
+                  >
+                    {r.name.toUpperCase()}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Full-Width Grid of Locations */}
+          {displayedLocations.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
+              {displayedLocations.map((loc) => {
+                const isCurrent = loc.slug === activeLocationKey;
+                return (
+                  <Link
+                    key={loc.slug}
+                    to={`/${loc.canonicalSlug}`}
+                    onClick={() => handleLocationClick(loc.slug)}
+                    className={`group relative p-3 sm:p-3.5 rounded-2xl border transition-all duration-200 flex flex-col justify-between ${
+                      isCurrent
+                        ? "bg-[#7FB706]/15 border-[#7FB706] text-white shadow-lg shadow-[#7FB706]/10"
+                        : "bg-black/30 border-white/10 hover:border-[#7FB706]/50 hover:bg-white/5 text-gray-300 hover:text-white"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-1 mb-1">
+                        <span className={`text-xs sm:text-sm font-bold truncate group-hover:text-[#B5F823] transition-colors ${isCurrent ? "text-[#B5F823]" : "text-white"}`}>
+                          {loc.city}
+                        </span>
+                        {isCurrent && (
+                          <span className="w-2 h-2 rounded-full bg-[#B5F823] shrink-0 animate-pulse" />
+                        )}
+                      </div>
+                      <p className="text-[10px] text-gray-400 group-hover:text-gray-300 truncate leading-snug">
+                        {loc.stateName || loc.region}
+                      </p>
+                    </div>
+
+                    <div className="mt-2.5 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] text-gray-500 group-hover:text-gray-400">
+                      <span className="truncate">
+                        {loc.slug === "delhi" || loc.slug === "noida" || loc.slug === "gurugram" || loc.slug === "greater-noida" || loc.slug === "ghaziabad" || loc.slug === "faridabad"
+                          ? "Same-Day Survey"
+                          : loc.slug === "uae"
+                          ? "GCC Export"
+                          : "24–48h Express"}
+                      </span>
+                      <span className="text-[#7FB706] opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="py-10 text-center bg-black/20 rounded-2xl border border-white/5 max-w-md mx-auto mb-6">
+              <p className="text-sm font-semibold text-white mb-1">No locations matching "{footerSearch}"</p>
+              <p className="text-xs text-gray-400 mb-3">Pacific manufactures and installs commercial restroom cubicles nationwide.</p>
+              <button
+                type="button"
+                onClick={() => setFooterSearch("")}
+                className="px-4 py-2 bg-[#7FB706] text-[#030213] text-xs font-bold rounded-xl"
+              >
+                Show All Cities
+              </button>
+            </div>
+          )}
+
+          {/* Logistics Note Strip */}
+          <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2 h-2 rounded-full bg-[#7FB706] shrink-0" />
+              <p className="text-xs text-gray-300">
+                <span className="font-bold text-white">Central Manufacturing Facility &amp; HQ:</span> Okhla Industrial Estate Phase-II, New Delhi. Direct factory supply &amp; turnkey installation Pan-India.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-bold text-[#25D366] hover:underline"
+              >
+                WhatsApp Project BOQ →
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
+        {/* ── BOTTOM COPYRIGHT BAR ───────────────────────────────── */}
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-400 text-sm">
-              © 2026 Pacific Products & Solutions. All rights reserved.
+              © 2026 Pacific Products &amp; Solutions. All rights reserved.
             </p>
             <div className="flex items-center space-x-6">
               <button 
