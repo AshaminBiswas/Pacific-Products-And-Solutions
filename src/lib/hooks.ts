@@ -11,25 +11,85 @@ import {
   demoGalleryImages,
 } from "./demo-data";
 
-// ── In-memory request cache ───────────────────────────────────
-// Stores already-fetched data so navigating back to a page is instant.
-// Cache is busted only when `refetch()` is explicitly called.
+// ── Resilient Request Cache (In-Memory + SessionStorage) ────────────────
+// Ensures 0ms instant page loads and ZERO duplicate Supabase egress during a visitor session.
 const memCache = new Map<string, { data: unknown; timestamp: number }>();
 const inFlight = new Map<string, Promise<any>>();
-const CACHE_TTL_MS = 20 * 1000; // 20 seconds for responsive CMS updates
+const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes cache TTL for production CMS assets
+const SESSION_CACHE_PREFIX = "prc_cache_";
 
-function getCached<T>(key: string): T[] | null {
+export function getCached<T>(key: string): T[] | null {
+  // 1. Check in-memory map
   const entry = memCache.get(key);
-  if (!entry) return null;
-  if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
+  if (entry) {
+    if (Date.now() - entry.timestamp <= CACHE_TTL_MS) {
+      return entry.data as T[];
+    }
     memCache.delete(key);
-    return null;
   }
-  return entry.data as T[];
+
+  // 2. Fall back to sessionStorage if available
+  if (typeof window !== "undefined" && window.sessionStorage) {
+    try {
+      const raw = sessionStorage.getItem(`${SESSION_CACHE_PREFIX}${key}`);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Date.now() - parsed.timestamp <= CACHE_TTL_MS) {
+          memCache.set(key, parsed);
+          return parsed.data as T[];
+        }
+        sessionStorage.removeItem(`${SESSION_CACHE_PREFIX}${key}`);
+      }
+    } catch {
+      // Ignore storage errors (private mode, quota exceeded, etc.)
+    }
+  }
+
+  return null;
 }
 
-function setCache<T>(key: string, data: T[]): void {
-  memCache.set(key, { data, timestamp: Date.now() });
+export function setCache<T>(key: string, data: T[]): void {
+  const entry = { data, timestamp: Date.now() };
+  memCache.set(key, entry);
+  if (typeof window !== "undefined" && window.sessionStorage) {
+    try {
+      sessionStorage.setItem(`${SESSION_CACHE_PREFIX}${key}`, JSON.stringify(entry));
+    } catch {
+      // Ignore storage errors
+    }
+  }
+}
+
+export function invalidateCache(keyPrefix?: string): void {
+  if (!keyPrefix) {
+    memCache.clear();
+    if (typeof window !== "undefined" && window.sessionStorage) {
+      try {
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const k = sessionStorage.key(i);
+          if (k && k.startsWith(SESSION_CACHE_PREFIX)) keysToRemove.push(k);
+        }
+        keysToRemove.forEach((k) => sessionStorage.removeItem(k));
+      } catch {}
+    }
+    return;
+  }
+
+  for (const k of Array.from(memCache.keys())) {
+    if (k.startsWith(keyPrefix)) memCache.delete(k);
+  }
+  if (typeof window !== "undefined" && window.sessionStorage) {
+    try {
+      const fullPrefix = `${SESSION_CACHE_PREFIX}${keyPrefix}`;
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const k = sessionStorage.key(i);
+        if (k && k.startsWith(fullPrefix)) keysToRemove.push(k);
+      }
+      keysToRemove.forEach((k) => sessionStorage.removeItem(k));
+    } catch {}
+  }
 }
 
 
@@ -110,7 +170,7 @@ export function useProducts(featuredOnly = false): UseDataResult<Product> {
     const fetchPromise = (async () => {
       let query = supabase
         .from("products")
-        .select("*")
+        .select("id,slug,title,subtitle,description,category,image_url,alt_text,is_featured,sort_order,published,created_at,updated_at")
         .eq("published", true)
         .order("sort_order", { ascending: true });
 
@@ -216,10 +276,13 @@ export function useSolutions(): UseDataResult<Solution> {
       return;
     }
 
+    if (bust) {
+      invalidateCache("solutions");
+    }
     try {
       const { data: rows, error: err } = await supabase
         .from("solutions")
-        .select("*")
+        .select("id,slug,title,subtitle,description,icon_name,image_url,alt_text,sort_order,published,created_at,updated_at")
         .eq("published", true)
         .order("sort_order", { ascending: true });
       if (err) throw err;
@@ -372,15 +435,23 @@ export function useBlog(slug: string | undefined): UseSingleResult<Blog> {
 // ── Gallery ──────────────────────────────────────────────────
 
 export function useGallery(): UseDataResult<GalleryImage> {
-  const [data, setData] = useState<GalleryImage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const cacheKey = "gallery:all";
+  const [data, setData] = useState<GalleryImage[]>(() => getCached<GalleryImage>(cacheKey) ?? []);
+  const [loading, setLoading] = useState(() => !getCached<GalleryImage>(cacheKey));
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (bust = false) => {
+    if (!bust) {
+      const cached = getCached<GalleryImage>(cacheKey);
+      if (cached) { setData(cached); setLoading(false); return; }
+    } else {
+      invalidateCache("gallery");
+    }
     setLoading(true);
     setError(null);
 
     if (!isSupabaseConfigured()) {
+      setCache(cacheKey, demoGalleryImages);
       setData(demoGalleryImages);
       setLoading(false);
       return;
@@ -389,11 +460,13 @@ export function useGallery(): UseDataResult<GalleryImage> {
     try {
       const { data: rows, error: err } = await supabase
         .from("gallery_images")
-        .select("*")
+        .select("id,title,category,location_slug,placement,image_url,alt_text,sort_order,published,created_at")
         .eq("published", true)
         .order("sort_order", { ascending: true });
       if (err) throw err;
-      setData((rows as GalleryImage[]) || []);
+      const result = (rows as GalleryImage[]) || [];
+      setCache(cacheKey, result);
+      setData(result);
     } catch (e: any) {
       setError(e.message);
       setData(demoGalleryImages);
@@ -406,19 +479,25 @@ export function useGallery(): UseDataResult<GalleryImage> {
     fetchData();
   }, [fetchData]);
 
-  return { data, loading, error, refetch: fetchData };
+  return { data, loading, error, refetch: () => fetchData(true) };
 }
 
 export function useLocationGallery(locationSlug: string | undefined): UseDataResult<GalleryImage> {
-  const [data, setData] = useState<GalleryImage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const cacheKey = `gallery:${locationSlug || "none"}`;
+  const [data, setData] = useState<GalleryImage[]>(() => locationSlug ? getCached<GalleryImage>(cacheKey) ?? [] : []);
+  const [loading, setLoading] = useState(() => Boolean(locationSlug && !getCached<GalleryImage>(cacheKey)));
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (bust = false) => {
     if (!locationSlug) {
       setData([]);
       setLoading(false);
       return;
+    }
+
+    if (!bust) {
+      const cached = getCached<GalleryImage>(cacheKey);
+      if (cached) { setData(cached); setLoading(false); return; }
     }
 
     setLoading(true);
@@ -433,12 +512,14 @@ export function useLocationGallery(locationSlug: string | undefined): UseDataRes
     try {
       const { data: rows, error: err } = await supabase
         .from("gallery_images")
-        .select("*")
+        .select("id,title,category,location_slug,placement,image_url,alt_text,sort_order,published,created_at")
         .eq("published", true)
         .eq("location_slug", locationSlug)
         .order("sort_order", { ascending: true });
       if (err) throw err;
-      setData((rows as GalleryImage[]) || []);
+      const result = (rows as GalleryImage[]) || [];
+      setCache(cacheKey, result);
+      setData(result);
     } catch (e: any) {
       console.error("Failed to fetch location gallery images:", e);
       setError(e.message);
@@ -446,7 +527,7 @@ export function useLocationGallery(locationSlug: string | undefined): UseDataRes
     } finally {
       setLoading(false);
     }
-  }, [locationSlug]);
+  }, [locationSlug, cacheKey]);
 
   useEffect(() => {
     fetchData();
@@ -683,11 +764,18 @@ export function useAdminHeroImages(): UseDataResult<HeroImage> {
 // ── Core Services ────────────────────────────────────────────
 
 export function useCoreServices(): UseDataResult<CoreService> {
-  const [data, setData] = useState<CoreService[]>([]);
-  const [loading, setLoading] = useState(true);
+  const cacheKey = "core_services:all";
+  const [data, setData] = useState<CoreService[]>(() => getCached<CoreService>(cacheKey) ?? []);
+  const [loading, setLoading] = useState(() => !getCached<CoreService>(cacheKey));
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (bust = false) => {
+    if (!bust) {
+      const cached = getCached<CoreService>(cacheKey);
+      if (cached) { setData(cached); setLoading(false); return; }
+    } else {
+      invalidateCache("core_services");
+    }
     setLoading(true);
     setError(null);
 
@@ -700,10 +788,12 @@ export function useCoreServices(): UseDataResult<CoreService> {
     try {
       const { data: rows, error: err } = await supabase
         .from("core_services")
-        .select("*")
+        .select("id,title,description,image_url,sort_order,created_at")
         .order("sort_order", { ascending: true });
       if (err) throw err;
-      setData((rows as CoreService[]) || []);
+      const result = (rows as CoreService[]) || [];
+      setCache(cacheKey, result);
+      setData(result);
     } catch (e: any) {
       setError(e.message);
       setData([]);
@@ -716,7 +806,7 @@ export function useCoreServices(): UseDataResult<CoreService> {
     fetchData();
   }, [fetchData]);
 
-  return { data, loading, error, refetch: fetchData };
+  return { data, loading, error, refetch: () => fetchData(true) };
 }
 
 export function useAdminCoreServices(): UseDataResult<CoreService> {

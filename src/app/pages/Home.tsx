@@ -47,7 +47,7 @@ import { createPortal } from "react-dom";
 import { locations, searchLocations, resolveLocationKey } from "./locations/locationData";
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 import type { Product, Solution } from "../../lib/database.types";
-import { useHeroImages, usePageBanner } from "../../lib/hooks";
+import { useHeroImages, usePageBanner, getCached, setCache } from "../../lib/hooks";
 import { getOptimizedImageUrl } from "../../lib/imageOptimization";
 import { useIsMobile } from "../components/ui/use-mobile";
 
@@ -211,17 +211,36 @@ function HeroSection() {
   const desktopOpacity = useTransform(scrollY, [0, 450], [1, 0]);
   const opacity = isMobile ? undefined : desktopOpacity;
 
-  // ── Fetch products & solutions on search interaction or idle (keeps critical load fast) ──
+  // ── Fetch products & solutions on search interaction or idle (keeps critical load fast & egress zero) ──
   const searchDataLoaded = useRef(false);
   const loadSearchData = useCallback(() => {
     if (searchDataLoaded.current || !isSupabaseConfigured()) return;
     searchDataLoaded.current = true;
+
+    const cachedProducts = getCached<Product>("products:false");
+    const cachedSolutions = getCached<Solution>("solutions");
+    if (cachedProducts && cachedSolutions) {
+      setAllProducts(cachedProducts);
+      setAllSolutions(cachedSolutions);
+      return;
+    }
+
     Promise.all([
-      supabase.from("products").select("id,title,subtitle,image_url,slug,category").eq("published", true).order("sort_order"),
-      supabase.from("solutions").select("id,title,subtitle,image_url,slug").eq("published", true).order("sort_order"),
+      cachedProducts
+        ? Promise.resolve({ data: cachedProducts, error: null })
+        : supabase.from("products").select("id,title,subtitle,image_url,slug,category").eq("published", true).order("sort_order"),
+      cachedSolutions
+        ? Promise.resolve({ data: cachedSolutions, error: null })
+        : supabase.from("solutions").select("id,title,subtitle,image_url,slug").eq("published", true).order("sort_order"),
     ]).then(([p, s]) => {
-      if (p.data) setAllProducts(p.data as Product[]);
-      if (s.data) setAllSolutions(s.data as Solution[]);
+      if (p.data) {
+        setAllProducts(p.data as Product[]);
+        if (!cachedProducts) setCache("products:false", p.data as Product[]);
+      }
+      if (s.data) {
+        setAllSolutions(s.data as Solution[]);
+        if (!cachedSolutions) setCache("solutions", s.data as Solution[]);
+      }
     });
   }, []);
 
