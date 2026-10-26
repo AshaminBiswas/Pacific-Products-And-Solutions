@@ -152,6 +152,41 @@ export interface Product {
   published: boolean;
   created_at: string;
   updated_at: string;
+  // BOQ & Architectural Attachments
+  boq_url?: string;
+  boq_file_name?: string;
+  boq_file_size?: number;
+  boqUrl?: string;
+  boqFileName?: string;
+  boqFileSize?: number;
+  brochure_url?: string;
+  brochure_file_name?: string;
+  brochure_file_size?: number;
+  brochureUrl?: string;
+  brochureFileName?: string;
+  brochureFileSize?: number;
+  drawing_url?: string;
+  drawing_file_name?: string;
+  drawing_file_size?: number;
+  drawingUrl?: string;
+  drawingFileName?: string;
+  drawingFileSize?: number;
+  metaTitle?: string;
+  metaDescription?: string;
+  metadata?: {
+    boqUrl?: string;
+    boqFileName?: string;
+    boqFileSize?: number;
+    brochureUrl?: string;
+    brochureFileName?: string;
+    brochureFileSize?: number;
+    drawingUrl?: string;
+    drawingFileName?: string;
+    drawingFileSize?: number;
+    metaTitle?: string;
+    metaDescription?: string;
+    [key: string]: any;
+  };
 }
 
 export interface Blog {

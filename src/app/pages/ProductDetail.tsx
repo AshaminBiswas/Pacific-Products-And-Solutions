@@ -5,6 +5,7 @@ import {
   Clock, Wrench, BadgeCheck, Truck, HeadphonesIcon, Star,
   ChevronRight, Layers, Video, Film, Play, Eye,
   Palette, Sparkles, Check, Download, FileText,
+  FileSpreadsheet, ExternalLink,
 } from "lucide-react";
 import { Button } from "../components/Button";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
@@ -361,12 +362,32 @@ export default function ProductDetailPage() {
                   <Wrench className="w-4 h-4 mr-2 text-[#B5F823]" />
                   Hardware Specs
                 </a>
-                {catalogs.length > 0 && (
+                {product?.boqUrl && (
+                  <Button
+                    size="lg"
+                    className="bg-[#7FB706] hover:bg-[#6ea105] text-[#030213] font-bold shadow-lg shadow-[#7FB706]/30 flex items-center gap-2 border-0"
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      link.href = product.boqUrl!;
+                      link.target = '_blank';
+                      link.download = product.boqFileName || `${product.title}-BOQ-Sheet.pdf`;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                  >
+                    <FileSpreadsheet className="w-4 h-4 text-[#030213]" />
+                    <span>Download BOQ</span>
+                  </Button>
+                )}
+                {(product?.brochureUrl || catalogs.length > 0) && (
                   <Button size="lg" variant="outline" className="border-[#7FB706]/40 text-[#7FB706] hover:bg-[#7FB706]/10 flex items-center gap-2" onClick={() => {
+                    const targetUrl = product?.brochureUrl || catalogs[0].file_url;
+                    const targetName = product?.brochureFileName || catalogs[0]?.title || `${product?.title || 'Model'}-Brochure`;
                     const link = document.createElement('a');
-                    link.href = catalogs[0].file_url;
+                    link.href = targetUrl;
                     link.target = '_blank';
-                    link.download = catalogs[0].title || `${product?.title || 'Model'}-Brochure`;
+                    link.download = targetName;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
@@ -751,6 +772,67 @@ export default function ProductDetailPage() {
               </div>
             </motion.div>
           </div>
+
+          {/* Architectural BOQ & Estimation Toolkit Card */}
+          {product.boqUrl && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mt-8 bg-gradient-to-br from-[#7FB706]/15 via-white/[0.02] to-transparent dark:from-[#7FB706]/10 dark:via-white/[0.02] border border-[#7FB706]/30 rounded-3xl p-6 sm:p-8 shadow-xl"
+            >
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-[#7FB706]/20 border border-[#7FB706]/40 flex items-center justify-center text-[#7FB706] shrink-0 shadow-lg shadow-[#7FB706]/10">
+                    <FileSpreadsheet className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <h4 className="text-lg font-bold text-gray-900 dark:text-white">
+                        Architectural Bill of Quantities (BOQ)
+                      </h4>
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-[#7FB706] text-[#030213]">
+                        Ready for Estimate
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1.5 max-w-2xl leading-relaxed">
+                      Official contractor &amp; tender BOQ estimation schedule for {product.title}. Includes stall counts, phenolic board dimensions, hardware fittings, and turnkey site installation notes.
+                    </p>
+                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mt-3 font-mono">
+                      <span className="font-semibold text-gray-700 dark:text-gray-200">{product.boqFileName || `${product.title} BOQ.pdf`}</span>
+                      {product.boqFileSize ? (
+                        <>
+                          <span>•</span>
+                          <span>{(product.boqFileSize / 1024).toFixed(1)} KB</span>
+                        </>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <a
+                    href={product.boqUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold border border-gray-300 dark:border-white/10 hover:border-[#7FB706] text-gray-800 dark:text-white hover:bg-[#7FB706]/10 transition-all"
+                    title="Preview BOQ Document"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 text-[#7FB706]" />
+                    <span>Preview</span>
+                  </a>
+                  <a
+                    href={product.boqUrl}
+                    download={product.boqFileName || `${product.title}-BOQ`}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#7FB706] hover:bg-[#6ea105] text-[#030213] shadow-lg shadow-[#7FB706]/20 transition-all"
+                    title="Download BOQ"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download BOQ Sheet</span>
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
       </section>
 
@@ -880,20 +962,83 @@ export default function ProductDetailPage() {
         </section>
       )}
 
-      {/* ═══════════════════ CATALOGS ═══════════════════ */}
-      {catalogs.length > 0 && (
-        <section className="py-16 sm:py-20 lg:py-24 bg-[#fafbf7] dark:bg-[#0a0a1a] transition-colors">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-              <span className="text-xs font-bold tracking-widest text-[#7FB706] uppercase">Resources</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mt-2 mb-4">Download Catalogs</h2>
-            </motion.div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              {catalogs.map((catalog) => (<CatalogCard key={catalog.id} catalog={catalog} />))}
+      {/* ═══════════════════ CATALOGS & RESOURCES ═══════════════════ */}
+      {(() => {
+        const allResourceCards: any[] = [...catalogs];
+        const catalogUrls = new Set(catalogs.map((c) => c.file_url));
+
+        if (product?.boqUrl && !catalogUrls.has(product.boqUrl)) {
+          catalogUrls.add(product.boqUrl);
+          allResourceCards.push({
+            id: `boq-${product.id}`,
+            title: product.boqFileName || `${product.title} BOQ & Estimation Sheet`,
+            description: `Official architectural Bill of Quantities (BOQ) with stall counts, dimensions, and hardware schedules for ${product.title}.`,
+            document_type: "BOQ",
+            category: product.category,
+            file_url: product.boqUrl,
+            file_type: "pdf",
+            file_size: product.boqFileSize || 0,
+            thumbnail_url: product.image_url || "",
+            product_id: product.id,
+            published: true,
+            sort_order: 1,
+          });
+        }
+
+        if (product?.brochureUrl && !catalogUrls.has(product.brochureUrl)) {
+          catalogUrls.add(product.brochureUrl);
+          allResourceCards.push({
+            id: `brochure-${product.id}`,
+            title: product.brochureFileName || `${product.title} Brochure & Specifications`,
+            description: `Official technical specifications and hardware catalog for ${product.title}.`,
+            document_type: "Brochure",
+            category: product.category,
+            file_url: product.brochureUrl,
+            file_type: "pdf",
+            file_size: product.brochureFileSize || 0,
+            thumbnail_url: product.image_url || "",
+            product_id: product.id,
+            published: true,
+            sort_order: 2,
+          });
+        }
+
+        if (product?.drawingUrl && !catalogUrls.has(product.drawingUrl)) {
+          catalogUrls.add(product.drawingUrl);
+          allResourceCards.push({
+            id: `drawing-${product.id}`,
+            title: product.drawingFileName || `${product.title} Architectural Drawing`,
+            description: `Architectural CAD layout drawing and plan for ${product.title}.`,
+            document_type: "Drawing",
+            category: product.category,
+            file_url: product.drawingUrl,
+            file_type: "pdf",
+            file_size: product.drawingFileSize || 0,
+            thumbnail_url: product.image_url || "",
+            product_id: product.id,
+            published: true,
+            sort_order: 3,
+          });
+        }
+
+        if (allResourceCards.length === 0) return null;
+
+        return (
+          <section className="py-16 sm:py-20 lg:py-24 bg-[#fafbf7] dark:bg-[#0a0a1a] transition-colors">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
+                <span className="text-xs font-bold tracking-widest text-[#7FB706] uppercase">Resources &amp; Specifications</span>
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mt-2 mb-4">Technical Downloads</h2>
+              </motion.div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                {allResourceCards.map((catalog) => (
+                  <CatalogCard key={catalog.id} catalog={catalog} />
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        );
+      })()}
 
       {showCatalogViewer && catalogs.length > 0 && (
         <CatalogViewerModal catalog={catalogs[0]} onClose={() => setShowCatalogViewer(false)} />

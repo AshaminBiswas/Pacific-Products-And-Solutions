@@ -9,6 +9,7 @@ import { usePageBanner } from "../../lib/hooks";
 const DOCUMENT_TYPES = [
   "Brochure",
   "Catalog",
+  "BOQ",
   "Drawing",
   "Installation Manual",
   "Warranty",
@@ -50,20 +51,66 @@ export default function Downloads() {
             .order("created_at", { ascending: false }),
           supabase
             .from("products")
-            .select("id, title, slug, category"),
+            .select("id, title, slug, category, image_url, metadata, created_at, updated_at"),
         ]);
 
-        if (catalogData) {
-          setDownloads(catalogData as Catalog[]);
-        }
+        const items: Catalog[] = catalogData ? [...(catalogData as Catalog[])] : [];
+        const seenUrls = new Set(items.map((i) => i.file_url));
 
         if (productData) {
           const map: Record<string, { title: string; slug: string; category: string }> = {};
           productData.forEach((p: any) => {
             map[p.id] = { title: p.title, slug: p.slug, category: p.category };
+
+            const meta = p.metadata || {};
+            // Synthesize BOQ document if attached and not duplicate
+            const boqUrl = (p.boq_url || meta.boqUrl || "").trim();
+            if (boqUrl && !seenUrls.has(boqUrl)) {
+              seenUrls.add(boqUrl);
+              items.push({
+                id: `boq-${p.id}`,
+                title: `${p.title} BOQ & Estimation Sheet`,
+                description: `Official architectural Bill of Quantities (BOQ) with stall counts, dimensions, and hardware schedules for ${p.title}.`,
+                document_type: "BOQ",
+                category: p.category === "Cubicle" ? "Restroom Cubicles" : p.category,
+                file_url: boqUrl,
+                file_type: "pdf",
+                file_size: Number(p.boq_file_size || meta.boqFileSize) || 0,
+                thumbnail_url: p.image_url || "",
+                product_id: p.id,
+                published: true,
+                sort_order: 1,
+                created_at: p.created_at || new Date().toISOString(),
+                updated_at: p.updated_at || new Date().toISOString(),
+              });
+            }
+
+            // Synthesize Drawing document if attached and not duplicate
+            const drawingUrl = (p.drawing_url || meta.drawingUrl || "").trim();
+            if (drawingUrl && !seenUrls.has(drawingUrl)) {
+              seenUrls.add(drawingUrl);
+              items.push({
+                id: `drawing-${p.id}`,
+                title: `${p.title} Standard Layout Drawing`,
+                description: `Architectural CAD layout drawing and installation plan for ${p.title}.`,
+                document_type: "Drawing",
+                category: p.category === "Cubicle" ? "Restroom Cubicles" : p.category,
+                file_url: drawingUrl,
+                file_type: "pdf",
+                file_size: Number(p.drawing_file_size || meta.drawingFileSize) || 0,
+                thumbnail_url: p.image_url || "",
+                product_id: p.id,
+                published: true,
+                sort_order: 2,
+                created_at: p.created_at || new Date().toISOString(),
+                updated_at: p.updated_at || new Date().toISOString(),
+              });
+            }
           });
           setProductMap(map);
         }
+
+        setDownloads(items);
       } catch (err) {
         console.error("Error loading downloads:", err);
       } finally {

@@ -16,7 +16,7 @@ import {
 const memCache = new Map<string, { data: unknown; timestamp: number }>();
 const inFlight = new Map<string, Promise<any>>();
 const CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes fresh cache TTL for production CMS assets
-const SESSION_CACHE_PREFIX = "prc_cache_v5_";
+const SESSION_CACHE_PREFIX = "prc_cache_v6_";
 
 // Proactively purge outdated session caches from earlier deployments
 try {
@@ -24,13 +24,60 @@ try {
     const toRemove: string[] = [];
     for (let i = 0; i < sessionStorage.length; i++) {
       const k = sessionStorage.key(i);
-      if (k && k.startsWith("prc_cache_") && !k.startsWith("prc_cache_v5_")) {
+      if (k && k.startsWith("prc_cache_") && !k.startsWith("prc_cache_v6_")) {
         toRemove.push(k);
       }
     }
     toRemove.forEach((k) => sessionStorage.removeItem(k));
   }
 } catch {}
+
+/**
+ * Normalizes a database product row, extracting BOQ, brochure, and drawing
+ * URLs and metadata so components can reliably access them.
+ */
+export function normalizeProductRow(row: any): Product {
+  if (!row) return row;
+  const meta = row.metadata || {};
+  const hwMeta = row.specifications?.find?.((s: any) => s.label === '__hardware_meta')?.value || {};
+
+  const boqUrl = (row.boq_url || meta.boqUrl || hwMeta.boqUrl || row.boqUrl || '').trim();
+  const boqFileName = (row.boq_file_name || meta.boqFileName || hwMeta.boqFileName || row.boqFileName || '').trim();
+  const boqFileSize = Number(row.boq_file_size || meta.boqFileSize || hwMeta.boqFileSize || row.boqFileSize) || undefined;
+
+  const brochureUrl = (row.brochure_url || meta.brochureUrl || hwMeta.brochureUrl || row.brochureUrl || '').trim();
+  const brochureFileName = (row.brochure_file_name || meta.brochureFileName || hwMeta.brochureFileName || row.brochureFileName || '').trim();
+  const brochureFileSize = Number(row.brochure_file_size || meta.brochureFileSize || hwMeta.brochureFileSize || row.brochureFileSize) || undefined;
+
+  const drawingUrl = (row.drawing_url || meta.drawingUrl || hwMeta.drawingUrl || row.drawingUrl || '').trim();
+  const drawingFileName = (row.drawing_file_name || meta.drawingFileName || hwMeta.drawingFileName || row.drawingFileName || '').trim();
+  const drawingFileSize = Number(row.drawing_file_size || meta.drawingFileSize || hwMeta.drawingFileSize || row.drawingFileSize) || undefined;
+
+  return {
+    ...row,
+    boq_url: boqUrl || undefined,
+    boq_file_name: boqFileName || undefined,
+    boq_file_size: boqFileSize,
+    boqUrl: boqUrl || undefined,
+    boqFileName: boqFileName || undefined,
+    boqFileSize,
+    brochure_url: brochureUrl || undefined,
+    brochure_file_name: brochureFileName || undefined,
+    brochure_file_size: brochureFileSize,
+    brochureUrl: brochureUrl || undefined,
+    brochureFileName: brochureFileName || undefined,
+    brochureFileSize,
+    drawing_url: drawingUrl || undefined,
+    drawing_file_name: drawingFileName || undefined,
+    drawing_file_size: drawingFileSize,
+    drawingUrl: drawingUrl || undefined,
+    drawingFileName: drawingFileName || undefined,
+    drawingFileSize,
+    metaTitle: meta.metaTitle || row.metaTitle || undefined,
+    metaDescription: meta.metaDescription || row.metaDescription || undefined,
+    metadata: meta,
+  };
+}
 
 export function getCached<T>(key: string): T[] | null {
   // 1. Check in-memory map
@@ -201,7 +248,7 @@ export function useProducts(featuredOnly = false): UseDataResult<Product> {
     const fetchPromise = (async () => {
       let query = supabase
         .from("products")
-        .select("id,slug,title,subtitle,description,bottom_description,category,image_url,alt_text,additional_images,features,specifications,applications,colors,is_featured,sort_order,published,created_at,updated_at")
+        .select("id,slug,title,subtitle,description,bottom_description,category,image_url,alt_text,additional_images,features,specifications,applications,colors,is_featured,sort_order,published,created_at,updated_at,metadata")
         .eq("published", true)
         .order("sort_order", { ascending: true });
 
@@ -211,7 +258,7 @@ export function useProducts(featuredOnly = false): UseDataResult<Product> {
 
       const { data: rows, error: err } = await query;
       if (err) throw err;
-      const result = (rows as Product[]) || [];
+      const result = ((rows || []) as any[]).map(normalizeProductRow);
       setCache(cacheKey, result);
       if (!featuredOnly) {
         setCache("products:true", result.filter((p) => p.is_featured));
@@ -312,7 +359,7 @@ export function useProduct(slug: string | undefined): UseSingleResult<Product> {
         if (err || !row || row.published === false) {
           setData(null);
         } else {
-          setData(row as Product);
+          setData(normalizeProductRow(row));
         }
       } catch (e: any) {
         console.error("Failed to fetch product from DB:", e);
