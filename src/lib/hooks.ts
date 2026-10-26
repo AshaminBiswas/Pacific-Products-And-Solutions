@@ -16,7 +16,7 @@ import {
 const memCache = new Map<string, { data: unknown; timestamp: number }>();
 const inFlight = new Map<string, Promise<any>>();
 const CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes fresh cache TTL for production CMS assets
-const SESSION_CACHE_PREFIX = "prc_cache_v4_";
+const SESSION_CACHE_PREFIX = "prc_cache_v5_";
 
 // Proactively purge outdated session caches from earlier deployments
 try {
@@ -24,7 +24,7 @@ try {
     const toRemove: string[] = [];
     for (let i = 0; i < sessionStorage.length; i++) {
       const k = sessionStorage.key(i);
-      if (k && k.startsWith("prc_cache_") && !k.startsWith("prc_cache_v4_")) {
+      if (k && k.startsWith("prc_cache_") && !k.startsWith("prc_cache_v5_")) {
         toRemove.push(k);
       }
     }
