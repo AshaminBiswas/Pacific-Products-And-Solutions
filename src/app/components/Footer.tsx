@@ -268,7 +268,7 @@ export function Footer() {
               <li className="flex items-start space-x-2">
                 <MapPin className="w-4 h-4 mt-1 text-[#7FB706] shrink-0" />
                 <span className="text-gray-400 text-sm">
-                  Okhla Industrial Estate Phase-II, New Delhi - 110020, Delhi, India
+                  H-5 JR Complex, Melaram farm Gate, No. 4, Sewa Dham Rd, Mandoli, Delhi, Uttar Pradesh 110093
                 </span>
               </li>
             </ul>
@@ -288,7 +288,7 @@ export function Footer() {
               Pan-India Service &amp; Project Locations
             </h4>
             <p className="text-xs sm:text-sm text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              Direct factory manufacturing in Okhla, New Delhi with express dispatch and certified installation crews deployed across all major commercial, institutional, and industrial hubs nationwide.
+              Direct factory manufacturing at Mandoli, Delhi NCR with express dispatch and certified installation crews deployed across all major commercial, institutional, and industrial hubs nationwide.
             </p>
           </div>
 
@@ -421,7 +421,7 @@ export function Footer() {
             <div className="flex items-center gap-2.5">
               <span className="w-2 h-2 rounded-full bg-[#7FB706] shrink-0" />
               <p className="text-xs text-gray-300">
-                <span className="font-bold text-white">Central Manufacturing Facility &amp; HQ:</span> Okhla Industrial Estate Phase-II, New Delhi. Direct factory supply &amp; turnkey installation Pan-India.
+                <span className="font-bold text-white">Central Manufacturing Facility &amp; HQ:</span> H-5 JR Complex, Melaram farm Gate, No. 4, Sewa Dham Rd, Mandoli, Delhi, Uttar Pradesh 110093. Direct factory supply &amp; turnkey installation Pan-India.
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">

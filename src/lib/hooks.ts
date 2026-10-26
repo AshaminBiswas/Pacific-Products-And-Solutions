@@ -15,7 +15,7 @@ import {
 // Ensures 0ms instant page loads and ZERO duplicate Supabase egress during a visitor session.
 const memCache = new Map<string, { data: unknown; timestamp: number }>();
 const inFlight = new Map<string, Promise<any>>();
-const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes cache TTL for production CMS assets
+const CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes fresh cache TTL for production CMS assets
 const SESSION_CACHE_PREFIX = "prc_cache_";
 
 export function getCached<T>(key: string): T[] | null {
@@ -129,17 +129,32 @@ export function useProducts(featuredOnly = false): UseDataResult<Product> {
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async (bust = false) => {
+    let hasServedCache = false;
     if (!bust) {
       const cached = getCached<Product>(cacheKey);
-      if (cached) { setData(cached); setLoading(false); return; }
-      if (featuredOnly) {
+      if (cached) {
+        setData(cached);
+        setLoading(false);
+        hasServedCache = true;
+        // Stale-While-Revalidate: serve cached immediately, but if fresh (< 30s) avoid re-query
+        const entry = memCache.get(cacheKey);
+        const age = entry ? Date.now() - entry.timestamp : Infinity;
+        if (age < 30 * 1000) {
+          return;
+        }
+      } else if (featuredOnly) {
         const all = getCached<Product>("products:false");
         if (all) {
           const featured = all.filter((p) => p.is_featured);
           setCache(cacheKey, featured);
           setData(featured);
           setLoading(false);
-          return;
+          hasServedCache = true;
+          const entry = memCache.get("products:false");
+          const age = entry ? Date.now() - entry.timestamp : Infinity;
+          if (age < 30 * 1000) {
+            return;
+          }
         }
       }
       if (inFlight.has(cacheKey)) {
@@ -154,7 +169,9 @@ export function useProducts(featuredOnly = false): UseDataResult<Product> {
         return;
       }
     }
-    setLoading(true);
+    if (!hasServedCache) {
+      setLoading(true);
+    }
     setError(null);
 
     if (!isSupabaseConfigured()) {
@@ -170,7 +187,7 @@ export function useProducts(featuredOnly = false): UseDataResult<Product> {
     const fetchPromise = (async () => {
       let query = supabase
         .from("products")
-        .select("id,slug,title,subtitle,description,category,image_url,alt_text,is_featured,sort_order,published,created_at,updated_at")
+        .select("id,slug,title,subtitle,description,bottom_description,category,image_url,alt_text,additional_images,features,specifications,applications,colors,is_featured,sort_order,published,created_at,updated_at")
         .eq("published", true)
         .order("sort_order", { ascending: true });
 
@@ -195,7 +212,7 @@ export function useProducts(featuredOnly = false): UseDataResult<Product> {
     } catch (e: any) {
       console.error("Failed to fetch products:", e);
       setError(e.message);
-      setData([]);
+      setData((prev) => (prev.length > 0 ? prev : []));
     } finally {
       inFlight.delete(cacheKey);
       setLoading(false);

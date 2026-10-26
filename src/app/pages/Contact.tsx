@@ -17,7 +17,7 @@ export default function ContactPage() {
     {
       city: "Delhi (Head Office)",
       slug: "delhi",
-      address: "Okhla Industrial Estate, New Delhi - 110020, Delhi, India",
+      address: "H-5 JR Complex, Melaram farm Gate, No. 4, Sewa Dham Rd, Mandoli, Delhi, Uttar Pradesh 110093",
       phone: "+91 98185 92113",
       email: "info@pacificproduct.in",
     },
@@ -107,8 +107,8 @@ export default function ContactPage() {
                   <div>
                     <h4 className="font-semibold text-white text-lg mb-2">Head Office</h4>
                     <p className="text-gray-400 leading-relaxed text-sm">
-                      Okhla Industrial Estate, New Delhi - 110020<br />
-                      Delhi, India
+                      H-5 JR Complex, Melaram farm Gate, No. 4, Sewa Dham Rd, Mandoli<br />
+                      Delhi, Uttar Pradesh 110093
                     </p>
                   </div>
                 </div>

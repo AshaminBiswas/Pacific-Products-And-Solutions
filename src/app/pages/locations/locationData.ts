@@ -206,8 +206,8 @@ export const locations: Record<string, LocationData> = {
     targetKeyword: "Restroom Cubicle Manufacturer in Delhi NCR",
     h1: "Restroom Cubicle Manufacturer in Delhi NCR",
     tagline: "Commercial Restroom Cubicles & HPL Toilet Partitions in Delhi NCR",
-    description: "Pacific Products & Solutions is a leading B2B manufacturer and contractor of commercial restroom cubicles, HPL toilet partitions, urinal modesty screens, and modular lockers across Delhi, New Delhi, and the National Capital Region. Factory-direct supply from Okhla Industrial Estate with professional installation.",
-    address: "Okhla Industrial Estate, New Delhi - 110020, Delhi, India",
+    description: "Pacific Products & Solutions is a leading B2B manufacturer and contractor of commercial restroom cubicles, HPL toilet partitions, urinal modesty screens, and modular lockers across Delhi, New Delhi, and the National Capital Region. Factory-direct supply from Mandoli, Delhi NCR with professional installation.",
+    address: "H-5 JR Complex, Melaram farm Gate, No. 4, Sewa Dham Rd, Mandoli, Delhi, Uttar Pradesh 110093",
     phone: "+91 98185 92113",
     email: "info@pacificproduct.in",
     hours: "Mon–Sat: 9:00 AM – 6:00 PM",
@@ -216,9 +216,9 @@ export const locations: Record<string, LocationData> = {
     geoRegion: "IN-DL",
     geoPlacename: "New Delhi, Delhi, India",
     logisticsInfo: {
-      deliveryTime: "Same-day site visit; 1-3 days dispatch from central Okhla facility",
+      deliveryTime: "Same-day site visit; 1-3 days dispatch from central Mandoli facility",
       dispatchMode: "Dedicated factory transport with trained in-house installation team",
-      coverageHubs: ["Okhla", "Connaught Place", "Nehru Place", "Aerocity", "South Extension", "Netaji Subhash Place", "Bhikaji Cama Place"],
+      coverageHubs: ["Mandoli", "Connaught Place", "Nehru Place", "Aerocity", "South Extension", "Netaji Subhash Place", "Bhikaji Cama Place"],
     },
     meta: {
       title: "Restroom Cubicle Manufacturer in Delhi NCR | Pacific Products",
@@ -231,7 +231,7 @@ export const locations: Record<string, LocationData> = {
     projects: ["Delhi International Airport (DIAL) Vendor Areas", "Corporate Office Complexes in Aerocity", "Central Delhi Institutional Auditoriums", "Metro Station Staff Washrooms", "Healthcare Complexes in Saket", "Commercial Complexes in Nehru Place"],
     whyChoose: COMMON_WHY_CHOOSE,
     faqs: [
-      { question: "Does PRC manufacture restroom cubicles directly in Delhi?", answer: "Yes. Our primary manufacturing and CNC routing facility is located at Okhla Industrial Estate, New Delhi, ensuring direct factory pricing, immediate sample availability, and fast project turnarounds." },
+      { question: "Does PRC manufacture restroom cubicles directly in Delhi?", answer: "Yes. Our primary manufacturing and CNC routing facility is located at Mandoli, Delhi NCR (H-5 JR Complex), ensuring direct factory pricing, immediate sample availability, and fast project turnarounds." },
       { question: "What materials are used for cubicles in Delhi NCR commercial projects?", answer: "We use solid compact laminate (HPL) in 12mm and 18mm thicknesses conforming to IS:2046 and EN 438, paired with Grade 304/316 stainless steel, polyamide nylon, or powder-coated aluminium hardware." },
       { question: "Can PRC handle emergency installation deadlines in Delhi NCR?", answer: "Yes. Because our central facility is located in Delhi NCR, standard modular cubicle models can be fabricated, dispatched, and installed within 3 to 7 business days for urgent handover milestones." },
       { question: "What warranty is provided on toilet partitions in Delhi NCR?", answer: "We provide an industry-leading 10-year warranty against water absorption, delamination, and fungal growth on our compact laminate boards, accompanied by a 1-year operational hardware warranty." },
@@ -982,7 +982,7 @@ export const REGION_CLUSTERS: RegionCluster[] = [
     id: "ncr",
     name: "Delhi NCR Hub",
     badge: "Primary Plant & HQ",
-    description: "Same-day site inspection & 24–48h express dispatch from Okhla, New Delhi",
+    description: "Same-day site inspection & 24–48h express dispatch from Mandoli, Delhi NCR",
     cityKeys: ["delhi", "gurugram", "noida", "greater-noida", "ghaziabad", "faridabad"],
   },
   {

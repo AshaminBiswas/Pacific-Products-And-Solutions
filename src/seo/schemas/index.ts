@@ -22,10 +22,10 @@ export function organizationSchema() {
     telephone: "+919818592113",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Okhla Industrial Estate",
-      addressLocality: "New Delhi",
-      addressRegion: "Delhi",
-      postalCode: "110020",
+      streetAddress: "H-5 JR Complex, Melaram farm Gate, No. 4, Sewa Dham Rd, Mandoli",
+      addressLocality: "Delhi",
+      addressRegion: "Delhi, Uttar Pradesh",
+      postalCode: "110093",
       addressCountry: "IN",
     },
     areaServed: [
@@ -105,7 +105,7 @@ export function localBusinessSchema(location?: {
     email: location?.email || "info@pacificproduct.in",
     address: {
       "@type": "PostalAddress",
-      streetAddress: location?.address || "Okhla Industrial Estate",
+      streetAddress: location?.address || "H-5 JR Complex, Melaram farm Gate, No. 4, Sewa Dham Rd, Mandoli",
       addressLocality: location?.city || "New Delhi",
       addressRegion: location?.region || "Delhi",
       addressCountry: location?.city.toLowerCase().includes("dubai") || location?.region.toLowerCase().includes("gcc") ? "AE" : "IN",

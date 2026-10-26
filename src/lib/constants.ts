@@ -9,4 +9,4 @@ export const WHATSAPP_DISPLAY = "+91 92170 16908";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 export const OFFICE_EMAIL = "info@pacificproduct.in";
-export const OFFICE_ADDRESS = "Okhla Industrial Estate, New Delhi - 110020, Delhi, India";
+export const OFFICE_ADDRESS = "H-5 JR Complex, Melaram farm Gate, No. 4, Sewa Dham Rd, Mandoli, Delhi, Uttar Pradesh 110093";

@@ -16,7 +16,7 @@
 - **Company**: Pacific Products & Solutions
 - **Established**: 2012 (12+ years of manufacturing excellence)
 - **Certification**: ISO 9001:2015 certified
-- **Corporate Headquarters**: Okhla Industrial Estate, New Delhi – 110020, India
+- **Corporate Headquarters**: H-5 JR Complex, Melaram farm Gate, No. 4, Sewa Dham Rd, Mandoli, Delhi, Uttar Pradesh 110093
 - **Regional & International Hubs**: Delhi NCR, Mumbai, Bangalore, Ahmedabad, Kolkata, and Dubai (UAE / GCC)
 - **Target Audience**: B2B enterprise clients — architects, general contractors, commercial builders, interior designers, facility managers, and institutional developers.
 - **Production Capabilities**: In-house CNC routing, edge chamfering, compact laminate fabrication, and hardware casting.
