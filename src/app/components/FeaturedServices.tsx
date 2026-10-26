@@ -12,7 +12,7 @@ export function FeaturedServices() {
   const realProducts = (allProducts || []).filter(
     (p) => p.published !== false && !p.id?.startsWith("prod-") && !p.id?.startsWith("demo-")
   );
-  const activePool = realProducts.length > 0 ? realProducts : (allProducts || []);
+  const activePool = realProducts;
   const explicitlyFeatured = activePool.filter((p) => p.is_featured);
   const featuredProducts = (explicitlyFeatured.length > 0 ? explicitlyFeatured : activePool).slice(0, 3);
 

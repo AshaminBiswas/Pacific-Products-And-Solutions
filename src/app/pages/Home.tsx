@@ -50,6 +50,7 @@ import type { Product, Solution } from "../../lib/database.types";
 import { useHeroImages, usePageBanner, getCached, setCache } from "../../lib/hooks";
 import { getOptimizedImageUrl } from "../../lib/imageOptimization";
 import { useIsMobile } from "../components/ui/use-mobile";
+import { toCategorySlug } from "../../lib/categoryUtils";
 
 // ─────────────────────────────────────────────────────────────
 
@@ -289,17 +290,16 @@ function HeroSection() {
         (p.category ?? "").toLowerCase().includes(q)
       )
       .slice(0, 15)
+      .filter((p) => !p.id?.startsWith("prod-") && !p.id?.startsWith("demo-"))
       .map((p) => {
-        const catSlug = p.category
-          ? p.category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
-          : "";
+        const catSlug = toCategorySlug(p.category);
         return {
           id: p.id,
           title: p.title,
           subtitle: p.subtitle ?? p.category,
           image_url: p.image_url,
           type: "product" as const,
-          url: catSlug ? `/products/${catSlug}/${p.slug}` : `/products/${p.slug}`,
+          url: `/products/${catSlug}/${p.slug}`,
         };
       });
 
