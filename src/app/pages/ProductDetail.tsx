@@ -259,18 +259,30 @@ export default function ProductDetailPage() {
   }
 
   const isPremiumShowerCubicles = lookupSlug === "premium-shower-cubicles-supplier-in-india";
-  const seoDescription = isPremiumShowerCubicles
+  const defaultDescription = isPremiumShowerCubicles
     ? "Premium shower cubicles manufacturer in India offering luxury modular shower cubicle solutions for hotels, gyms, offices, hospitals, and commercial spaces. Waterproof, durable, hygienic, and modern shower partition systems by Pacific Product and Solution."
     : (product.description?.replace(/<[^>]+>/g, '').slice(0, 155) || `Premium ${product.title} solutions by Pacific Products & Solutions`);
+
+  // Respect user-configured SEO Title and Meta Description from Admin
+  const configuredMetaTitle = (product.metaTitle || (product as any).metadata?.metaTitle || '').trim();
+  const configuredMetaDesc = (product.metaDescription || (product as any).metadata?.metaDescription || '').trim();
+
+  const pageTitle = configuredMetaTitle || `${product.title} | Commercial Restroom Cubicle`;
+  const pageDescription = configuredMetaDesc || defaultDescription;
+
+  // Format ImageKit image to 1200x630 JPEG for WhatsApp & Open Graph social preview compatibility
+  const ogImageUrl = product.image_url?.includes('ik.imagekit.io')
+    ? `${product.image_url.split('?')[0]}?tr=w-1200,h-630,cm-pad_resize,bg-030213,f-jpg,q-85`
+    : product.image_url;
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#030213] transition-colors">
       <SEO
-        title={product.title}
-        description={seoDescription}
+        title={pageTitle}
+        description={pageDescription}
         canonical={productUrl}
         ogType="product"
-        ogImage={product.image_url}
+        ogImage={ogImageUrl}
         jsonLd={[productSchema({ ...product, slug: productUrl.replace('/products/', '') }), breadcrumbSchema([
           {name: 'Home', url: '/'},
           {name: 'Products', url: '/products'},

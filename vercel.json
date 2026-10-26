@@ -506,6 +506,28 @@
       "destination": "/api/gone"
     },
     {
+      "source": "/products/(.*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot|TelegramBot|Discordbot|Slackbot|SkypeUriPreview|Google-Structured-Data-Testing-Tool|vkShare|Pinterest|Applebot).*"
+        }
+      ],
+      "destination": "/api/og-preview?path=/products/$1"
+    },
+    {
+      "source": "/blog/(.*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot|TelegramBot|Discordbot|Slackbot|SkypeUriPreview|Google-Structured-Data-Testing-Tool|vkShare|Pinterest|Applebot).*"
+        }
+      ],
+      "destination": "/api/og-preview?path=/blog/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

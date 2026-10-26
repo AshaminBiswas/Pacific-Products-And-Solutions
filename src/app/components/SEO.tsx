@@ -51,6 +51,11 @@ export function SEO({
       : `${title} | ${SITE_NAME}`;
   const canonicalUrl = canonical ? `${SITE_URL}${canonical}` : undefined;
 
+  // Format ImageKit image to 1200x630 JPEG with brand background for Open Graph & WhatsApp
+  const formattedOgImage = (ogImage && ogImage.includes("ik.imagekit.io") && !ogImage.includes("tr="))
+    ? `${ogImage.split("?")[0]}?tr=w-1200,h-630,cm-pad_resize,bg-030213,f-jpg,q-85`
+    : ogImage;
+
   // Normalize jsonLd to always be an array
   const jsonLdArray = jsonLd
     ? Array.isArray(jsonLd)
@@ -75,7 +80,9 @@ export function SEO({
       <meta property="og:type" content={ogType} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={ogImage} />
+      <meta property="og:image" content={formattedOgImage} />
+      <meta property="og:image:secure_url" content={formattedOgImage} />
+      <meta property="og:image:type" content={formattedOgImage?.endsWith(".png") ? "image/png" : "image/jpeg"} />
       <meta property="og:image:width" content={String(ogImageWidth)} />
       <meta property="og:image:height" content={String(ogImageHeight)} />
       <meta property="og:image:alt" content={`${title} — ${SITE_NAME}`} />
@@ -88,7 +95,7 @@ export function SEO({
       <meta name="twitter:site" content={twitterSite} />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={ogImage} />
+      <meta name="twitter:image" content={formattedOgImage} />
       <meta name="twitter:image:alt" content={`${title} — ${SITE_NAME}`} />
 
       {/* JSON-LD Structured Data */}
