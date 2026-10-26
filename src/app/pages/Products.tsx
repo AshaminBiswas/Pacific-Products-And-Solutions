@@ -7,6 +7,7 @@ import { DEFAULT_KEYWORDS, itemListSchema, faqSchema, breadcrumbSchema } from ".
 import { PageHero } from "../components/PageHero";
 import { ShieldCheck, Award, ArrowRight, Layers, FileText, Phone, MessageSquare, Sparkles } from "lucide-react";
 import { Button } from "../components/Button";
+import { toCategorySlug, normalizeCategorySlug } from "../../lib/categoryUtils";
 
 interface ProductsPageProps {
   categorySlug?: string;
@@ -71,26 +72,7 @@ const CATEGORY_DEFINITIONS: Record<string, CategoryMeta> = {
   },
 };
 
-function normalizeCategorySlug(raw?: string): string | null {
-  if (!raw) return null;
-  const s = raw.toLowerCase().trim();
-  if (s.includes("cubicle") && !s.includes("kid")) return "restroom-cubicles";
-  if (s.includes("locker")) return "lockers";
-  if (s.includes("urinal") || s.includes("partition")) return "urinal-partitions";
-  if (s.includes("kid") || s.includes("toilet")) return "kids-cubicles";
-  if (CATEGORY_DEFINITIONS[s]) return s;
-  return null;
-}
-
-function toProductCategorySlug(category: string | undefined): string {
-  if (!category) return "restroom-cubicles";
-  const cat = category.toLowerCase().trim();
-  if (cat.includes("cubicle") && !cat.includes("kid")) return "restroom-cubicles";
-  if (cat.includes("locker")) return "lockers";
-  if (cat.includes("urinal") || cat.includes("partition")) return "urinal-partitions";
-  if (cat.includes("kid") || cat.includes("toilet")) return "kids-cubicles";
-  return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
+const toProductCategorySlug = toCategorySlug;
 
 const CATEGORY_BANNERS: Record<string, { bannerSlug: string; fallbackImage: string }> = {
   "restroom-cubicles": {

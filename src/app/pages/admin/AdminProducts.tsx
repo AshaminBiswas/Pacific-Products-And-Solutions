@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { supabase, uploadImage, uploadMultipleImages, uploadVideo } from "../../../lib/supabase";
-import { useAdminProducts } from "../../../lib/hooks";
+import { useAdminProducts, invalidateCache } from "../../../lib/hooks";
 import type { Product } from "../../../lib/database.types";
 import {
   Plus,
@@ -53,7 +53,7 @@ const emptyForm = {
   colors: [] as { name: string; image_url: string }[],
   is_featured: false,
   sort_order: 0,
-  published: false,
+  published: true,
 };
 
 export default function AdminProducts() {
@@ -359,6 +359,10 @@ export default function AdminProducts() {
         const { error } = await supabase.from("products").insert(payload as any);
         if (error) throw error;
       }
+      invalidateCache("products");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("pacific:products-updated"));
+      }
       refetch();
       return { success: true, slug };
     } catch (e: any) {
@@ -390,16 +394,30 @@ export default function AdminProducts() {
     if (!confirm("Delete this service?")) return;
     const { error: err } = await supabase.from("products").delete().eq("id", id);
     if (err) setError(err.message);
-    else refetch();
+    else {
+      invalidateCache("products");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("pacific:products-updated"));
+      }
+      refetch();
+    }
   };
 
   const togglePublished = async (product: Product) => {
     await supabase.from("products").update({ published: !product.published } as any).eq("id", product.id);
+    invalidateCache("products");
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("pacific:products-updated"));
+    }
     refetch();
   };
 
   const toggleFeatured = async (product: Product) => {
     await supabase.from("products").update({ is_featured: !product.is_featured } as any).eq("id", product.id);
+    invalidateCache("products");
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("pacific:products-updated"));
+    }
     refetch();
   };
 
@@ -603,13 +621,19 @@ export default function AdminProducts() {
                     className="w-full px-4 py-2.5 bg-[#0a0a1a] border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-[#7FB706]"
                   >
                     <option value="">Select Category</option>
-                    <option value="Restroom Cubicles">Restroom Cubicles</option>
-                    <option value="Toilet Partition">Toilet Partition</option>
-                    <option value="Shower Cubicle">Shower Cubicle</option>
-                    <option value="Locker Solution">Locker Solution</option>
-                    <option value="Changing Room">Changing Room</option>
-                    <option value="Custom Hardware">Custom Hardware</option>
-                    <option value="Other">Other</option>
+                    <optgroup label="Official Product Lines">
+                      <option value="Cubicle">Restroom Cubicles (Cubicle)</option>
+                      <option value="Lockers">Modular Lockers (Lockers)</option>
+                      <option value="Urinal Partitions">Urinal Partitions</option>
+                      <option value="Kids Toilet">Kids Safety Cubicles (Kids Toilet)</option>
+                    </optgroup>
+                    <optgroup label="Sub-Categories & Types">
+                      <option value="Toilet Partition">Toilet Partition</option>
+                      <option value="Shower Cubicle">Shower Cubicle</option>
+                      <option value="Changing Room">Changing Room</option>
+                      <option value="Custom Hardware">Custom Hardware</option>
+                      <option value="Other">Other</option>
+                    </optgroup>
                   </select>
                   {form.category === "Other" && (
                     <input

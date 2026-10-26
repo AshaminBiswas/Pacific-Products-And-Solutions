@@ -233,7 +233,49 @@ export function useProducts(featuredOnly = false): UseDataResult<Product> {
     }
   }, [featuredOnly, cacheKey]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => {
+    fetchData();
+
+    // 1. Listen for cross-window / tab product updates
+    const handleUpdate = () => {
+      invalidateCache("products");
+      fetchData(true);
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("pacific:products-updated", handleUpdate);
+      window.addEventListener("storage", (e) => {
+        if (e.key && e.key.includes("product")) {
+          handleUpdate();
+        }
+      });
+    }
+
+    // 2. Supabase Realtime Channel: Instantly refresh when any product is added/updated in the Admin console
+    let channel: any = null;
+    try {
+      channel = supabase
+        .channel("public:products-realtime")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "products" },
+          () => {
+            invalidateCache("products");
+            fetchData(true);
+          }
+        )
+        .subscribe();
+    } catch {}
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("pacific:products-updated", handleUpdate);
+      }
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, [fetchData]);
 
   return { data, loading, error, refetch: () => fetchData(true) };
 }
@@ -259,11 +301,14 @@ export function useProduct(slug: string | undefined): UseSingleResult<Product> {
       }
 
       try {
-        const { data: row, error: err } = await supabase
-          .from("products")
-          .select("*")
-          .eq("slug", slug!)
-          .single();
+        let query = supabase.from("products").select("*");
+        if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug!)) {
+          query = query.or(`id.eq.${slug},slug.eq.${slug}`);
+        } else {
+          query = query.eq("slug", slug!);
+        }
+        const { data: rows, error: err } = await query.limit(1);
+        const row = rows && rows.length > 0 ? rows[0] : null;
         if (err || !row || row.published === false) {
           setData(null);
         } else {

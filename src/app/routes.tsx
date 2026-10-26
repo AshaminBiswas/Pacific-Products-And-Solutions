@@ -150,6 +150,58 @@ export const router = createBrowserRouter([
         element: <Navigate to="/products/kids-cubicles" replace />,
       },
       {
+        path: "products/kids",
+        element: <Navigate to="/products/kids-cubicles" replace />,
+      },
+      {
+        path: "products/kids-toilet-cubicles",
+        element: <Navigate to="/products/kids-cubicles" replace />,
+      },
+      {
+        path: "products/cubicle",
+        element: <Navigate to="/products/restroom-cubicles" replace />,
+      },
+      {
+        path: "products/cubicles",
+        element: <Navigate to="/products/restroom-cubicles" replace />,
+      },
+      {
+        path: "products/toilet-cubicles",
+        element: <Navigate to="/products/restroom-cubicles" replace />,
+      },
+      {
+        path: "products/toilet-partitions",
+        element: <Navigate to="/products/restroom-cubicles" replace />,
+      },
+      {
+        path: "products/shower-cubicles",
+        element: <Navigate to="/products/restroom-cubicles" replace />,
+      },
+      {
+        path: "products/locker",
+        element: <Navigate to="/products/lockers" replace />,
+      },
+      {
+        path: "products/modular-lockers",
+        element: <Navigate to="/products/lockers" replace />,
+      },
+      {
+        path: "products/hpl-lockers",
+        element: <Navigate to="/products/lockers" replace />,
+      },
+      {
+        path: "products/urinal",
+        element: <Navigate to="/products/urinal-partitions" replace />,
+      },
+      {
+        path: "products/urinals",
+        element: <Navigate to="/products/urinal-partitions" replace />,
+      },
+      {
+        path: "products/urinal-partition",
+        element: <Navigate to="/products/urinal-partitions" replace />,
+      },
+      {
         path: "cubicles",
         element: <Navigate to="/products/restroom-cubicles" replace />,
       },

@@ -6,18 +6,9 @@ import { Button } from "./Button";
 import { ThemeToggle } from "./ThemeToggle";
 import { useProducts } from "../../lib/hooks";
 import type { Product } from "../../lib/database.types";
+import { toCategorySlug } from "../../lib/categoryUtils";
 
 const logo = "/logo.webp";
-
-function toCategorySlug(category: string | undefined) {
-  if (!category) return "";
-  const cat = category.toLowerCase().trim();
-  if (cat.includes("cubicle") && !cat.includes("kid")) return "restroom-cubicles";
-  if (cat.includes("locker")) return "lockers";
-  if (cat.includes("urinal") || cat.includes("partition")) return "urinal-partitions";
-  if (cat.includes("kid") || cat.includes("toilet")) return "kids-cubicles";
-  return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
 
 interface DropdownModelItem {
   name: string;
@@ -93,22 +84,10 @@ export function Navbar() {
   );
 
   // Categorize products for dropdowns
-  const cubicleProducts = effectiveProducts.filter(
-    (p) =>
-      (p.category || "").toLowerCase().includes("cubicle") &&
-      !(p.category || "").toLowerCase().includes("kid")
-  );
-  const lockerProducts = effectiveProducts.filter((p) =>
-    (p.category || "").toLowerCase().includes("locker")
-  );
-  const urinalProducts = effectiveProducts.filter(
-    (p) =>
-      (p.category || "").toLowerCase().includes("urinal") ||
-      (p.category || "").toLowerCase().includes("partition")
-  );
-  const kidsProducts = effectiveProducts.filter((p) =>
-    (p.category || "").toLowerCase().includes("kid")
-  );
+  const cubicleProducts = effectiveProducts.filter((p) => toCategorySlug(p.category) === "restroom-cubicles");
+  const lockerProducts = effectiveProducts.filter((p) => toCategorySlug(p.category) === "lockers");
+  const urinalProducts = effectiveProducts.filter((p) => toCategorySlug(p.category) === "urinal-partitions");
+  const kidsProducts = effectiveProducts.filter((p) => toCategorySlug(p.category) === "kids-cubicles");
 
   const getProductPath = (p: Product) => {
     const catSlug = toCategorySlug(p.category);

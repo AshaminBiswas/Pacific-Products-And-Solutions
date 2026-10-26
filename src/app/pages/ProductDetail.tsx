@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import { SEO } from "../components/SEO";
 import { productSchema, breadcrumbSchema } from "../../lib/seo-data";
 import { RelatedProducts } from "../components/RelatedProducts";
+import { toCategorySlug, normalizeCategorySlug } from "../../lib/categoryUtils";
 
 interface ProductSpecification {
   label: string;
@@ -64,15 +65,6 @@ const CATEGORY_BANNERS: Record<string, { bannerSlug: string; fallbackImage: stri
   },
 };
 
-function toCategorySlug(category: string | undefined) {
-  if (!category) return "";
-  const cat = category.toLowerCase().trim();
-  if (cat.includes("cubicle") && !cat.includes("kid")) return "restroom-cubicles";
-  if (cat.includes("locker")) return "lockers";
-  if (cat.includes("urinal") || cat.includes("partition")) return "urinal-partitions";
-  if (cat.includes("kid") || cat.includes("toilet")) return "kids-cubicles";
-  return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
 
 // Helper: extract and format video embed info from YouTube, Vimeo, or direct URLs
 function parseVideoSource(url: string): { type: "youtube" | "vimeo" | "native"; src: string } | null {
@@ -154,22 +146,10 @@ export default function ProductDetailPage() {
       navigate("/products/restroom-cubicles/platina-wave", { replace: true });
       return;
     }
-    if (raw === "kids-toilet" || raw === "kids-cubicle") {
-      navigate("/products/kids-cubicles", { replace: true });
+    const canonicalCat = normalizeCategorySlug(raw);
+    if (canonicalCat && !productSlug) {
+      navigate(`/products/${canonicalCat}`, { replace: true });
       return;
-    }
-    const isCategory = [
-      "restroom-cubicles",
-      "lockers",
-      "urinal-partitions",
-      "kids-cubicles",
-      "cubicles",
-      "cubicle",
-      "locker-systems",
-      "urinal-partition",
-    ].includes(raw);
-    if (isCategory && !productSlug) {
-      navigate(`/products/${raw}`, { replace: true });
     }
   }, [slug, productSlug, navigate]);
 

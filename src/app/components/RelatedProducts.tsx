@@ -5,21 +5,13 @@ import { useProducts } from "../../lib/hooks";
 import { ProductCard } from "./ProductCard";
 import { Button } from "./Button";
 import type { Product } from "../../lib/database.types";
+import { toCategorySlug } from "../../lib/categoryUtils";
 
 interface RelatedProductsProps {
   currentProductId: string;
   currentCategory?: string;
 }
 
-function toCategorySlug(category: string | undefined) {
-  if (!category) return "";
-  const cat = category.toLowerCase().trim();
-  if (cat.includes("cubicle") && !cat.includes("kid")) return "restroom-cubicles";
-  if (cat.includes("locker")) return "lockers";
-  if (cat.includes("urinal") || cat.includes("partition")) return "urinal-partitions";
-  if (cat.includes("kid") || cat.includes("toilet")) return "kids-cubicles";
-  return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
 
 export function RelatedProducts({ currentProductId, currentCategory }: RelatedProductsProps) {
   const navigate = useNavigate();

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { Button } from "./Button";
 import { ProductCard } from "./ProductCard";
 import { useProducts } from "../../lib/hooks";
+import { toCategorySlug } from "../../lib/categoryUtils";
 
 export function FeaturedServices() {
   const navigate = useNavigate();
@@ -15,15 +16,6 @@ export function FeaturedServices() {
   const explicitlyFeatured = activePool.filter((p) => p.is_featured);
   const featuredProducts = (explicitlyFeatured.length > 0 ? explicitlyFeatured : activePool).slice(0, 3);
 
-  const toCategorySlug = (category: string | undefined) => {
-    if (!category) return "restroom-cubicles";
-    const cat = category.toLowerCase().trim();
-    if (cat.includes("cubicle") && !cat.includes("kid")) return "restroom-cubicles";
-    if (cat.includes("locker")) return "lockers";
-    if (cat.includes("urinal") || cat.includes("partition")) return "urinal-partitions";
-    if (cat.includes("kid") || cat.includes("toilet")) return "kids-cubicles";
-    return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-  };
 
   return (
     <section style={{ contentVisibility: "auto", containIntrinsicSize: "auto 550px" }} className="pt-12 sm:pt-16 md:pt-20 lg:pt-24 pb-12 sm:pb-16 md:pb-20 lg:pb-24 bg-transparent dark:bg-[#030213] text-gray-900 dark:text-white transition-colors">
