@@ -7,7 +7,6 @@ import {
   Maximize2,
   X,
   Palette,
-  Check,
   Sparkles,
   ArrowRight,
 } from "lucide-react";
@@ -83,13 +82,13 @@ export function ColorsAndFinishesSection({
           )}
         </motion.div>
 
-        {/* ── Redesigned 4:3 Image Showcase Box ── */}
-        <div className="max-w-3xl lg:max-w-4xl mx-auto mb-10 relative">
+        {/* ── Redesigned 4:3 Image Showcase Box (Half Size) ── */}
+        <div className="max-w-md mx-auto mb-6 relative">
           {/* Ambient Lighting Glow Behind the 4:3 Box */}
-          <div className="absolute -inset-3 bg-gradient-to-tr from-[#7FB706]/20 via-[#B5F823]/10 to-transparent rounded-[2.5rem] blur-2xl -z-10 pointer-events-none opacity-70 dark:opacity-40" />
+          <div className="absolute -inset-2 bg-gradient-to-tr from-[#7FB706]/20 via-[#B5F823]/10 to-transparent rounded-3xl blur-xl -z-10 pointer-events-none opacity-60 dark:opacity-30" />
 
           {/* Master 4:3 Image Container */}
-          <div className="relative rounded-3xl overflow-hidden aspect-[4/3] ring-1 ring-black/10 dark:ring-white/10 shadow-2xl bg-gray-100 dark:bg-[#070617] group">
+          <div className="relative rounded-2xl overflow-hidden aspect-[4/3] ring-1 ring-black/10 dark:ring-white/10 shadow-xl bg-gray-100 dark:bg-[#070617] group">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeIdx}
@@ -99,38 +98,59 @@ export function ColorsAndFinishesSection({
                 transition={{ duration: 0.35, ease: "easeOut" }}
                 className="w-full h-full relative"
               >
-                <ImageWithFallback
-                  src={currentColor?.image_url}
-                  alt={currentColor?.name || `Color option ${activeIdx + 1}`}
-                  className="w-full h-full object-cover select-none cursor-pointer"
-                  renderWidth={1200}
-                  quality={85}
-                  onClick={() => setIsLightboxOpen(true)}
-                />
+                {currentColor?.image_url && currentColor.image_url.trim() ? (
+                  <ImageWithFallback
+                    src={currentColor.image_url}
+                    alt={currentColor?.name || `Color option ${activeIdx + 1}`}
+                    className="w-full h-full object-cover select-none cursor-pointer"
+                    renderWidth={800}
+                    quality={85}
+                    onClick={() => setIsLightboxOpen(true)}
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#0a0a1a] via-[#12122b] to-[#070617] text-white p-6 select-none">
+                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-[#7FB706] mb-3 shadow-inner">
+                      <Palette className="w-6 h-6" />
+                    </div>
+                    <span className="text-[10px] uppercase tracking-widest text-[#B5F823] font-bold">
+                      Architectural Decor
+                    </span>
+                    <span className="text-base font-extrabold mt-1 text-white text-center">
+                      {currentColor?.name || 'Standard Decor'}
+                    </span>
+                    <span className="text-[11px] text-gray-400 mt-0.5">
+                      Solid Compact Phenolic Laminate
+                    </span>
+                  </div>
+                )}
               </motion.div>
             </AnimatePresence>
 
             {/* Top Floating Badges */}
-            <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none z-10">
-              <div className="pointer-events-auto px-3.5 py-1.5 rounded-full bg-black/60 dark:bg-black/80 backdrop-blur-md border border-white/15 text-white text-xs font-semibold flex items-center gap-2 shadow-lg">
-                <span className="w-2 h-2 rounded-full bg-[#B5F823] shadow-sm shadow-[#B5F823]/50 animate-pulse" />
-                <span>Finish Decor #{activeIdx + 1}</span>
+            <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
+              <div className="pointer-events-auto px-2.5 py-1 rounded-full bg-black/60 dark:bg-black/80 backdrop-blur-md border border-white/15 text-white text-[11px] font-semibold flex items-center gap-1.5 shadow-md">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#B5F823] shadow-sm shadow-[#B5F823]/50 animate-pulse" />
+                <span>Finish #{activeIdx + 1}</span>
               </div>
 
-              <div className="pointer-events-auto flex items-center gap-2">
-                <span className="px-3 py-1.5 rounded-full bg-black/60 dark:bg-black/80 backdrop-blur-md border border-white/15 text-white text-xs font-bold font-mono tracking-wider shadow-lg">
-                  {String(activeIdx + 1).padStart(2, "0")} / {String(colors.length).padStart(2, "0")}
-                </span>
+              <div className="pointer-events-auto flex items-center gap-1.5">
+                {colors.length > 1 && (
+                  <span className="px-2.5 py-1 rounded-full bg-black/60 dark:bg-black/80 backdrop-blur-md border border-white/15 text-white text-[11px] font-bold font-mono tracking-wider shadow-md">
+                    {String(activeIdx + 1).padStart(2, "0")} / {String(colors.length).padStart(2, "0")}
+                  </span>
+                )}
 
-                <button
-                  type="button"
-                  onClick={() => setIsLightboxOpen(true)}
-                  className="p-2 rounded-full bg-black/60 hover:bg-black/85 backdrop-blur-md border border-white/15 text-white/90 hover:text-white transition-all shadow-lg active:scale-95"
-                  title="View Full Resolution Texture"
-                  aria-label="Enlarge image"
-                >
-                  <Maximize2 className="w-4 h-4" />
-                </button>
+                {currentColor?.image_url && currentColor.image_url.trim() && (
+                  <button
+                    type="button"
+                    onClick={() => setIsLightboxOpen(true)}
+                    className="p-1.5 rounded-full bg-black/60 hover:bg-black/85 backdrop-blur-md border border-white/15 text-white/90 hover:text-white transition-all shadow-md active:scale-95"
+                    title="View Full Resolution Texture"
+                    aria-label="Enlarge image"
+                  >
+                    <Maximize2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
             </div>
 
@@ -140,119 +160,71 @@ export function ColorsAndFinishesSection({
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/55 hover:bg-black/90 backdrop-blur-md border border-white/15 text-white flex items-center justify-center transition-all opacity-85 sm:opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95 shadow-xl z-10"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-md border border-white/15 text-white flex items-center justify-center transition-all opacity-85 hover:opacity-100 hover:scale-105 active:scale-95 shadow-lg z-10"
                   aria-label="Previous finish"
                 >
-                  <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/55 hover:bg-black/90 backdrop-blur-md border border-white/15 text-white flex items-center justify-center transition-all opacity-85 sm:opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95 shadow-xl z-10"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black/90 backdrop-blur-md border border-white/15 text-white flex items-center justify-center transition-all opacity-85 hover:opacity-100 hover:scale-105 active:scale-95 shadow-lg z-10"
                   aria-label="Next finish"
                 >
-                  <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </>
             )}
 
             {/* Bottom Glassmorphic Showcase Banner */}
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/70 to-transparent p-5 sm:p-7 text-white flex flex-col sm:flex-row sm:items-end justify-between gap-4 z-10 pointer-events-none">
-              <div className="space-y-1">
-                <span className="text-[11px] font-bold uppercase tracking-widest text-[#B5F823]">
-                  Selected Architectural Decor
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/75 to-transparent p-3.5 sm:p-4 text-white flex items-end justify-between gap-2 z-10 pointer-events-none">
+              <div className="space-y-0.5 min-w-0">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#B5F823] block">
+                  Architectural Decor
                 </span>
-                <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-white drop-shadow-md">
+                <h3 className="text-base sm:text-lg font-extrabold tracking-tight text-white drop-shadow-md truncate">
                   {currentColor?.name}
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-300 font-medium">
-                  Solid Compact Phenolic Resin • Waterproof &amp; Impact Resistant
+                <p className="text-[10px] text-gray-300 font-medium truncate">
+                  Solid Compact Phenolic Resin
                 </p>
               </div>
 
-              <div className="pointer-events-auto shrink-0 flex items-center gap-2">
+              <div className="pointer-events-auto shrink-0">
                 <Link
                   to="/contact"
-                  className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-[#7FB706] hover:bg-[#6fa005] text-black font-bold text-xs sm:text-sm transition-all shadow-lg hover:shadow-[#7FB706]/30 active:scale-95"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#7FB706] hover:bg-[#6fa005] text-black font-bold text-xs transition-all shadow-md active:scale-95"
                 >
-                  <span>Request Sample Swatch</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>Sample</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ── Redesigned Swatch Thumbnails Strip ── */}
-        <div className="max-w-4xl mx-auto space-y-4">
-          <div className="flex items-center justify-between px-2 text-xs text-gray-500 dark:text-gray-400">
-            <span className="font-semibold uppercase tracking-wider">
-              Available Finish Swatches ({colors.length})
-            </span>
-            <span>Click any swatch to view</span>
+        {/* ── Pagination Indicator Dots (When multiple finishes exist) ── */}
+        {colors.length > 1 && (
+          <div className="flex items-center justify-center gap-1.5 mb-8">
+            {colors.map((color, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setActiveIdx(index)}
+                className={`transition-all duration-300 rounded-full ${
+                  index === activeIdx
+                    ? "w-6 h-1.5 bg-[#7FB706]"
+                    : "w-1.5 h-1.5 bg-gray-300 dark:bg-white/20 hover:bg-gray-400 dark:hover:bg-white/40"
+                }`}
+                title={color.name || `Finish option ${index + 1}`}
+                aria-label={`View ${color.name || `finish ${index + 1}`}`}
+              />
+            ))}
           </div>
-
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 p-4 rounded-2xl bg-gray-50/80 dark:bg-white/[0.02] border border-gray-200/80 dark:border-white/5">
-            {colors.map((color, index) => {
-              const isActive = index === activeIdx;
-              return (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => setActiveIdx(index)}
-                  className={`group relative flex items-center gap-3 p-2 sm:p-2.5 rounded-2xl border transition-all duration-200 text-left ${
-                    isActive
-                      ? "bg-white dark:bg-white/10 border-[#7FB706] shadow-lg shadow-[#7FB706]/15 scale-[1.02]"
-                      : "bg-white/60 dark:bg-black/20 border-gray-200 dark:border-white/5 hover:border-[#7FB706]/50 hover:bg-white dark:hover:bg-white/5 hover:scale-[1.01]"
-                  }`}
-                >
-                  {/* Mini 4:3 Swatch Image */}
-                  <div
-                    className={`w-14 sm:w-16 aspect-[4/3] rounded-xl overflow-hidden ring-2 transition-all relative shrink-0 ${
-                      isActive
-                        ? "ring-[#7FB706] ring-offset-2 ring-offset-white dark:ring-offset-[#030213]"
-                        : "ring-gray-200 dark:ring-white/10 group-hover:ring-[#7FB706]/50"
-                    }`}
-                  >
-                    <ImageWithFallback
-                      src={color.image_url}
-                      alt={color.name}
-                      className="w-full h-full object-cover"
-                      renderWidth={160}
-                      quality={70}
-                    />
-                    {isActive && (
-                      <div className="absolute inset-0 bg-[#7FB706]/20 flex items-center justify-center">
-                        <span className="w-5 h-5 rounded-full bg-[#7FB706] text-black flex items-center justify-center shadow-md">
-                          <Check className="w-3 h-3 stroke-[3]" />
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Label & Active State */}
-                  <div className="pr-2">
-                    <span
-                      className={`text-xs sm:text-sm font-bold block transition-colors leading-snug ${
-                        isActive
-                          ? "text-[#7FB706]"
-                          : "text-gray-800 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white"
-                      }`}
-                    >
-                      {color.name}
-                    </span>
-                    <span className="text-[10px] text-gray-500 dark:text-gray-400 block mt-0.5">
-                      {isActive ? "Active Preview" : "Select Decor"}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        )}
 
         {/* ── Architectural Customization Assistance Strip ── */}
-        <div className="mt-8 max-w-3xl mx-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-gray-50 via-white to-gray-50 dark:from-white/[0.03] dark:via-white/[0.02] dark:to-transparent border border-gray-200 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+        <div className="mt-6 max-w-xl mx-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-gray-50 via-white to-gray-50 dark:from-white/[0.03] dark:via-white/[0.02] dark:to-transparent border border-gray-200 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#7FB706]/15 text-[#7FB706] flex items-center justify-center shrink-0">
               <Sparkles className="w-5 h-5" />
@@ -309,14 +281,22 @@ export function ColorsAndFinishesSection({
 
             {/* Modal 4:3 Image Preview */}
             <div className="relative aspect-[4/3] bg-black">
-              <ImageWithFallback
-                src={currentColor?.image_url}
-                alt={currentColor?.name}
-                className="w-full h-full object-contain"
-                renderWidth={1600}
-                quality={90}
-                priority
-              />
+              {currentColor?.image_url && currentColor.image_url.trim() ? (
+                <ImageWithFallback
+                  src={currentColor.image_url}
+                  alt={currentColor?.name}
+                  className="w-full h-full object-contain"
+                  renderWidth={1600}
+                  quality={90}
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#0a0a1a] via-[#12122b] to-[#070617] text-white p-8">
+                  <Palette className="w-12 h-12 text-[#7FB706] mb-3" />
+                  <span className="text-xl font-bold">{currentColor?.name}</span>
+                  <span className="text-xs text-gray-400 mt-1">High-Resolution texture preview available on request</span>
+                </div>
+              )}
 
               {colors.length > 1 && (
                 <>
